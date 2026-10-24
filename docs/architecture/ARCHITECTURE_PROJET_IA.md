@@ -1,10 +1,10 @@
 # Architecture — FigureTrail
 
-**Version 1.0 proposée — 24 octobre 2026 — Fekher Jarrar**
+**Version 1.1 — conception cible — 24 octobre 2026 — Fekher Jarrar**
 
 **But :** poser une question simple sur des chiffres issus de rapports publics, retrouver les preuves, effectuer un calcul fiable et afficher une fiche vérifiable. Exemple de parcours : « Quelle est la variation relative de cet indicateur entre ces deux années ? » L'interface présente les valeurs, les périodes, les unités, les sources, la formule et le résultat.
 
-Cette architecture est dimensionnée pour un projet personnel sur Windows, environ 36 heures de réalisation et d'apprentissage sur six semaines, avec moins de 30 € de dépenses supplémentaires. Elle couvre les P0 et P1 convenus. C'est une conception à éprouver, pas une architecture déjà implémentée ou une garantie de perfection. Le premier contrôle porte sur les données et l'accès au modèle.
+Cette conception décrit un service local de raisonnement numérique avec preuves, structuré autour d'un parcours fixe mesurable et d'une extension agentique bornée. Les priorités P0 portent sur le LLM/RAG, les contrats d'API et les évaluations ; les P1 couvrent les outils, la sécurité et l'observabilité. Le socle de données et l'API de santé sont vérifiés ; les capacités d'analyse restent à implémenter selon la roadmap.
 
 Le format retenu est **Markdown avec Mermaid** : lisible, modifiable et versionnable avec le code. GitHub sait afficher ces diagrammes dans les fichiers Markdown. [Documentation GitHub](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/creating-diagrams).
 
@@ -69,7 +69,7 @@ Ces choix forment une base concrète pour le backlog. Le socle Python/FastAPI/Py
 
 | Besoin | Choix de départ | Justification et limite |
 |---|---|---|
-| Langage | Python, environnement isolé, dépendances figées après le premier essai | Réutiliser tes connaissances et garder un démarrage Windows simple. |
+| Langage | Python, environnement isolé, dépendances figées après le premier essai | Environnement reproductible et compatibilité Windows vérifiée. |
 | API et contrats | FastAPI, Pydantic, serveur Uvicorn | Entrées/sorties typées et documentation OpenAPI ; validation métier complémentaire dans le service. |
 | Interface | Une page HTML/CSS/JavaScript servie par FastAPI | Formulaire, résultat, preuves et détail d'exécution ; même origine que l'API, un seul serveur. |
 | Données et SQL | `sqlite3` de Python | Corpus consultable et traces locales sans service de base à administrer. |
@@ -84,7 +84,7 @@ Ces choix forment une base concrète pour le backlog. Le socle Python/FastAPI/Py
 
 Sources techniques : [corps de requête et validation FastAPI](https://fastapi.tiangolo.com/tutorial/body/), [SQLite dans Python](https://docs.python.org/3/library/sqlite3.html), [FTS5 et BM25](https://sqlite.org/fts5.html), [produit scalaire NumPy](https://numpy.org/doc/stable/reference/generated/numpy.dot.html). La similarité cosinus suppose la normalisation préalable des vecteurs ; un vecteur nul ou une dimension incompatible doit être rejeté.
 
-**À trancher au premier essai :** fournisseur, modèles, tarifs et accès effectifs. Le modèle génératif doit proposer une sortie structurée exploitable et le tool calling ; un simple JSON demandé par prompt ne suffit pas à annoncer ces capacités. Choisir des modèles concrets après vérification, puis figer leur configuration. L'abonnement ChatGPT existant ne constitue pas un budget API acquis.
+**À trancher au premier essai :** fournisseur, modèles, tarifs et accès effectifs. Le modèle génératif doit proposer une sortie structurée exploitable et le tool calling ; un simple JSON demandé par prompt ne suffit pas à annoncer ces capacités. Choisir des modèles concrets après vérification, puis figer leur configuration. L'accès API et la facturation doivent être configurés et vérifiés séparément.
 
 ## 3. Périmètre de données et préparation
 
@@ -239,7 +239,7 @@ Le RAG et les délimiteurs de prompt ne garantissent pas la résistance à l'inj
 
 ### 7.2 Appels bornés et dépenses
 
-- Objectif de planification : **20 € d'usage API + 5 € de marge**, en restant sous la contrainte utilisateur de 30 €. Ce n'est pas une estimation de facture démontrée.
+- Enveloppe de validation initiale : **20 € d'usage API + 5 € de réserve**, sous un plafond cumulé strictement inférieur à 30 €. La consommation réelle doit être rapprochée de la facturation fournisseur.
 - Les embeddings du corpus et des questions, les évaluations, les essais agentiques et les répétitions comptent dans cette enveloppe.
 - Un essai de quelques cas précède tout lancement groupé. Estimer le coût de la campagne, puis fixer le nombre de cas/répétitions avant de la lancer.
 - Vérifier le budget estimé avant chaque appel ; utiliser également une limite fournisseur lorsqu'elle existe. L'estimation locale ne garantit pas à elle seule une limite bancaire : prix, conversion et facturation tardive doivent être pris en compte.
@@ -288,7 +288,7 @@ Trois expériences suffisent : **parcours fixe lexical**, **parcours fixe séman
 
 Seuils chiffrés d'acceptation à fixer et consigner avant les essais finaux à partir du premier relevé et du besoin démontré. Aucun taux de réussite n'est acquis. Toute violation d'une permission de code est un défaut à corriger ; une campagne de tests sans violation ne prouve pas une sécurité universelle.
 
-## 9. Découpage du futur dépôt
+## 9. Organisation cible du dépôt
 
 Arborescence indicative, à créer seulement pendant l'implémentation :
 
@@ -325,11 +325,11 @@ pyproject.toml      # dependances et commandes, versions stabilisees
 
 Pas besoin d'un fichier par classe. Ces modules peuvent commencer plus petits. Le service ne dépend pas de `evals` ; l'évaluateur dépend du service. Les tests réseau simulés vérifient les erreurs sans frais ; la preuve finale inclut des appels réels au LLM et des résultats mesurés.
 
-## 10. Couverture des compétences et critères de validation
+## 10. Exigences techniques et critères de validation
 
-| Priorité / compétence | Réalisation attendue | Preuve examinable | Backlog |
+| Priorité / capacité | Réalisation attendue | Preuve examinable | Backlog |
 |---|---|---|---|
-| P0 — LLM | Appel réel, schéma de sortie, sélection de cellules, gestion des erreurs | Exécution réelle enregistrée et schéma expliqué | B03, B06 |
+| P0 — LLM | Appel réel, schéma de sortie, sélection de cellules, gestion des erreurs | Exécution réelle enregistrée et contrat documenté | B03, B06 |
 | P0 — RAG | Préparation textes/tableaux, recherche multi-source, comparaison lexicale/sémantique | Preuves classées, métriques de récupération et analyse d'erreurs | B04, B05, B08 |
 | P0 — APIs / architecture | API typée, responsabilités séparées, même service pour UI et évaluation | OpenAPI, exemple requête/réponse et test des frontières | B02, B07, B09 |
 | P0 — AI evals | Références séparées, cas finaux réservés, mesures et amélioration | Commande reproductible, effectifs et rapport de comparaison | B01, B08, B13 |
@@ -342,7 +342,7 @@ Pas besoin d'un fichier par classe. Ces modules peuvent commencer plus petits. L
 
 1. **Faisabilité** : dix cas vérifiables et un essai hébergé jugé acceptable en coût/latence. Sinon réduire le périmètre avant d'avancer.
 2. **P0 complet** : une demande traverse recherche, LLM, calcul, API et interface ; évaluation de référence enregistrée.
-3. **P1 réel** : outils choisis par le modèle, tests de limites et traces consultables, avec comparaison honnête au fixe.
+3. **P1 réel** : outils choisis par le modèle, tests de limites et traces consultables, avec comparaison mesurée au parcours fixe.
 4. **Présentation** : démarrage documenté, résultats réels, échecs, arbitrages et démonstration courte.
 
-La faisabilité des dix cas initiaux est vérifiée. Le fournisseur, la préparation du corpus indexé et les seuils de performance restent à valider. L'architecture satisfait les besoins de conception identifiés ; sa fiabilité réelle dépendra de ces contrôles. Elle n'ajoute ni déploiement cloud, ni framework d'agents, ni base vectorielle distante pour la seule apparence du portfolio.
+La faisabilité des dix cas initiaux est vérifiée. Le fournisseur, la préparation du corpus indexé et les seuils de performance restent à valider. L'architecture satisfait les besoins de conception identifiés ; sa fiabilité réelle dépendra de ces contrôles. Déploiement cloud, framework d'agents et base vectorielle distante restent conditionnés à des exigences de charge, de persistance ou d'orchestration démontrées.

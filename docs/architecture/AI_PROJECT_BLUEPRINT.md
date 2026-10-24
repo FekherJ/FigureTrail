@@ -2,7 +2,7 @@
 
 **Reviewed 24 October 2026. Proposed target; build incrementally.**
 
-Purpose: answer numerical questions from public reports with traceable evidence. Scope: six weeks, one hour/day, additional spending below €30. B01 has ten verified development cases; application functionality remains to build.
+Purpose: answer numerical questions from public reports with traceable evidence. Scope: one local Python service, a bounded report corpus, deterministic calculations and measured retrieval/model variants. Data references and the HTTP health contract are verified; analysis capabilities follow the implementation roadmap.
 
 ## 1. Repository responsibilities
 
@@ -70,7 +70,7 @@ Version substantive prompts and record their hashes. Keep trusted instructions s
 
 ## 4. Reproducible development
 
-Recommended: uv with committed `pyproject.toml`/`uv.lock`, tested Python, and locked CI installs. Retain B01's dependency-free commands. [uv](https://docs.astral.sh/uv/concepts/projects/layout/)
+Use uv with committed `pyproject.toml`/`uv.lock`, tested Python, and locked CI installs. Retain B01's dependency-free commands. [uv](https://docs.astral.sh/uv/concepts/projects/layout/)
 
 Use Ruff lint/format checks; add type checking where useful. Ruff does not replace a type checker. [Ruff](https://docs.astral.sh/ruff/faq/)
 

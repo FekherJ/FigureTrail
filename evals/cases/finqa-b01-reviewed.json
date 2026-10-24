@@ -3,7 +3,7 @@
   "review_date": "2026-10-24",
   "partition": "development",
   "raw_sha256": "a847fb7e0d61a3125a1e2909852df6b89f1ee64d2c5ff1bf689e332214deee51",
-  "reviewed_by": "assistant; verification delegated by user",
+  "reviewed_by": "AI-assisted source review and deterministic verification",
   "cases": [
     {
       "key": "ratio",

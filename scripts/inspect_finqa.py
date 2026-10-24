@@ -97,7 +97,7 @@ def audit_contexts(dataset, selected, distractors):
 
 def main():
     if not __debug__:
-        raise SystemExit("Ne pas utiliser -O : ce contrôle pédagogique repose sur assert.")
+        raise SystemExit("Ne pas utiliser -O : les assertions de vérification doivent rester actives.")
     manifest = json.loads((ROOT / "evals/cases/finqa-b01-reviewed.json").read_text(encoding="utf-8"))
     specs = manifest["cases"]
     parser = argparse.ArgumentParser(description=__doc__)

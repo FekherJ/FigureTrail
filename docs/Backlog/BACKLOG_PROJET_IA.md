@@ -1,10 +1,10 @@
 # Backlog — FigureTrail
 
-**Version 1.0 proposée — 24 octobre 2026 — Fekher Jarrar**
+**Version 1.1 — roadmap de réalisation — 24 octobre 2026 — Fekher Jarrar**
 
-Ce backlog met en œuvre l'architecture décrite dans [docs/architecture/ARCHITECTURE_PROJET_IA.md](../architecture/ARCHITECTURE_PROJET_IA.md), chemin depuis la racine du projet. Il est prêt à copier dans GitHub Issues. Aucun dépôt, projet GitHub ou ticket distant n'a été créé. Les identifiants B01 à B13 sont des repères stables ; ils ne présument pas les futurs numéros d'issues GitHub.
+Ce backlog met en œuvre l'architecture décrite dans [docs/architecture/ARCHITECTURE_PROJET_IA.md](../architecture/ARCHITECTURE_PROJET_IA.md), chemin depuis la racine du projet. Les sections B01–B13 définissent les issues, dépendances et preuves de validation. Le dépôt distant [FigureTrail](https://github.com/FekherJ/FigureTrail) est configuré ; l'état du tableau et des issues reste à confirmer. Les identifiants B01 à B13 sont des repères stables ; ils ne présument pas les futurs numéros d'issues GitHub.
 
-**Résultat visé :** une application locale qui retrouve des cellules dans des rapports publics, calcule une variation ou un ratio, puis montre résultat, formule et preuves. Elle utilise un vrai LLM hébergé, un RAG mesuré et une API. Une variante agentique limitée, des garde-fous et des traces complètent le parcours fixe.
+**Résultat visé :** une application locale qui retrouve des cellules dans des rapports publics, calcule une variation ou un ratio, puis montre résultat, formule et preuves. Elle utilise un LLM hébergé, un RAG mesuré et une API. Une variante agentique limitée, des garde-fous et des traces complètent le parcours fixe.
 
 ## 1. Organisation dans GitHub
 
@@ -14,9 +14,9 @@ Champs utiles : priorité `P0` ou `P1`, jalon, estimation en heures. Étiquettes
 
 Une issue est terminée lorsque ses critères sont vérifiés et que sa preuve est enregistrée dans le dépôt ou reliée à un commit. Les résultats doivent distinguer appels simulés et appels réels. Une fonctionnalité seulement décrite dans le README n'est pas une fonctionnalité démontrée.
 
-## 2. Temps, ordre et budget
+## 2. Plan de livraison et enveloppe de validation
 
-**Six semaines × une heure par jour ≈ 42 heures au total.** L'organisation déjà proposée réserve environ 36 heures au projet/apprentissage et six à la préparation de carrière. Les tickets représentent une **première enveloppe de 31 heures**, avec cinq heures de réserve projet pour difficultés, reprise de Python et corrections. Lecture, essais, GitHub et documentation sont inclus, sans temps de formation caché en supplément.
+Les estimations initiales représentent **31 heures de réalisation et vérification**, complétées par cinq heures de réserve pour intégration, diagnostic et corrections. L'enveloppe de 36 heures inclut documentation et suivi des issues. Les estimations sont à réviser à partir des résultats des jalons.
 
 Ce chiffrage est ambitieux et provisoire, pas un engagement de livraison. Réestimer après B01 et B03. Si le rythme réel ne tient pas, réduire le corpus, les types de questions ou la finition d'interface ; préserver les P0 et une démonstration limitée de chaque P1. Si cela ne suffit pas, consigner le reste à faire : ne pas déclarer terminé un objectif non réalisé.
 
@@ -31,11 +31,11 @@ Ce chiffrage est ambitieux et provisoire, pas un engagement de livraison. Réest
 | B07 | P0 | API documentée et erreurs cohérentes | B06 | 2 h | J2 |
 | B08 | P0 | Évaluateur et amélioration comparée | B01, B05, B06 | 3 h | J3 |
 | B09 | P0 | Interface de démonstration | B07 | 2 h | J3 |
-| B10 | P1 | Agent avec vrais appels d'outils | B07, B08 | 3 h | J4 |
+| B10 | P1 | Agent avec appels d'outils structurés | B07, B08 | 3 h | J4 |
 | B11 | P1 | Garde-fous et campagne négative | B09, B10 | 2 h | J4 |
 | B12 | P1 | Traces complètes et versions | B07, B10 | 2 h | J4 |
-| B13 | P0 | Validation finale et portfolio reproductible | B08, B09, B10, B11, B12 | 3 h | J5 |
-| Réserve | — | Débogage, apprentissage et corrections | Selon les difficultés | 5 h | Tous |
+| B13 | P0 | Validation finale et livraison reproductible | B08, B09, B10, B11, B12 | 3 h | J5 |
+| Réserve | — | Intégration, diagnostic et corrections | Selon les difficultés | 5 h | Tous |
 | **Total projet** | | | | **36 h** | |
 
 Les dépendances indiquent ce qui est nécessaire pour terminer, pas pour commencer à réfléchir ou écrire quelques lignes. Évaluations et traces commencent immédiatement : B08 formalise les premiers contrôles, B12 complète les traces commencées dans B03. API et UI minimales peuvent être amorcées avant leur clôture.
@@ -48,9 +48,9 @@ Les jalons correspondent à des résultats, pas à cinq semaines fixes :
 - **J4 — P1 démontrés :** agent limité, garde-fous et observabilité.
 - **J5 — Démonstration :** versions figées, essais finaux, limites et reproduction.
 
-Ordre conseillé : B01 → B02 → B03 → B04 → B05 → B06 → B07 → B08 → B09 → B10 → B11 → B12 → B13. Viser J1 en première semaine ; démarrer la chaîne P0 dès la suivante. Le découpage précis se recale sur les heures effectivement consommées.
+Ordre conseillé : B01 → B02 → B03 → B04 → B05 → B06 → B07 → B08 → B09 → B10 → B11 → B12 → B13. Valider J1 avant la chaîne P0 ; réestimer les tâches après l'essai fournisseur B03.
 
-**Budget proposé :** 20 € d'usage API et 5 € de marge, en restant sous 30 € supplémentaires. Choix du fournisseur et dépenses non engagés. Les essais, embeddings, évaluations et erreurs comptent tous. Avant une campagne, estimer sa consommation et réduire le nombre de répétitions si nécessaire. Ne pas compter l'abonnement ChatGPT comme des crédits API.
+**Enveloppe de validation :** 20 € d'usage API et 5 € de réserve, sous un plafond cumulé strictement inférieur à 30 €. Choix du fournisseur et dépenses non engagés. Les essais, embeddings, évaluations et erreurs comptent tous. Avant une campagne, estimer sa consommation et réduire le nombre de répétitions si nécessaire. Vérifier séparément l'accès API, les tarifs et la facturation fournisseur.
 
 ### Adoption progressive du blueprint
 
@@ -64,7 +64,7 @@ Le [blueprint technique](../architecture/AI_PROJECT_BLUEPRINT.md) complète l'ar
 | B09 à B12 | Affichage sûr des preuves, outils bornés, cas négatifs et traces complètes. |
 | B13 | Contrôles automatisés sans secrets, reproduction de la démo et résultats/limites mesurés. |
 
-Le blueprint ne prouve pas à lui seul une fonctionnalité. B01 est vérifié ; le socle technique local B02 est validé, avec l'organisation GitHub encore à effectuer. Les autres étapes restent à réaliser.
+Le blueprint ne prouve pas à lui seul une fonctionnalité. B01 est vérifié ; le socle technique local B02 est validé, avec un remote GitHub configuré et un tableau d'issues restant à confirmer. Les autres étapes restent à réaliser.
 
 ## 3. Issues prêtes à reprendre
 
@@ -72,29 +72,30 @@ Le blueprint ne prouve pas à lui seul une fonctionnalité. B01 est vérifié ; 
 
 **Priorité : P0 · Étiquettes : data, evals · Jalon : J1 · Estimation : 2 h · Dépendances : aucune**
 
-Objectif : confirmer que le thème est faisable sans dépenser le projet dans des règles financières ou de l'OCR.
+Objectif : valider des références numériques à deux cellules avec contexte explicite, sans dépendance à l'OCR ou à une reconstruction financière implicite.
 
 - [x] Lire un petit échantillon FinQA et sélectionner dix questions compréhensibles : variation relative et ratio en pourcentage sur deux cellules, avec dénominateur positif.
-- [x] Pour chacune, relever question, contexte, cellules, unités, périodes, formule, résultat attendu et provenance ; recalculer et vérifier manuellement.
+- [x] Pour chacune, relever question, contexte, cellules, unités, périodes, formule, résultat attendu et provenance ; recalculer et vérifier les preuves sources.
 - [x] Examiner les doublons de contexte et prévoir des documents distracteurs pour la recherche.
 - [x] Lire les conditions d'utilisation/attribution à conserver avec les données ; noter le périmètre retenu et les exclusions.
 
 **Critères d'acceptation :** dix cas relus, calculables sans convention implicite, avec preuves identifiables. Aucun exemple ou chiffre inventé. Sources et annotations ont des destinations distinctes. Si le sous-ensemble ne convient pas, consigner ce qui bloque et réduire les types de calcul avant B04.
 
-**Preuve à conserver :** fiche de faisabilité et premiers cas de développement annotés côté évaluation. La première séance peut n'en vérifier qu'une partie : compter uniquement les cas réellement relus.
+**Preuve à conserver :** fiche de faisabilité et premiers cas de développement annotés côté évaluation. Le rapport doit compter uniquement les cas effectivement vérifiés.
 
-**À savoir expliquer :** pourquoi une réponse numérique seule ne suffit pas à construire une évaluation RAG.
+**Point de conception :** L'évaluation sépare pertinence des preuves, sélection de cellules et exactitude numérique.
 
-**État local au 24 octobre 2026 : terminé pour la faisabilité des données, vérification déléguée à l'assistant.** Dix cas relus/recalculés, dix contextes et groupes de rapport distincts, conventions de référence explicites, doublons audités, trois distracteurs identifiés et notice conservée. [Rapport et limites](../verification/B01_VERIFICATION_DONNEES.md). Contrôles exécutés : dix cas et trois tests négatifs réussis, sans appel LLM. Aucun ticket GitHub distant n'a été créé ou clôturé. Le jalon J1 complet attend B03.
+**État local au 24 octobre 2026 : terminé pour la faisabilité des données, revue assistée des sources et recalcul déterministe.** Dix cas relus/recalculés, dix contextes et groupes de rapport distincts, conventions de référence explicites, doublons audités, trois distracteurs identifiés et notice conservée. [Rapport et limites](../verification/B01_VERIFICATION_DONNEES.md). Contrôles exécutés : dix cas et trois tests négatifs réussis, sans appel LLM. Aucun ticket GitHub distant n'a été créé ou clôturé. Le jalon J1 complet attend B03.
 
-### B02 — Installer le minimum et créer le squelette du dépôt
+### B02 — Établir l'environnement et le socle HTTP
 
 **Priorité : P0 · Étiquettes : api, data · Jalon : J1 · Estimation : 2 h · Dépendances : B01**
 
-Objectif : obtenir un point de départ reproductible et reprendre le Python utile.
+Objectif : établir un environnement reproductible et un socle HTTP vérifiable.
 
 - [x] Relire architecture et backlog, vérifier la structure actuelle et initialiser le dépôt Git local.
-- [ ] Mettre en place le dépôt distant et le tableau GitHub avec les tickets utiles au démarrage ; partie GitHub conservée pour l'utilisateur selon l'organisation précédente.
+- [x] Configurer le dépôt distant GitHub et le suivi de la branche `main`.
+- [ ] Configurer le tableau GitHub et les issues de réalisation ; statut à confirmer.
 - [x] Créer un environnement Python, installer FastAPI/Pydantic/Uvicorn et NumPy ; vérifier SQLite FTS5 sur le runtime Windows choisi.
 - [x] Ajouter les fichiers de configuration sans secrets, exclusions Git et instructions de démarrage ; fixer les versions effectivement testées.
 - [x] Charger un cas, afficher ses données sources séparément de ses références et démarrer un `/health` sans appel IA.
@@ -103,9 +104,9 @@ Objectif : obtenir un point de départ reproductible et reprendre le Python util
 
 **Preuve à conserver :** premier commit, instructions Windows et exemple de sortie. Ce ticket ne demande pas de créer tous les modules de l'architecture vides.
 
-**À savoir expliquer :** différence entre configuration, données d'inférence et annotations d'évaluation.
+**Point de conception :** Configuration, sources d'inférence et références d'évaluation ont des responsabilités distinctes.
 
-**État au 24 octobre 2026 : socle local B02 validé ; organisation GitHub encore ouverte.** Voir le [rapport B02](../verification/B02_ENVIRONNEMENT.md) pour les versions, commandes, vérifications et limites. Aucune fonctionnalité LLM/RAG n'est annoncée comme réalisée ; B03 reste à commencer.
+**État au 24 octobre 2026 : socle local B02 validé ; remote GitHub configuré, tableau d'issues à confirmer.** Voir le [rapport B02](../verification/B02_ENVIRONNEMENT.md) pour les versions, commandes, vérifications et limites. Aucune fonctionnalité LLM/RAG n'est annoncée comme réalisée ; B03 reste à commencer.
 
 ### B03 — Valider un LLM hébergé, son contrat et son coût
 
@@ -122,7 +123,7 @@ Objectif : écarter tôt un modèle trop lent ou inaccessible et obtenir un vrai
 
 **Preuve à conserver :** trace expurgée de secrets, configuration du modèle et décision datée coût/latence. Aucun objectif chiffré de performance n'est annoncé comme atteint avant mesure.
 
-**À savoir expliquer :** différence entre schéma valide, sélection correcte des preuves et résultat vrai.
+**Point de conception :** Un schéma valide ne garantit pas la pertinence des cellules ni l'exactitude de la réponse.
 
 ### B04 — Préparer un corpus versionné, sans fuite de réponses
 
@@ -137,9 +138,9 @@ Objectif : transformer des textes/tableaux publics en preuves récupérables.
 
 **Critères d'acceptation :** préparation relançable ; aucun champ de réponse, programme ou bonne preuve dans le corpus d'inférence. Tous les identifiants résolvent une source réelle. Index incohérent refusé au chargement ; traces préservées lors d'une reconstruction.
 
-**Preuve à conserver :** commande de préparation, exemple anonymisé seulement si nécessaire, manifeste et résultats des contrôles. Les données sont publiques ; ne pas publier les pièces BPCE.
+**Preuve à conserver :** commande de préparation, exemple anonymisé seulement si nécessaire, manifeste et résultats des contrôles. Conserver uniquement les sources publiques autorisées dans ce dépôt.
 
-**À savoir expliquer :** comment une mauvaise segmentation de tableau fait perdre le sens d'un nombre.
+**Point de conception :** La segmentation préserve ensemble nombres, libellés, périodes et unités.
 
 ### B05 — Construire et mesurer la recherche de preuves
 
@@ -156,7 +157,7 @@ Objectif : un RAG qui retrouve réellement des preuves parmi plusieurs contextes
 
 **Preuve à conserver :** tableau de comparaison et exemples de preuves retrouvées/manquées, avec version du corpus et paramètre `k`.
 
-**À savoir expliquer :** pourquoi une similarité élevée ne garantit ni la bonne preuve ni une réponse correcte.
+**Point de conception :** La similarité est un signal de classement ; sa pertinence se mesure contre les références.
 
 ### B06 — Assembler le parcours fixe et le calcul vérifiable
 
@@ -173,7 +174,7 @@ Objectif : question → recherche → sélection structurée par le LLM → calc
 
 **Preuve à conserver :** exécution réelle complète et vérifications relançables ; au moins un résultat avec formule et deux sources de cellules, et un état sans réponse chiffrée.
 
-**À savoir expliquer :** ce que le LLM décide et ce que le programme garantit réellement.
+**Point de conception :** Le modèle sélectionne l'opération et les cellules ; le code valide les données et calcule.
 
 ### B07 — Exposer une API documentée, avec contrats et erreurs
 
@@ -190,7 +191,7 @@ Objectif : rendre le service utilisable et testable indépendamment de l'interfa
 
 **Preuve à conserver :** exemples de requêtes/réponses et contrôle ciblé du contrat HTTP.
 
-**À savoir expliquer :** pourquoi une réponse d'information insuffisante n'est pas une panne du serveur.
+**Point de conception :** L'information insuffisante est un état métier distinct d'une panne technique.
 
 ### B08 — Formaliser les évaluations et démontrer une amélioration
 
@@ -207,7 +208,7 @@ Objectif : mesurer les forces/faiblesses et empêcher une démonstration fondée
 
 **Preuve à conserver :** rapports avant/après, règles de notation et au moins une analyse détaillée d'erreur. Consigner avant les essais finaux les seuils chiffrés retenus et les raisons de leur choix.
 
-**À savoir expliquer :** différence entre contrôle du calcul, évaluation du RAG et évaluation de bout en bout.
+**Point de conception :** Les contrôles de calcul, de retrieval et de bout en bout utilisent des mesures distinctes.
 
 ### B09 — Créer une interface qui montre les preuves
 
@@ -224,13 +225,13 @@ Objectif : une démonstration compréhensible rapidement, sous forme de fiche d'
 
 **Preuve à conserver :** captures ou courte séquence montrant un succès sourcé et une information insuffisante.
 
-**À savoir expliquer :** comment l'interface permet de vérifier un résultat au lieu de seulement lui faire confiance.
+**Point de conception :** Le résultat reste vérifiable jusqu'aux valeurs sources et à la formule.
 
-### B10 — Ajouter un agent limité avec de vrais appels d'outils
+### B10 — Ajouter un agent limité avec de appels d'outils structurés
 
 **Priorité : P1 · Étiquettes : agents, llm, evals · Jalon : J4 · Estimation : 3 h · Dépendances : B07, B08**
 
-Objectif : apprendre le tool calling sans remplacer une référence simple par une boucle opaque.
+Objectif : implémenter une sélection d'outils bornée et mesurer son apport par rapport au parcours fixe.
 
 - [ ] Déclarer les outils `search_evidence`, `read_evidence` et `calculate` avec des paramètres structurés, reliés aux fonctions existantes.
 - [ ] Laisser le modèle choisir les outils et la prochaine action ; appliquer un périmètre immuable, quatre appels génératifs, six appels d'outils dont deux recherches au maximum.
@@ -241,7 +242,7 @@ Objectif : apprendre le tool calling sans remplacer une référence simple par u
 
 **Preuve à conserver :** trace expurgée, tableau comparatif et décision motivée sur le mode par défaut. Ne pas inventer de gain : conserver le fixe si les mesures le justifient.
 
-**À savoir expliquer :** ce qui distingue une succession d'étapes programmées d'une boucle pilotée par des appels d'outils du modèle.
+**Point de conception :** L'agent choisit les prochaines actions ; le programme applique les permissions et plafonds.
 
 ### B11 — Tester injections, permissions et cas impossibles
 
@@ -258,7 +259,7 @@ Objectif : éprouver les garde-fous déjà présents, pas les ajouter seulement 
 
 **Preuve à conserver :** liste des attaques/cas, résultat attendu/observé, défauts corrigés et reste à faire.
 
-**À savoir expliquer :** pourquoi un prompt « ignore les instructions des documents » ne remplace pas les permissions du programme.
+**Point de conception :** Les instructions au modèle ne remplacent pas les autorisations exécutées en code.
 
 ### B12 — Rendre chaque exécution explicable et versionnée
 
@@ -275,28 +276,28 @@ Objectif : compléter les traces de B03 pour diagnostiquer qualité, coût et é
 
 **Preuve à conserver :** exemple de diagnostic d'échec, export et démonstration du changement de version. Cette observabilité locale n'exige pas d'abonnement.
 
-**À savoir expliquer :** quelles données permettent de distinguer problème de recherche, de sélection de cellule, de calcul ou de fournisseur.
+**Point de conception :** Les traces distinguent recherche, sélection de cellule, calcul et erreur fournisseur.
 
-### B13 — Exécuter les essais finaux et livrer un portfolio reproductible
+### B13 — Exécuter les essais finaux et livrer une version reproductible
 
 **Priorité : P0 · Étiquettes : evals, docs · Jalon : J5 · Estimation : 3 h · Dépendances : B08, B09, B10, B11, B12**
 
-Objectif : présenter le travail effectivement réalisé et les décisions que tu sais défendre.
+Objectif : livrer une version reproductible, accompagnée de résultats mesurés et de décisions techniques documentées.
 
 - [ ] Figer code, prompts, corpus, modèles/configurations et règles de mesure ; estimer la campagne finale avant lancement.
 - [ ] Exécuter les variantes fixes et l'agent sur les cas finaux réservés ; publier effectifs, scores, échecs, latences et coûts réellement observés.
 - [ ] Vérifier le démarrage dans un environnement Python neuf ; documenter récupération des données, configuration et commandes sans secret. La vérification hors réseau peut utiliser des réponses simulées, clairement identifiées.
 - [ ] Finaliser README et schémas correspondant au code ; enregistrer une démonstration courte : réussite sourcée, cas difficile/amélioration et absence de preuve. Ajouter limites, arbitrages et prochaines améliorations fondées sur les erreurs.
 
-**Critères d'acceptation :** une autre personne peut suivre l'installation et comprendre les mesures ; code réel du RAG, API, évaluations et outils présent. Pas de score inventé, d'annonce de production ou d'attribution au projet BPCE. Si une comparaison ne peut être exécutée faute de budget/temps, l'indiquer explicitement et publier les seuls résultats obtenus.
+**Critères d'acceptation :** une autre personne peut suivre l'installation et comprendre les mesures ; code réel du RAG, API, évaluations et outils présent. Les résultats publiés doivent correspondre aux exécutions enregistrées et au périmètre de déploiement vérifié. Si une comparaison ne peut être exécutée faute de budget/temps, l'indiquer explicitement et publier les seuls résultats obtenus.
 
 **Preuve à conserver :** version de livraison, README, rapport de mesures, exemple requête/réponse, traces expurgées et vidéo ou scénario de démonstration. Indiquer la dépense incrémentale suivie et ses limites de rapprochement avec la facture fournisseur.
 
-**À savoir expliquer :** le problème traité, les frontières de confiance, une erreur analysée, une amélioration mesurée et un arbitrage qualité/coût/latence.
+**Point de conception :** La livraison documente frontières de confiance, erreurs, comparaisons et arbitrages qualité/coût/latence.
 
 ## 4. Vérification de couverture
 
-| Priorité | Compétence | Issues de réalisation | Preuve finale |
+| Priorité | Capacité | Issues de réalisation | Preuve finale |
 |---|---|---|---|
 | P0 | LLM et sorties structurées | B03, B06 | Appel réel, sélection de cellules validée, erreurs explicites. |
 | P0 | RAG | B04, B05, B06, B08 | Recherche multi-source, preuves et comparaison de retrievers. |
@@ -311,6 +312,6 @@ Objectif : présenter le travail effectivement réalisé et les décisions que t
 
 Ne pas ajouter pendant ce cycle : OCR/PDF arbitraires, téléchargement d'URL fourni par l'utilisateur, modèle local lent, fine-tuning, multi-agent, plusieurs fournisseurs, SSO, cloud distribué, tableau de bord complet ou juge LLM systématique.
 
-Ces extensions ne sont pas nécessaires pour démontrer les compétences demandées. Tout ajout doit résoudre une faiblesse observée et remplacer une autre tâche dans l'enveloppe disponible.
+Ces extensions ne répondent pas aux exigences de la version courante. Tout ajout doit résoudre une faiblesse observée et remplacer une autre tâche dans l'enveloppe disponible.
 
-**Première action : B01.** Choisir et comprendre les premiers cas, sans construire toute l'application ni dépenser une semaine à administrer le backlog. Les documents actuels sont des livrables de préparation ; l'implémentation et les mesures restent à faire.
+**Prochaine étape technique : B03.** Le socle de données B01 et l'environnement local B02 sont vérifiés. Valider l'accès fournisseur et le contrat LLM avant la construction du corpus indexé et du parcours d'analyse.

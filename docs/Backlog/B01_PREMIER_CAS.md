@@ -1,6 +1,6 @@
-# B01 — Première lecture vérifiable
+# B01 — Cas de référence : ratio en pourcentage
 
-**24 octobre 2026 — Premier cas vérifié par l'assistant ; B01 compte désormais 10 cas vérifiés / 10 visés. L'apprenant a délégué la relecture des preuves pour cette étape.**
+**24 octobre 2026 — Cas vérifié contre les textes et tableaux FinQA ; B01 : 10 références vérifiées.**
 
 Références : [backlog](BACKLOG_PROJET_IA.md), [architecture](../architecture/ARCHITECTURE_PROJET_IA.md), [provenance et licence](../../data/FINQA_PROVENANCE.md).
 
@@ -54,22 +54,21 @@ Les bonnes preuves annotées désignent `table_3`, `table_5` et `text_34` (unit�
 
 `table[4][3]` contient `2014`, tandis que `table_ori[4][3]` contient un tiret. Cette cellule International/NGLs n'est pas utilisée ici. Le script la signale sans correction automatique. Avant B04, il faudra traiter cette anomalie : une normalisation peut transformer un symbole en nombre trompeur.
 
-Un cas de développement examiné, aucun score global. Aucun corpus de recherche, distracteur, appel LLM, test d'abstention ou partition finale par groupe documentaire n'existe encore. Les références de cet outil pédagogique ne doivent jamais alimenter le futur service d'analyse.
+Un cas de développement examiné, aucun score global. Aucun corpus de recherche, distracteur, appel LLM, test d'abstention ou partition finale par groupe documentaire n'existe encore. Les références de ce vérificateur ne doivent jamais alimenter le futur service d'analyse.
 
-## Code utile et contrôle relançable
+## Contrôles et reproduction
 
 Depuis la racine : `python3.14.exe -X utf8 scripts/inspect_finqa.py`.
 
-- `Path(__file__)` retrouve la racine depuis le script, même si le terminal est ailleurs.
-- `json.loads` transforme le JSON en listes et dictionnaires ; `table[3][4]` lit une cellule dont on vérifie aussi les en-têtes.
+- Résolution des chemins depuis le script et vérification des libellés, coordonnées et en-têtes des cellules.
 - `SOURCE_FIELDS` autorise seulement les champs sources. Exclure uniquement `answer` laisserait fuir les programmes, bonnes preuves ou résultats de recherche préparés.
 - `Decimal` lit les nombres depuis les chaînes des cellules ; l'arrondi d'affichage reste distinct du calcul.
-- Les `assert` contrôlent ce cas et l'export écrit sur disque. Ils servent ici de vérification pédagogique, pas de validation de sécurité pour une API. Ne pas utiliser l'option `-O`, qui les désactive.
+- Les `assert` contrôlent ce cas et l'export écrit sur disque. Ils sont réservés au contrôle hors ligne ; les validations de l'API nécessitent des exceptions explicites. Ne pas utiliser l'option `-O`, qui les désactive.
 
 Exécution observée : contrôles passés, deux fichiers séparés créés, résultat conforme. Dépense LLM/API : **0 €**.
 
-## Suite de B01
+## Couverture et suivi
 
-La vérification du document est déléguée à l'assistant à la demande de l'apprenant ; il n'est plus attendu de copie manuelle des passages de période. Le script du premier cas a été exécuté par l'apprenant avec succès. Le [second cas](B01_DEUXIEME_CAS.md), une variation relative, est maintenant vérifié par l'assistant.
+Le [cas de variation relative](B01_DEUXIEME_CAS.md) complète la couverture des deux opérations. La méthode combine revue assistée des sources et recalcul déterministe ; elle ne constitue pas une revue humaine indépendante.
 
-Les dix cas, doublons et candidats distracteurs sont vérifiés : voir le [rapport B01](../verification/B01_VERIFICATION_DONNEES.md). B01 est terminé pour la faisabilité des données ; prochaine étape B02. L'apprentissage porte sur la séparation sources/références, le choix de la base et les conventions numériques ; aucune relecture manuelle de l'apprenant n'est annoncée comme faite.
+Les dix références, doublons et candidats distracteurs sont consignés dans le [rapport B01](../verification/B01_VERIFICATION_DONNEES.md). B01 est validé pour la faisabilité des données ; le socle local B02 est vérifié et la prochaine étape technique est B03. Les références restent séparées du futur corpus d'inférence.

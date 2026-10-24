@@ -1,4 +1,4 @@
-"""B02: a local health endpoint without corpus or provider access."""
+"""HTTP entry point and service health contract."""
 
 from typing import Literal
 
@@ -16,5 +16,5 @@ app = FastAPI(title="FigureTrail", version="0.1.0")
 
 @app.get("/health", response_model=HealthResponse)
 def health() -> HealthResponse:
-    """Report process availability; no corpus is loaded at this milestone."""
+    """Report process availability; no analysis corpus is currently loaded."""
     return HealthResponse()

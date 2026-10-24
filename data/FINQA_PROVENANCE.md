@@ -22,6 +22,6 @@ L'entrée `FBHS/2017/page_23.pdf-1` partage le même contexte source : ne pas cr
 
 ## Vérification des dix cas B01
 
-Le 24 octobre 2026, dix contextes de développement ont été relus et recalculés par l'assistant : voir `../docs/verification/B01_VERIFICATION_DONNEES.md`. Le manifeste `../evals/cases/finqa-b01-reviewed.json` conserve les identifiants, questions adaptées, unités, périodes, cellules, résultats attendus et conventions de `exe_ans`. Les dix références originales restent inchangées. Tous les contextes proviennent du même téléchargement ci-dessus.
+Le 24 octobre 2026, dix contextes de développement ont été vérifiés par revue assistée des sources et recalcul déterministe : voir `../docs/verification/B01_VERIFICATION_DONNEES.md`. Le manifeste `../evals/cases/finqa-b01-reviewed.json` conserve les identifiants, questions adaptées, unités, périodes, cellules, résultats attendus et conventions de `exe_ans`. Les dix références originales restent inchangées. Tous les contextes proviennent du même téléchargement ci-dessus.
 
 L'audit compare les champs sources sans filename pour les doublons exacts et prévoit un groupement par entreprise/année du rapport. Dix contextes et dix groupes de rapport distincts sont sélectionnés ; trois candidats distracteurs sont identifiés, sans être encore exportés/indexés. Les détails de rapprochement figurent dans `../docs/verification/B01_VERIFICATION_RESULTS.json`. docs/verification et evals sont exclus du futur corpus d'inférence.

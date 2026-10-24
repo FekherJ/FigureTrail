@@ -1,35 +1,33 @@
-# B02 — Environnement et API minimale
+# B02 — Validation de l'environnement et du socle HTTP
 
-**Vérification du 24 octobre 2026. Socle technique local validé ; organisation distante GitHub encore à effectuer.**
+**24 octobre 2026 — environnement local et contrat de santé vérifiés.**
 
-## Résultat et périmètre
+## Périmètre
 
-La structure existante convient au jalon : `docs/architecture/`, `docs/Backlog/`, `docs/verification/`, `scripts/`, `tests/`, `data/` et `evals/` sont conservés. Seul `app/` est ajouté pour une API réelle. Aucun module d'analyse, répertoire de prompts vide, framework d'agents, base distante ou migration `src/` n'est introduit.
+Le socle comprend l'application FastAPI, le contrat Pydantic de `/health`, l'environnement Python isolé et les commandes de vérification. L'organisation existante des données, références, tests et documents est conservée. Les modules d'analyse, retrieval et outils seront ajoutés selon la roadmap.
 
-Le point de santé est `GET /health` → HTTP 200, `{"status":"ok","corpus_version":null}`. Il indique la disponibilité du processus, sans promettre la disponibilité d'un corpus ou d'un fournisseur. L'API n'importe ni le script de préparation ni les références d'évaluation. Le schéma OpenAPI ne comporte que `/health`. Le serveur de vérification est arrêté après le contrôle.
+`GET /health` renvoie HTTP 200 et `{"status":"ok","corpus_version":null}`. Il indique la disponibilité du processus ; aucun corpus n'est encore chargé. Le schéma OpenAPI décrit uniquement `/health`. L'application ne charge pas les scripts de préparation ou les annotations d'évaluation.
 
-## Choix et versions réellement testés
+## Versions vérifiées
 
-| Élément | Version / rôle |
+| Composant | Version |
 |---|---|
-| Windows, Python | CPython 3.14.5, 64 bits ; `.python-version` fixe la version testée |
-| uv | 0.11.14 ; environnement `.venv/`, résolution et synchronisation |
-| FastAPI | 0.162.0 ; route HTTP et documentation OpenAPI |
-| Pydantic | 2.14.1 ; contrat typé de réponse |
-| Uvicorn | 0.54.0 ; serveur local |
-| NumPy | 2.5.4 ; produit scalaire vérifié, préparation du futur essai sémantique |
-| SQLite | 3.50.4 ; module standard, FTS5 testé avec insertion et recherche |
-| Ruff | 0.17.2 ; lint et format des nouveaux fichiers |
+| CPython, Windows 64 bits | 3.14.5 |
+| uv | 0.11.14 |
+| FastAPI | 0.162.0 |
+| Pydantic | 2.14.1 |
+| Uvicorn | 0.54.0 |
+| NumPy | 2.5.4 |
+| SQLite, FTS5 disponible | 3.50.4 |
+| Ruff | 0.17.2 |
 
-`pyproject.toml` décrit les dépendances et règles de code ; `uv.lock` conserve les versions résolues et les empreintes des distributions. Le projet reste une application locale sans paquet à publier (`package = false`). Le développement cible actuellement Python 3.14 ; aucune compatibilité avec d'autres versions n'est revendiquée.
+`pyproject.toml` décrit les dépendances et les règles de code ; `uv.lock` conserve les versions résolues et les empreintes des distributions. `package = false` correspond à une application exécutée depuis le dépôt. La compatibilité vérifiée porte sur Python 3.14 et Windows.
 
-La bibliothèque standard peut créer l'environnement avant `uv sync` : cela évite une restriction Windows rencontrée par l'assistant lors de la création des lanceurs. L'installation a ensuite été effectuée avec les permissions nécessaires, sans changement du PATH global. Les installations utilisent les distributions précompilées de PyPI (`--no-build`) ; pas de compilation locale de dépendances natives.
+Les paquets sont installés dans `.venv/` depuis PyPI sous forme précompilée. La création explicite de l'environnement avec Python ne demande ni activation PowerShell ni installation de pip. `.gitattributes` conserve les octets JSON et normalise les autres fichiers texte en LF ; les empreintes des références restent vérifiables entre copies.
 
-`.gitattributes` impose LF pour le texte et laisse les octets JSON inchangés, car les preuves B01 incluent des empreintes de JSON existants. Cela évite qu'une conversion automatique Git des fins de ligne invalide ces empreintes. Aucun fichier B01 n'est reformatté. Les règles Ruff E4/E7/E9/F sont explicites ; le format est appliqué progressivement aux nouveaux fichiers.
+## Reproduction
 
-## Reproduire
-
-Depuis la racine, les instructions complètes sont dans [README](../../README.md). Aucune activation de script PowerShell, clé API ou variable de fournisseur n'est requise :
+Depuis la racine, avec le brut et les exports préparés selon [README](../../README.md) :
 
 ```powershell
 python3.14.exe -m venv .venv --without-pip
@@ -42,32 +40,23 @@ uv run --locked python -B -X utf8 -m unittest discover -s tests -p test_b01_veri
 uv run --locked python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
 
-Les données B01 sont déjà présentes sur cette machine. Sur une copie neuve, suivre d'abord le téléchargement et la génération B01 documentés dans README. Dans un autre terminal, appeler `Invoke-RestMethod http://127.0.0.1:8000/health` ; arrêter le serveur avec Ctrl+C. `/docs` utilise la documentation interactive par défaut de FastAPI, dont les ressources de navigateur peuvent demander Internet ; `/health` et `/openapi.json` sont servis localement.
+Appeler `Invoke-RestMethod http://127.0.0.1:8000/health` dans un autre terminal. Le contrat JSON est servi sur `/openapi.json` ; `/docs` fournit la documentation interactive FastAPI, dont les ressources de navigateur peuvent demander Internet. Arrêter le serveur avec Ctrl+C.
 
-## Vérifications exécutées
+## Résultats observés
 
-- Environnement recréé dans le projet puis synchronisé avec le lockfile : réussite ; 16 paquets installés, dépendances compatibles.
-- SQLite FTS5 : création d'une table en mémoire, insertion et recherche réussies. NumPy : produit scalaire attendu obtenu.
-- HTTP réel : `/health` renvoie 200 avec le contrat attendu ; schéma `/openapi.json` valide. Les chemins de données brutes, références et analyses non implémentées renvoient 404.
-- **10 cas B01 et 3 tests négatifs réussis** dans le nouvel environnement, sans réécriture des exports.
-- Ruff : lint réussi sur le code ; trois nouveaux fichiers conformes au format.
-- **39 liens Markdown locaux valides**, avec contrôle de casse.
-- Git : **36 fichiers suivis**, sept chemins locaux/secrets contrôlés comme ignorés ; aucun secret détecté par les motifs ciblés examinés. Ce contrôle ne constitue pas une détection exhaustive de secrets.
-- **35 fichiers préexistants inchangés**, y compris toutes les données, références, le code et les preuves B01. Empreintes du manifeste, de l'instantané et du script conservées dans les objets Git malgré les différences de fins de ligne.
-- Aucun appel de modèle, coût API, publication ou création distante GitHub.
+- Environnement créé et synchronisé avec le lockfile ; 16 paquets installés et dépendances compatibles.
+- SQLite FTS5 : création, insertion et recherche en mémoire réussies ; produit scalaire NumPy conforme.
+- HTTP réel : réponse 200 et contrat attendu pour `/health`, schéma OpenAPI valide.
+- Les routes de données brutes, références d'évaluation et analyses non implémentées renvoient 404.
+- Dix cas B01 conformes et trois tests négatifs réussis dans l'environnement du projet.
+- Lint Ruff et contrôle de format des trois fichiers du socle réussis.
+- Exclusions Git contrôlées pour l'environnement, les caches, secrets et données générées ; code, références et notices suivis.
+- Aucun appel de modèle nécessaire aux vérifications. Le serveur de contrôle est arrêté après les essais.
 
-## Git et reste à faire
+Le point de santé mesure la disponibilité du processus. Il ne constitue pas un contrôle de disponibilité d'un fournisseur, de qualité de retrieval ou d'exactitude de réponse LLM. Les résultats courants de revue du dépôt et les contrôles de liens sont consignés dans la [revue de structure](STRUCTURE_REVIEW.md).
 
-Le dépôt Git local contient un premier commit du socle vérifié, avec l'identité Git déjà configurée et son adresse GitHub de non-divulgation. Aucune identité n'est inventée ni configuration globale modifiée. Les données brutes, exports sources, environnement et caches sont exclus ; les références, preuves, code, `pyproject.toml` et `uv.lock` restent suivis.
+## Prochaine étape
 
-La publication distante et le tableau GitHub restent à effectuer par l'utilisateur, comme prévu dans les échanges précédents. Aucun dépôt distant, ticket ou tableau n'est annoncé comme créé. La licence générale du code reste à choisir ; la notice FinQA est conservée.
+B03 doit établir l'accès à un fournisseur hébergé, le contrat de sélection de cellules, les limites d'appel, le suivi d'usage et les premières mesures coût/latence. Aucun fournisseur ou modèle n'est encore configuré. Les tâches de suivi GitHub restent décrites dans le backlog, séparément de la validation technique du socle.
 
-La suite technique est B03 : vérifier un fournisseur/modèle, coût, latence, sortie structurée, appels bornés et première trace. Aucun LLM, RAG, index documentaire, embedding ou agent n'est encore implémenté. Aucun appel de modèle ni dépense API n'a été effectué en B02. Le socle local n'est pas une preuve de performance IA ou de préparation à la production.
-
-## Ce qu'il faut comprendre
-
-1. L'environnement isole les dépendances ; le lockfile permet de retrouver les mêmes versions.
-2. FastAPI reçoit une requête HTTP, Pydantic définit le contrat, Uvicorn écoute sur l'interface locale.
-3. Le point de santé ne lit pas les références : le calcul et le RAG seront des fonctions distinctes, construites et évaluées plus tard.
-
-Sources techniques : [uv : structure et lockfile](https://docs.astral.sh/uv/concepts/projects/layout/), [uv : synchronisation verrouillée](https://docs.astral.sh/uv/concepts/projects/sync/), [FastAPI : premiers pas et OpenAPI](https://fastapi.tiangolo.com/tutorial/first-steps/), [Ruff : configuration](https://docs.astral.sh/ruff/configuration/), [SQLite FTS5](https://sqlite.org/fts5.html), [Git : attributs de texte](https://git-scm.com/docs/gitattributes).
+Sources : [uv : structure et lockfile](https://docs.astral.sh/uv/concepts/projects/layout/), [synchronisation verrouillée](https://docs.astral.sh/uv/concepts/projects/sync/), [FastAPI et OpenAPI](https://fastapi.tiangolo.com/tutorial/first-steps/), [Ruff](https://docs.astral.sh/ruff/configuration/), [SQLite FTS5](https://sqlite.org/fts5.html), [attributs Git](https://git-scm.com/docs/gitattributes).

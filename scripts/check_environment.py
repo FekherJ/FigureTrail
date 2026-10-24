@@ -1,4 +1,4 @@
-"""Check the B02 runtime offline, without reading sources or references."""
+"""Validate Python dependencies, SQLite FTS5 and NumPy offline."""
 
 import json
 import platform

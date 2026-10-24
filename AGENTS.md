@@ -1,38 +1,42 @@
-# FigureTrail — Consignes de travail
+# FigureTrail — Engineering instructions
 
-## Contexte et documents de référence
+## References and scope
 
-- Nom affiché : **FigureTrail** ; nom technique : `figuretrail` (Windows, PowerShell, VS Code). La racine est le dossier contenant ce fichier et README.md. Utiliser des chemins relatifs à cette racine dans le code pour garder le projet portable.
-- Lire [README.md](README.md), [l'architecture](docs/architecture/ARCHITECTURE_PROJET_IA.md) et [le backlog](docs/Backlog/BACKLOG_PROJET_IA.md) avant de modifier le projet.
-- Conserver les dossiers réels `docs/architecture/` et `docs/Backlog/`, y compris leur casse. Les preuves sont regroupées dans `docs/verification/`. La documentation est regroupée sous `docs/` ; les autres dossiers restent à la racine.
-- Préserver les fichiers et changements existants. Créer uniquement les fichiers utiles à l'étape en cours.
-- Consulter le [blueprint technique](docs/architecture/AI_PROJECT_BLUEPRINT.md) comme complément à l'architecture. Appliquer ses recommandations dans l'ordre B02 à B13 décrit au backlog ; conserver ce qui convient déjà et justifier les adaptations par un besoin actuel. L'arborescence cible n'est pas une liste de fichiers à créer. uv et Ruff ont été retenus en B02 : dépendances dans `pyproject.toml`, versions exactes dans `uv.lock`, commandes dans README. Ne pas ajouter d'autres outils sans besoin actuel.
+- Read [README](README.md), [architecture](docs/architecture/ARCHITECTURE_PROJET_IA.md), [engineering standards](docs/architecture/AI_PROJECT_BLUEPRINT.md) and [backlog](docs/Backlog/BACKLOG_PROJET_IA.md) before changes.
+- Keep the existing `docs/architecture/`, `docs/Backlog/` and `docs/verification/` names and case. Use repository-relative runtime paths.
+- Preserve existing work. Add modules, dependencies and services only when required by the current issue. The target directory tree is not a scaffolding checklist.
+- Document product behaviour, contracts, decisions, verification evidence and operational limits in an impersonal, technical style. Distinguish implemented capabilities from design targets.
+- Follow B01–B13 dependencies and priorities: LLM/RAG, API/architecture and evaluations first; bounded tools, security and observability next.
 
-## Objectif pédagogique
+## Current baseline
 
-- Accompagner en français un développeur de niveau Python intermédiaire, peu pratiqué récemment.
-- Priorités : LLM/RAG, APIs/architecture et évaluations ; ensuite agents/tool calling, sécurité et observabilité.
-- Temps disponible : environ une heure par jour pendant six semaines. Le backlog propose 36 h de projet et une réserve de temps ; réestimer selon le rythme réellement constaté.
-- Budget supplémentaire strictement inférieur à 30 €. La proposition de 20 € d'API + 5 € de marge n'est pas une dépense déjà engagée. L'abonnement ChatGPT ne vaut pas crédit API.
-- Expliquer les concepts, les choix et le code utile. Avancer par petits changements vérifiables, adaptés à une séance d'une heure.
-- Terminer chaque étape par ce qui est réellement obtenu, les vérifications exécutées, les limites, ce qu'il faut comprendre et la prochaine action du backlog. Ne pas annoncer des fonctionnalités ou scores non démontrés.
+- B01: ten development cases verified against supplied FinQA text/tables. See [data verification](docs/verification/B01_VERIFICATION_DONNEES.md). These checks do not establish model or retrieval performance.
+- B02: local environment and `/health` verified. See [runtime verification](docs/verification/B02_ENVIRONNEMENT.md). Git remote `origin` is configured; issue-board status is tracked separately in the backlog.
+- B03 is the next technical issue. No provider or model is configured. Do not make paid calls before provider capabilities, dated prices, cost limits and credentials are configured for that issue.
 
-## Périmètre et séparation des données
+## Development and verification
 
-- B01 est terminé pour la faisabilité des données : dix cas vérifiés par l'assistant le 24 octobre 2026. Lire `docs/verification/B01_VERIFICATION_DONNEES.md` pour les preuves, limites et suites ; socle local B02 opérationnel, mise en place distante GitHub encore à effectuer, suite technique B03. Lire aussi `docs/verification/B02_ENVIRONNEMENT.md`. Ne pas transformer ce résultat en score LLM/RAG.
-- Aucun appel LLM payant à cette étape. Aucun fournisseur ou modèle choisi par anticipation.
-- Pour chaque cas, vérifier question, cellules, unités/échelles, périodes, formule, résultat et preuves. Conserver la provenance et distinguer données réalisées et prévisions.
-- Les téléchargements bruts contiennent des annotations : ils restent dans `data/raw/` et ne sont jamais des données d'inférence.
-- Les sources seules vont dans `data/samples/` à ce stade ; questions/réponses attendues, programmes, bonnes preuves et notes de relecture restent séparés dans `evals/` et la fiche B01 de `docs/Backlog/`.
-- `docs/verification/` contient des réponses et coordonnées attendues : il est exclu de toute ingestion d'inférence, comme `evals/`. Le manifeste `evals/cases/finqa-b01-reviewed.json` contient les questions adaptées et conventions explicites ; conserver les questions FinQA originales.
-- Le futur corpus/index/prompt ne doit recevoir ni réponses, ni programmes, ni preuves sélectionnées par les annotations. Utiliser une liste explicite de champs source autorisés.
-- La sélection manuelle d'un cas de développement ne constitue pas une évaluation de recherche. Plus tard, rechercher sur plusieurs documents avec distracteurs, sans filtre documentaire déduit des bonnes réponses.
-- Calculer par code déterministe avec `Decimal`, jamais par `eval` ou exécution de code généré. Les opérandes viennent des cellules sources.
-- Garder les secrets, données brutes et traces locales hors de Git. Conserver les conditions et attributions des sources publiques.
+- Use Python 3.14.5 and the project `.venv/`. Manage dependencies in `pyproject.toml` and preserve exact resolutions in `uv.lock`; use locked installs. Follow README commands with ordinary `git` and `uv` executables.
+- Prefer standard-library functionality and small readable functions. Keep one local Python application; introduce abstractions only for a demonstrated requirement.
+- Run checks proportionate to the change. Preserve executable checks for data separation, numeric conventions and trust boundaries. Do not rewrite numerical fixtures or measured results to make a check pass.
+- Ruff lint covers the codebase; formatting is applied to the API and environment-check files. Avoid unrelated reformatting of verified reference tooling.
+- The offline FinQA verifier uses assertions and rejects `-O`. Runtime API/provider/domain validation must use explicit validation and exceptions.
+- Record actual commands, results, limitations and relevant versions. Keep failures in evaluation denominators and distinguish simulated from live model calls.
+- Keep shared Git history intact. Leave changes reviewable and keep generated data, environments, credentials and execution traces out of commits.
 
-## Manière de développer
+## Data and trust boundaries
 
-- Privilégier la bibliothèque standard et le minimum de code lisible. Étendre l'application uniquement avec la fonctionnalité en cours ; ne pas créer de modules vides ou de dépendances pour des étapes futures.
-- Vérifier les outils avant de supposer leur disponibilité. Au 24 octobre 2026 : `python3.14.exe` fonctionne (3.14.5), `python` et `py` ne sont pas dans le PATH du terminal utilisé. uv 0.11.14 et Git 2.47.0 sont détectés par l'assistant ; leur visibilité peut différer dans un ancien terminal VS Code. Git est installé dans `C:/Users/fekhe/AppData/Local/Programs/Git/cmd/git.exe`. Ne pas modifier le PATH global. Utiliser l'environnement `.venv/` du projet pour l'application.
-- Faire les contrôles proportionnés au changement ; conserver un contrôle relançable pour la séparation des données et le calcul étudié.
-- Pas de multi-agent, framework d'agents, service cloud, OCR ou ingestion libre de PDF à ce stade. Suivre les dépendances B01 à B13, en conservant honnêtement le reste à faire.
+- Raw FinQA contains annotations. It is preparation input only, never application inference input.
+- Source-only exports allow exactly `filename`, `pre_text`, `post_text`, `table` and `table_ori`. Preserve complete context, numbers, headers, units and periods.
+- `evals/` and `docs/verification/` contain reference answers and evidence coordinates. Exclude both from inference ingestion, corpus construction and model context.
+- The evaluator forwards only the question and explicit user scope to the shared analysis service. Never derive retrieval filters or supplied evidence from gold annotations.
+- Validate stable cell/source IDs and resolve operands from source data. Calculate approved operations using `Decimal`; never execute generated Python, SQL or `eval`.
+- Preserve source attribution, licence notices and provenance. Record and resolve table-normalisation conflicts before indexing; retain report groups when splitting evaluation cases.
+
+## Operational limits
+
+- Bind the service to localhost for the current release scope. No unrestricted URL/file ingestion, shell tools, arbitrary PDF/OCR pipeline or distributed deployment is required.
+- Use a single hosted provider module. Apply deadlines, output-token bounds, retry limits, usage accounting and spending checks to every generation and embedding call.
+- Keep cumulative hosted-AI spending strictly below €30. Preparation, evaluations, errors and retries count toward this limit. Local estimates are not a guaranteed provider billing cap.
+- Introduce the agent only after the fixed baseline is measured. Initial ceiling: four generation calls and six tool calls, including at most two searches; enforce limits in code.
+- Minimise provider payloads, redact secrets from traces and escape displayed source content. Guardrails supplement explicit permissions and boundary validation.

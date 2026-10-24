@@ -1,1 +1,1 @@
-"""FigureTrail local API; analysis capabilities are added incrementally."""
+"""FigureTrail: numerical analysis of public reports with traceable evidence."""

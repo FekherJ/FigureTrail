@@ -2,7 +2,7 @@
 
 **24 octobre 2026 — Faisabilité des données vérifiée : 10 exemples sur 10.**
 
-Vérification réalisée par l'assistant, à la demande de l'apprenant. Ce rapport documente les sources effectivement lues, les calculs refaits et les limites constatées. La relecture des documents n'est pas présentée comme un travail manuel réalisé par l'apprenant.
+Méthode : revue des textes et tableaux assistée par IA, recalcul déterministe et tests automatisés. Ce rapport documente les sources examinées, les conventions de référence et les limites du contrôle. Il ne constitue pas une revue humaine indépendante.
 
 ## 1. Conclusion et objectif de cette étape
 
@@ -424,8 +424,8 @@ Les instantanés JSON/Markdown de `docs/verification/` sont datés de cette revu
 
 ## 10. Limites et prochaine étape
 
-Le contrôle confirme les dix exemples sélectionnés dans FinQA, pas la vérité indépendante des rapports originaux ni la qualité de tout le dataset. Aucune vérification des PDFs, aucun test sur des cas réservés, aucune mesure de généralisation, aucun coût/temps de réponse de modèle et aucun gain de recrutement ne sont démontrés.
+Le contrôle confirme les dix exemples sélectionnés dans FinQA, pas la vérité indépendante des rapports originaux ni la qualité de tout le dataset. Aucune vérification des PDFs, aucun test sur des cas réservés, aucune mesure de généralisation, aucun coût ou temps de réponse de modèle ne sont mesurés.
 
-Prochaine action du backlog : **B02**, préparer le dépôt et l'environnement minimal et vérifier SQLite FTS5. Puis **B03**, choisir et tester un LLM hébergé avec sortie structurée et mesurer latence/consommation avant une campagne. Fournisseur et modèle restent non choisis ; aucun achat n'a été effectué. Ne pas commencer B04 sans traiter les conflits de tableau identifiés et conserver les références hors du corpus.
+Le socle local **B02** est vérifié séparément. La prochaine étape technique est **B03** : valider un LLM hébergé avec sortie structurée et mesurer latence/consommation avant une campagne. Fournisseur et modèle restent à sélectionner. B04 doit résoudre les conflits de tableaux identifiés et conserver les références hors du corpus d'inférence.
 
-À comprendre pour la suite : le modèle proposera l'opération et les identifiants des cellules ; le code calculera. Les références préparées ici permettront de vérifier séparément la récupération des preuves, le choix des cellules et le résultat numérique.
+Contrat du parcours cible : le modèle proposera l'opération et les identifiants des cellules ; le code calculera. Les références préparées ici permettront de vérifier séparément la récupération des preuves, le choix des cellules et le résultat numérique.

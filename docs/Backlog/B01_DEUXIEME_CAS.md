@@ -1,6 +1,6 @@
-# B01 — Deuxième cas : variation relative
+# B01 — Cas de référence : variation relative
 
-**24 octobre 2026 — Vérifié par l'assistant sur les sources FinQA ; B01 : 10 cas / 10, faisabilité des données terminée.**
+**24 octobre 2026 — Vérifié contre les sources FinQA ; B01 : 10 cas / 10, faisabilité des données terminée.**
 
 Objectif : préparer des réponses de référence fiables pour mesurer ensuite la recherche de preuves et la sélection de cellules par le LLM. Ces vérifications ne constituent pas encore une évaluation de l'application.
 
@@ -44,7 +44,7 @@ Le programme annoté `subtract(2467.1, 2397.8), divide(#0, 2397.8)` est une donn
 
 - Source complète autorisée : `data/samples/finqa-b01-growth-source.json` ; uniquement `filename`, `pre_text`, `post_text`, `table`, `table_ori`. Aucun filtrage sur la bonne ligne.
 - Question et annotations : `evals/cases/finqa-b01-growth-reference.json`, exclusivement pour l'évaluation.
-- `FBHS/2017/page_23.pdf-1` partage exactement les mêmes champs sources. Dédupliquer ce contexte avant indexation et grouper ses questions ensemble lors de la séparation développement/final. Les deux exemples B01 actuels proviennent de rapports différents.
+- `FBHS/2017/page_23.pdf-1` partage exactement les mêmes champs sources. Dédupliquer ce contexte avant indexation et grouper ses questions ensemble lors de la séparation développement/final. Les deux cas détaillés proviennent de rapports différents.
 - Aucun conflit numérique constaté entre les deux versions des cellules utilisées. Le contexte contient des artefacts textuels, par exemple `2019s` pour des apostrophes : ne pas prétendre que tout le document est nettoyé.
 - Vérification sur les textes et tableaux FinQA distribués, sans inspection du PDF original. La notice et l'empreinte du téléchargement restent celles de `data/FINQA_PROVENANCE.md`.
 
@@ -55,11 +55,11 @@ python3.14.exe -X utf8 scripts/inspect_finqa.py --case growth
 python3.14.exe -X utf8 scripts/inspect_finqa.py --case growth --check
 ```
 
-La première commande régénère les deux exports séparés ; la seconde les vérifie sans écriture. La commande existante sans option conserve le premier cas. Les contrôles pédagogiques utilisent `assert` : ne pas exécuter avec `-O`.
+La première commande régénère les deux exports séparés ; la seconde les vérifie sans écriture. La commande existante sans option conserve le premier cas. Le vérificateur hors ligne utilise `assert` : ne pas exécuter avec `-O`.
 
 Contrôles : empreinte du brut, libellés/périodes, valeurs des deux tableaux, base positive, calcul depuis les cellules, ratio/arrondi, liste positive des champs sources et correspondance des exports. Aucun appel LLM/API : **0 €** pour cette étape.
 
-## Ce qu'il faut retenir et suite
+## Conventions de référence et suivi
 
 Un résultat de référence doit préciser son unité, sa convention et sa tolérance. Un nombre correct accompagné des mauvaises années ou d'une réponse de référence mal normalisée peut fausser une évaluation.
 
