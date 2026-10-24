@@ -10,10 +10,9 @@ Retrouver des chiffres dans des rapports publics, calculer une variation ou un r
 - Vérification des cellules, unités, périodes et calculs avec `Decimal`.
 - Audit des doublons de contexte et identification de trois candidats distracteurs.
 - Dix contrôles de cas et trois tests négatifs : mauvaise année, confusion ratio/pourcentage et réponse présente dans un export source.
+- Environnement isolé, dépendances verrouillées, contrôles SQLite FTS5/NumPy et endpoint de santé sans appel IA.
 
 Ces contrôles valident les exemples sélectionnés dans les textes/tableaux FinQA. Aucun PDF original n'a été inspecté et aucun score LLM/RAG n'a été mesuré. Aucun appel LLM ni dépense API n'est nécessaire pour cette étape.
-
-- Environnement isolé, dépendances verrouillées, contrôles SQLite FTS5/NumPy et endpoint de santé sans appel IA.
 
 ## Organisation actuelle
 
