@@ -10,10 +10,10 @@
       "case_id": "DVN/2007/page_58.pdf-2",
       "stem": "finqa-b01",
       "operation": "ratio_percent",
-      "title": "Part du Canada dans la production totale estimée",
+      "title": "Canada's share of total estimated production",
       "unit": "MMBoe",
-      "scale": "million de barils équivalent pétrole",
-      "nature": "Prévision de production pour 2008",
+      "scale": "million barrels of oil equivalent",
+      "nature": "Estimated production for 2008",
       "exe_ans_unit": "percent",
       "precision": 2,
       "operands": [
@@ -24,7 +24,7 @@
             4
           ],
           "value": "60",
-          "period": "Estimation 2008"
+          "period": "2008 estimate"
         },
         {
           "role": "denominator",
@@ -33,7 +33,7 @@
             4
           ],
           "value": "243",
-          "period": "Estimation 2008"
+          "period": "2008 estimate"
         }
       ],
       "checks": [
@@ -77,24 +77,24 @@
         }
       ],
       "notes": [
-        "2007 est l'année du rapport, pas celle des valeurs : prévisions 2008.",
-        "La colonne Total inclut les NGLs ; conserver ce périmètre tabulé.",
-        "Anomalie hors opérandes : table[4][3] = 2014, table_ori[4][3] = tiret. La bloquer/normaliser explicitement en B04."
+        "2007 is the report year; the values are forecasts for 2008.",
+        "The Total column includes NGLs; preserve the scope of the supplied table.",
+        "Non-operand anomaly: table[4][3] is 2014, but table_ori[4][3] is a dash. Explicitly reject or normalize this conflict in B04."
       ],
       "application_question": "In Devon's estimated 2008 production table, what percentage of total production in MMBoe comes from Canada?",
       "expected_percent": "24.69135802469135802469135802",
       "exe_ans_tolerance": "0.000005",
-      "question_scope": "Question adaptée avec entreprise, périodes et périmètre explicites ; ne fournit ni réponse ni identifiant documentaire au moteur de recherche."
+      "question_scope": "The adapted question states the company, periods and scope explicitly. It supplies neither the answer nor a document identifier to retrieval."
     },
     {
       "key": "growth",
       "case_id": "FBHS/2017/page_23.pdf-2",
       "stem": "finqa-b01-growth",
       "operation": "percent_change",
-      "title": "Croissance des ventes de Cabinets",
+      "title": "Growth in Cabinets segment sales",
       "unit": "dollar ($)",
       "scale": "million",
-      "nature": "Ventes annuelles historiques",
+      "nature": "Historical annual sales",
       "exe_ans_unit": "ratio",
       "precision": 1,
       "operands": [
@@ -105,7 +105,7 @@
             1
           ],
           "value": "2467.1",
-          "period": "Exercice 2017"
+          "period": "Fiscal year 2017"
         },
         {
           "role": "old",
@@ -114,7 +114,7 @@
             2
           ],
           "value": "2397.8",
-          "period": "Exercice 2016"
+          "period": "Fiscal year 2016"
         }
       ],
       "checks": [
@@ -159,23 +159,23 @@
         }
       ],
       "notes": [
-        "Utiliser la division Cabinets, pas les ventes totales ou Plumbing.",
-        "Le symbole $ est explicite ; aucun code ISO de devise n'est ajouté par supposition."
+        "Use the Cabinets segment, rather than total sales or the Plumbing segment.",
+        "The $ symbol is explicit; do not infer an ISO currency code that is absent from the context."
       ],
       "application_question": "For FBHS, what was the percentage growth in annual Cabinets segment net sales from 2016 to 2017?",
       "expected_percent": "2.890149303528234214696805405",
       "exe_ans_tolerance": "0.000005",
-      "question_scope": "Question adaptée avec entreprise, périodes et périmètre explicites ; ne fournit ni réponse ni identifiant documentaire au moteur de recherche."
+      "question_scope": "The adapted question states the company, periods and scope explicitly. It supplies neither the answer nor a document identifier to retrieval."
     },
     {
       "key": "case03",
       "case_id": "PKG/2009/page_65.pdf-4",
       "stem": "finqa-b01-03",
       "operation": "ratio_percent",
-      "title": "Part des engagements d'achat exigibles après 2014",
+      "title": "Share of purchase commitments due after 2014",
       "unit": "dollar ($)",
-      "scale": "millier",
-      "nature": "Échéancier d'engagements futurs du rapport 2009",
+      "scale": "thousand",
+      "nature": "Future commitments schedule in the 2009 report",
       "exe_ans_unit": "ratio",
       "precision": 0,
       "operands": [
@@ -186,7 +186,7 @@
             1
           ],
           "value": "25048",
-          "period": "Après 2014 : thereafter"
+          "period": "After 2014: thereafter"
         },
         {
           "role": "denominator",
@@ -195,7 +195,7 @@
             1
           ],
           "value": "44572",
-          "period": "Total de l'échéancier 2010 et suivants"
+          "period": "Total schedule, 2010 onward"
         }
       ],
       "checks": [
@@ -247,23 +247,23 @@
         }
       ],
       "notes": [
-        "Thereafter signifie après la dernière année explicite 2014 ; ne pas inclure 2014.",
-        "Les engagements futurs ne sont pas des achats déjà réalisés."
+        "Thereafter means after the last explicit year, 2014; exclude 2014 itself.",
+        "Future commitments are not purchases already made."
       ],
       "application_question": "In PKG's 2009 purchase commitments schedule, what percentage of the total is due after 2014?",
       "expected_percent": "56.19671542672529839361033833",
       "exe_ans_tolerance": "0.000005",
-      "question_scope": "Question adaptée avec entreprise, périodes et périmètre explicites ; ne fournit ni réponse ni identifiant documentaire au moteur de recherche."
+      "question_scope": "The adapted question states the company, periods and scope explicitly. It supplies neither the answer nor a document identifier to retrieval."
     },
     {
       "key": "case04",
       "case_id": "UNP/2008/page_77.pdf-1",
       "stem": "finqa-b01-04",
       "operation": "ratio_percent",
-      "title": "Part des salaires et congés à payer dans les dettes courantes",
+      "title": "Accrued wages and vacation as a share of current liabilities",
       "unit": "dollar ($)",
       "scale": "million",
-      "nature": "Solde historique au 31 décembre 2008",
+      "nature": "Historical balance at December 31, 2008",
       "exe_ans_unit": "ratio",
       "precision": 1,
       "operands": [
@@ -274,7 +274,7 @@
             1
           ],
           "value": "367",
-          "period": "31 décembre 2008"
+          "period": "December 31, 2008"
         },
         {
           "role": "denominator",
@@ -283,7 +283,7 @@
             1
           ],
           "value": "2560",
-          "period": "31 décembre 2008"
+          "period": "December 31, 2008"
         }
       ],
       "checks": [
@@ -328,23 +328,23 @@
         }
       ],
       "notes": [
-        "La question abrège le libellé ; le dénominateur est le total des passifs courants du tableau, pas seulement Accounts payable.",
-        "Ne pas utiliser la colonne 2007."
+        "The question shortens the label. Use total current liabilities from the table, rather than Accounts payable alone.",
+        "Do not use the 2007 column."
       ],
       "application_question": "For Union Pacific at December 31, 2008, what percentage of total accounts payable and other current liabilities was accrued wages and vacation?",
       "expected_percent": "14.3359375",
       "exe_ans_tolerance": "0.000005",
-      "question_scope": "Question adaptée avec entreprise, périodes et périmètre explicites ; ne fournit ni réponse ni identifiant documentaire au moteur de recherche."
+      "question_scope": "The adapted question states the company, periods and scope explicitly. It supplies neither the answer nor a document identifier to retrieval."
     },
     {
       "key": "case05",
       "case_id": "INTC/2013/page_29.pdf-3",
       "stem": "finqa-b01-05",
       "operation": "ratio_percent",
-      "title": "Part des surfaces détenues situées hors États-Unis",
-      "unit": "pied carré",
+      "title": "Share of owned facility space outside the United States",
+      "unit": "square foot",
       "scale": "million",
-      "nature": "Surfaces des installations au 28 décembre 2013",
+      "nature": "Facility floor space at December 28, 2013",
       "exe_ans_unit": "ratio",
       "precision": 1,
       "operands": [
@@ -355,7 +355,7 @@
             2
           ],
           "value": "16.7",
-          "period": "28 décembre 2013"
+          "period": "December 28, 2013"
         },
         {
           "role": "denominator",
@@ -364,7 +364,7 @@
             3
           ],
           "value": "46.6",
-          "period": "28 décembre 2013"
+          "period": "December 28, 2013"
         }
       ],
       "checks": [
@@ -409,23 +409,23 @@
         }
       ],
       "notes": [
-        "Le dénominateur est le total Owned facilities 46,6, pas Total facilities 54,9.",
-        "Unité de surface ; aucune conversion en monnaie. Les exposants des libellés sont des appels de note."
+        "The denominator is Owned facilities, 46.6, rather than Total facilities, 54.9.",
+        "The unit measures area; no currency conversion applies. Superscripts in labels are footnote markers."
       ],
       "application_question": "For Intel at December 28, 2013, what percentage of the total square footage of owned facilities was in other countries?",
       "expected_percent": "35.83690987124463519313304721",
       "exe_ans_tolerance": "0.000005",
-      "question_scope": "Question adaptée avec entreprise, périodes et périmètre explicites ; ne fournit ni réponse ni identifiant documentaire au moteur de recherche."
+      "question_scope": "The adapted question states the company, periods and scope explicitly. It supplies neither the answer nor a document identifier to retrieval."
     },
     {
       "key": "case06",
       "case_id": "ZBH/2017/page_53.pdf-1",
       "stem": "finqa-b01-06",
       "operation": "ratio_percent",
-      "title": "Marge nette sur les chiffres pro forma 2015",
+      "title": "Net profit margin using 2015 pro forma figures",
       "unit": "dollar ($)",
       "scale": "million",
-      "nature": "Données pro forma non auditées, année terminée le 31 décembre 2015",
+      "nature": "Unaudited pro forma figures for the year ended December 31, 2015",
       "exe_ans_unit": "ratio",
       "precision": 3,
       "operands": [
@@ -436,7 +436,7 @@
             1
           ],
           "value": "330.2",
-          "period": "Année terminée le 31 décembre 2015, pro forma"
+          "period": "Year ended December 31, 2015, pro forma"
         },
         {
           "role": "denominator",
@@ -445,7 +445,7 @@
             1
           ],
           "value": "7517.8",
-          "period": "Année terminée le 31 décembre 2015, pro forma"
+          "period": "Year ended December 31, 2015, pro forma"
         }
       ],
       "checks": [
@@ -496,24 +496,24 @@
         }
       ],
       "notes": [
-        "Rapport identifié 2017 mais valeurs portant sur 2015.",
-        "Préciser pro forma non audité : ne pas présenter ces valeurs comme des résultats historiques consolidés sans retraitement.",
-        "Le calcul porte sur les valeurs fournies ; aucune reconstitution comptable de la fusion."
+        "The report identifier refers to 2017, but the values refer to 2015.",
+        "State that the figures are unaudited and pro forma; do not describe them as unadjusted consolidated historical results.",
+        "Calculate from the supplied values; do not reconstruct the merger accounting."
       ],
       "application_question": "Using Zimmer Biomet's unaudited pro forma figures for the year ended December 31, 2015, what were net earnings as a percentage of net sales?",
       "expected_percent": "4.392242411343744180478331427",
       "exe_ans_tolerance": "0.000005",
-      "question_scope": "Question adaptée avec entreprise, périodes et périmètre explicites ; ne fournit ni réponse ni identifiant documentaire au moteur de recherche."
+      "question_scope": "The adapted question states the company, periods and scope explicitly. It supplies neither the answer nor a document identifier to retrieval."
     },
     {
       "key": "case07",
       "case_id": "LMT/2012/page_47.pdf-3",
       "stem": "finqa-b01-07",
       "operation": "percent_change",
-      "title": "Croissance du résultat opérationnel de Space Systems en 2011",
+      "title": "Growth in Space Systems operating profit in 2011",
       "unit": "dollar ($)",
       "scale": "million",
-      "nature": "Résultats annuels historiques du segment Space Systems",
+      "nature": "Historical annual results for the Space Systems segment",
       "exe_ans_unit": "ratio",
       "precision": 1,
       "operands": [
@@ -524,7 +524,7 @@
             2
           ],
           "value": "1063",
-          "period": "Exercice 2011"
+          "period": "Fiscal year 2011"
         },
         {
           "role": "old",
@@ -533,7 +533,7 @@
             3
           ],
           "value": "1030",
-          "period": "Exercice 2010"
+          "period": "Fiscal year 2010"
         }
       ],
       "checks": [
@@ -578,24 +578,24 @@
         }
       ],
       "notes": [
-        "Interprétation annuelle de growth in 2011 : 2011 comparé à 2010 ; la question d'origine ne précise pas explicitement la base.",
-        "Les paragraphes initiaux parlent de MST et d'une baisse : ce n'est pas le segment Space Systems du tableau.",
-        "La colonne 2012 ne sert pas à la variation en 2011."
+        "Interpret annual growth in 2011 as 2011 compared with 2010. The original question does not explicitly state the base year.",
+        "The opening paragraphs describe MST and a decline; they do not describe the table's Space Systems segment.",
+        "The 2012 column is not part of the change in 2011."
       ],
       "application_question": "For Lockheed Martin Space Systems, what was the percentage change in operating profit from 2010 to 2011?",
       "expected_percent": "3.203883495145631067961165049",
       "exe_ans_tolerance": "0.000005",
-      "question_scope": "Question adaptée avec entreprise, périodes et périmètre explicites ; ne fournit ni réponse ni identifiant documentaire au moteur de recherche."
+      "question_scope": "The adapted question states the company, periods and scope explicitly. It supplies neither the answer nor a document identifier to retrieval."
     },
     {
       "key": "case08",
       "case_id": "MAS/2018/page_35.pdf-3",
       "stem": "finqa-b01-08",
       "operation": "percent_change",
-      "title": "Croissance du résultat opérationnel publié de 2017 à 2018",
+      "title": "Growth in operating profit as reported from 2017 to 2018",
       "unit": "dollar ($)",
       "scale": "million",
-      "nature": "Résultat annuel historique, as reported",
+      "nature": "Historical annual operating profit, as reported",
       "exe_ans_unit": "ratio",
       "precision": 1,
       "operands": [
@@ -606,7 +606,7 @@
             1
           ],
           "value": "1211",
-          "period": "Exercice 2018"
+          "period": "Fiscal year 2018"
         },
         {
           "role": "old",
@@ -615,7 +615,7 @@
             2
           ],
           "value": "1194",
-          "period": "Exercice 2017"
+          "period": "Fiscal year 2017"
         }
       ],
       "checks": [
@@ -652,23 +652,23 @@
         }
       ],
       "notes": [
-        "Choisir as reported, pas as adjusted ni les lignes de marge déjà en pourcentage.",
-        "Anomalies hors opérandes : table[3][2] et [3][3] = 2014, mais table_ori contient des tirets. À traiter en B04."
+        "Use as reported, rather than as adjusted or margin rows already expressed as percentages.",
+        "Non-operand anomalies: table[3][2] and table[3][3] are 2014, but table_ori contains dashes. Resolve these conflicts in B04."
       ],
       "application_question": "For Masco, what was the percentage growth in operating profit as reported from 2017 to 2018?",
       "expected_percent": "1.423785594639865996649916248",
       "exe_ans_tolerance": "0.000005",
-      "question_scope": "Question adaptée avec entreprise, périodes et périmètre explicites ; ne fournit ni réponse ni identifiant documentaire au moteur de recherche."
+      "question_scope": "The adapted question states the company, periods and scope explicitly. It supplies neither the answer nor a document identifier to retrieval."
     },
     {
       "key": "case09",
       "case_id": "ETR/2004/page_213.pdf-4",
       "stem": "finqa-b01-09",
       "operation": "percent_change",
-      "title": "Croissance du net revenue d'Entergy Louisiana de 2002 à 2003",
+      "title": "Growth in Entergy Louisiana net revenue from 2002 to 2003",
       "unit": "dollar ($)",
       "scale": "million",
-      "nature": "Mesure annuelle historique net revenue / marge brute définie dans le rapport",
+      "nature": "Historical annual net revenue, a gross-margin measure defined in the report",
       "exe_ans_unit": "ratio",
       "precision": 1,
       "operands": [
@@ -679,7 +679,7 @@
             1
           ],
           "value": "973.7",
-          "period": "Exercice 2003"
+          "period": "Fiscal year 2003"
         },
         {
           "role": "old",
@@ -688,7 +688,7 @@
             1
           ],
           "value": "922.9",
-          "period": "Exercice 2002"
+          "period": "Fiscal year 2002"
         }
       ],
       "checks": [
@@ -739,23 +739,23 @@
         }
       ],
       "notes": [
-        "Net revenue est ici une mesure de marge brute définie dans pre_text[5], pas gross operating revenues.",
-        "Ne pas utiliser les variations intermédiaires du tableau comme valeurs annuelles ; le rapport 2004 décrit ici 2003/2002."
+        "Here, net revenue is a gross-margin measure defined in pre_text[5], rather than gross operating revenues.",
+        "Do not use intermediate changes as annual values. This section of the 2004 report describes 2003 and 2002."
       ],
       "application_question": "For Entergy Louisiana, what was the percentage change in the reported net revenue measure from 2002 to 2003?",
       "expected_percent": "5.504388341098710586195687507",
       "exe_ans_tolerance": "0.000005",
-      "question_scope": "Question adaptée avec entreprise, périodes et périmètre explicites ; ne fournit ni réponse ni identifiant documentaire au moteur de recherche."
+      "question_scope": "The adapted question states the company, periods and scope explicitly. It supplies neither the answer nor a document identifier to retrieval."
     },
     {
       "key": "case10",
       "case_id": "ETR/2017/page_26.pdf-4",
       "stem": "finqa-b01-10",
       "operation": "percent_change",
-      "title": "Baisse du net revenue d'Entergy Wholesale Commodities en 2016",
+      "title": "Decline in Entergy Wholesale Commodities net revenue in 2016",
       "unit": "dollar ($)",
       "scale": "million",
-      "nature": "Mesure annuelle historique du segment Entergy Wholesale Commodities",
+      "nature": "Historical annual results for the Entergy Wholesale Commodities segment",
       "exe_ans_unit": "ratio",
       "precision": 1,
       "operands": [
@@ -766,7 +766,7 @@
             1
           ],
           "value": "1542",
-          "period": "Exercice 2016"
+          "period": "Fiscal year 2016"
         },
         {
           "role": "old",
@@ -775,7 +775,7 @@
             1
           ],
           "value": "1666",
-          "period": "Exercice 2015"
+          "period": "Fiscal year 2015"
         }
       ],
       "checks": [
@@ -819,28 +819,28 @@
         }
       ],
       "notes": [
-        "Le résultat est négatif malgré le mot growth ; conserver le signe.",
-        "La question ne donne pas les années de base ni le segment : le contexte explicite une comparaison 2016/2015 de ce segment.",
-        "Ne pas confondre ce segment avec Entergy Louisiana dans l'autre rapport retenu."
+        "The result is negative despite the word growth; preserve the sign.",
+        "The original question omits the base year and segment. The context establishes a 2016 versus 2015 comparison for this segment.",
+        "Do not confuse this segment with Entergy Louisiana in the other selected report."
       ],
       "application_question": "For Entergy Wholesale Commodities, what was the signed percentage change in net revenue from 2015 to 2016?",
       "expected_percent": "-7.442977190876350540216086435",
       "exe_ans_tolerance": "0.000005",
-      "question_scope": "Question adaptée avec entreprise, périodes et périmètre explicites ; ne fournit ni réponse ni identifiant documentaire au moteur de recherche."
+      "question_scope": "The adapted question states the company, periods and scope explicitly. It supplies neither the answer nor a document identifier to retrieval."
     }
   ],
   "distractor_candidates": [
     {
       "case_id": "AES/2017/page_157.pdf-1",
-      "reason": "Autre entreprise, revenus 2017/2016/2015 ; années et montants similaires."
+      "reason": "Different company, with 2017/2016/2015 revenues; similar years and amounts."
     },
     {
       "case_id": "LMT/2015/page_56.pdf-4",
-      "reason": "Même entreprise LMT, autre rapport et autres années ; tableau de net sales / operating profit."
+      "reason": "Same company, LMT, but a different report and years; net sales and operating profit table."
     },
     {
       "case_id": "UNP/2007/page_65.pdf-1",
-      "reason": "Autre échéancier de paiements futurs ; peut concurrencer celui des engagements PKG."
+      "reason": "Another future-payment schedule that may compete with the PKG commitments schedule."
     }
   ]
 }

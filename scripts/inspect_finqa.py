@@ -1,4 +1,4 @@
-"""Vérifier les dix cas B01 hors ligne ; aucune recherche ni inférence LLM."""
+"""Verify the ten B01 cases offline, without retrieval or LLM inference."""
 
 import argparse
 import hashlib
@@ -18,15 +18,15 @@ def source_only(case):
 
 
 def context_hash(case):
-    # Exclure filename pour repérer aussi un même contexte sous un autre chemin.
+    # Exclude filename to detect identical contexts stored under different paths.
     context = {key: case[key] for key in SOURCE_FIELDS if key != "filename"}
     return hashlib.sha256(json.dumps(context, ensure_ascii=False, sort_keys=True).encode("utf-8")).hexdigest()
 
 
 def number(text):
-    # Parseur limité aux cellules positives relues ; aucun traitement implicite des tirets.
+    # Parse reviewed positive cells only; never interpret dashes implicitly.
     cleaned = text.replace("$", "").replace(",", "").strip()
-    assert re.fullmatch(r"\d+(?:\.\d+)?", cleaned), f"Cellule non prise en charge : {text!r}"
+    assert re.fullmatch(r"\d+(?:\.\d+)?", cleaned), f"Unsupported cell : {text!r}"
     return Decimal(cleaned)
 
 
@@ -36,13 +36,13 @@ def verify_case(case, spec):
         actual = source
         for key in proof["path"]:
             actual = actual[key]
-        assert proof["contains"] in actual, f"Preuve différente : {proof['path']}"
+        assert proof["contains"] in actual, f"Evidence mismatch : {proof['path']}"
     values = []
     for operand in spec["operands"]:
         row, col = operand["cell"]
         value = number(source["table"][row][col])
-        assert value == Decimal(operand["value"]), "Valeur différente de la cellule relue"
-        assert number(source["table_ori"][row][col]) == value, "Les deux tableaux divergent sur un opérande"
+        assert value == Decimal(operand["value"]), "Value differs from the reviewed cell"
+        assert number(source["table_ori"][row][col]) == value, "Table versions disagree on an operand"
         values.append(value)
     a, b = values
     assert b > 0
@@ -61,9 +61,9 @@ def verify_case(case, spec):
     comparison = result if spec["exe_ans_unit"] == "percent" else result / Decimal(100)
     assert spec["exe_ans_unit"] in ("ratio", "percent")
     error = abs(comparison - Decimal(str(case["qa"]["exe_ans"])))
-    assert error <= Decimal(spec["exe_ans_tolerance"]), "Écart avec exe_ans hors tolérance"
+    assert error <= Decimal(spec["exe_ans_tolerance"]), "Difference from exe_ans exceeds tolerance"
     display = f"{result:.{spec['precision']}f}%"
-    assert display == case["qa"]["answer"], "Arrondi différent de la réponse originale"
+    assert display == case["qa"]["answer"], "Display rounding differs from the original answer"
     return {"key": spec["key"], "case_id": case["id"], "filename": case["filename"],
             "document_group": case["filename"].rsplit("/", 1)[0], "operation": spec["operation"],
             "expected_percent": str(result), "display": display, "formula": formula,
@@ -79,8 +79,8 @@ def audit_contexts(dataset, selected, distractors):
     chosen = {c["id"]: c for c in dataset}
     hashes = [context_hash(chosen[s["case_id"]]) for s in selected]
     groups = [chosen[s["case_id"]]["filename"].rsplit("/", 1)[0] for s in selected]
-    assert len(set(hashes)) == len(selected), "Deux exemples choisis partagent un contexte exact"
-    assert len(set(groups)) == len(selected), "Deux exemples choisis partagent un rapport"
+    assert len(set(hashes)) == len(selected), "Selected cases share an exact context"
+    assert len(set(groups)) == len(selected), "Selected cases share a report"
     distractor_hashes = [context_hash(chosen[d["case_id"]]) for d in distractors]
     assert len(set(distractor_hashes)) == len(distractors)
     assert not set(hashes).intersection(distractor_hashes)
@@ -97,15 +97,15 @@ def audit_contexts(dataset, selected, distractors):
 
 def main():
     if not __debug__:
-        raise SystemExit("Ne pas utiliser -O : les assertions de vérification doivent rester actives.")
+        raise SystemExit("Do not use -O: verification assertions must remain enabled.")
     manifest = json.loads((ROOT / "evals/cases/finqa-b01-reviewed.json").read_text(encoding="utf-8"))
     specs = manifest["cases"]
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--case", choices=["all", *(s["key"] for s in specs)], default="ratio")
-    parser.add_argument("--check", action="store_true", help="Vérifier les exports existants sans écriture.")
+    parser.add_argument("--check", action="store_true", help="Check existing exports without writing files.")
     args = parser.parse_args()
     raw = (ROOT / "data/raw/finqa-dev.json").read_bytes()
-    assert hashlib.sha256(raw).hexdigest() == manifest["raw_sha256"], "Le téléchargement a changé"
+    assert hashlib.sha256(raw).hexdigest() == manifest["raw_sha256"], "The downloaded source hash has changed"
     dataset = json.loads(raw)
     by_id = {c["id"]: c for c in dataset}
     selected = specs if args.case == "all" else [s for s in specs if s["key"] == args.case]
@@ -119,19 +119,19 @@ def main():
                                   (f"evals/cases/{spec['stem']}-reference.json", reference)):
             path = ROOT / relative
             if args.check:
-                assert json.loads(path.read_text(encoding="utf-8")) == content, f"Export différent : {relative}"
+                assert json.loads(path.read_text(encoding="utf-8")) == content, f"Export mismatch : {relative}"
             else:
                 path.parent.mkdir(parents=True, exist_ok=True)
                 path.write_text(json.dumps(content, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
                 assert json.loads(path.read_text(encoding="utf-8")) == content
         print(f"OK {spec['key']}: {case['id']} | {result['formula']} = {result['expected_percent']} % | {result['display']}")
         if args.case != "all":
-            print(f"Unité/échelle : {spec['unit']} / {spec['scale']} ; {spec['nature']}")
+            print(f"Unit/scale: {spec['unit']} / {spec['scale']}; {spec['nature']}")
             for note in spec["notes"]:
-                print(f"Note : {note}")
+                print(f"Note: {note}")
     audit = audit_contexts(dataset, specs, manifest["distractor_candidates"])
-    print(f"Contextes distincts sélectionnés : {audit['selected_unique_contexts']}/10 ; rapports : {audit['selected_unique_report_groups']}/10")
-    print(f"Contrôles réussis : {len(selected)} cas ; sources/références séparées ; coût API : 0 €.")
+    print(f"Distinct selected contexts: {audit['selected_unique_contexts']}/10; reports: {audit['selected_unique_report_groups']}/10")
+    print(f"Checks passed: {len(selected)} cases; sources and references separated; API cost: EUR 0.")
 
 
 if __name__ == "__main__":

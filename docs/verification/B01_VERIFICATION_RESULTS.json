@@ -5,8 +5,8 @@
   "reviewed_by": "AI-assisted source review and deterministic verification",
   "python_version": "3.14.5",
   "raw_sha256": "a847fb7e0d61a3125a1e2909852df6b89f1ee64d2c5ff1bf689e332214deee51",
-  "manifest_sha256": "f9ee3f1744263c7ac3aeb21669d287629c4f70c650e28fd02b12d311c3a85167",
-  "verifier_sha256": "c7ebcf1eae9dceef5e0fffef64d6ae7a44ca8a802fe7b470d616cf09c70b1d8e",
+  "manifest_sha256": "a416ae37cbbd9557df733c8320e37dd17a325f555fc235cae1b444a3d407b832",
+  "verifier_sha256": "b02fe462d52370e3e73781ff786de5b4589aee06341b4657230d5e8ef4630fd4",
   "scope": "FinQA supplied text and tables; original PDFs not inspected",
   "model_calls": 0,
   "api_cost_eur": "0",
@@ -297,19 +297,19 @@
     "distractors": [
       {
         "case_id": "AES/2017/page_157.pdf-1",
-        "reason": "Autre entreprise, revenus 2017/2016/2015 ; années et montants similaires.",
+        "reason": "Different company, with 2017/2016/2015 revenues; similar years and amounts.",
         "filename": "AES/2017/page_157.pdf",
         "context_sha256": "0a8f34939bfff38ac73bede38bf407c335897a77f361e1136c5d0cff9b15a6c3"
       },
       {
         "case_id": "LMT/2015/page_56.pdf-4",
-        "reason": "Même entreprise LMT, autre rapport et autres années ; tableau de net sales / operating profit.",
+        "reason": "Same company, LMT, but a different report and years; net sales and operating profit table.",
         "filename": "LMT/2015/page_56.pdf",
         "context_sha256": "3f3ddfd7166c1cfaa14746a0371d4902bdab9c22858f4ecd7a0e497d032ed98f"
       },
       {
         "case_id": "UNP/2007/page_65.pdf-1",
-        "reason": "Autre échéancier de paiements futurs ; peut concurrencer celui des engagements PKG.",
+        "reason": "Another future-payment schedule that may compete with the PKG commitments schedule.",
         "filename": "UNP/2007/page_65.pdf",
         "context_sha256": "8f5a9ef7ee2e6ab9da167671b67881805b7b1fe04bcba088df7dd141dea5e884"
       }

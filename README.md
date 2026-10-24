@@ -1,26 +1,27 @@
 # FigureTrail
 
-Analyse chiffrée de rapports publics avec preuves traçables : retrouver les valeurs, identifier leurs unités et périodes, calculer un ratio ou une variation et restituer les cellules sources.
+Answer numerical questions about public reports with traceable evidence. Find the values, identify their units and periods, calculate a percentage ratio or change, and show the source cells behind the result.
 
-La conception associe recherche documentaire, sélection structurée par LLM et calcul déterministe avec `Decimal`. Le modèle sélectionne les preuves ; les opérandes et le résultat proviennent des données et du code.
+The design combines retrieval, structured LLM selection and deterministic calculation with `Decimal`. The model selects evidence; source data and application code supply the operands and result.
 
-## État du projet
+## Project status
 
-**Développement actif — état vérifié au 24 octobre 2026.**
+**Active development — status reviewed on 25 October 2026.**
 
-| Composant | État |
+| Component | Status |
 |---|---|
-| Références de données | 10 cas FinQA vérifiés : cellules, unités, périodes, formules et résultats |
-| Reproductibilité | Environnement Python isolé, dépendances verrouillées, contrôles relançables |
-| API | `/health`, contrat Pydantic et schéma OpenAPI opérationnels |
-| Recherche et analyse | Corpus indexé, retrieval lexical/sémantique et analyse LLM planifiés |
-| Outils et exploitation | Agent borné, garde-fous d'analyse et traces d'exécution planifiés |
+| Data references | 10 FinQA cases verified: cells, units, periods, formulas and results |
+| Reproducibility | Isolated Python environment, locked dependencies and repeatable checks |
+| API | Working `/health` endpoint, Pydantic response contract and OpenAPI schema |
+| Retrieval and analysis | Indexed corpus, lexical/semantic retrieval and LLM analysis planned |
+| Tools and operations | Bounded agent, analysis guardrails and execution records planned |
+| Delivery tracking | B01–B13 tracked as [repository issues](https://github.com/FekherJ/FigureTrail/issues); B01 closed, B02 open for final review |
 
-Les contrôles existants valident les données de référence et le socle HTTP. Les performances LLM/RAG seront mesurées après implémentation ; aucun score de modèle n'est publié à ce stade.
+Existing checks validate the reference data and HTTP foundation. LLM/RAG performance will be measured after implementation; no model score is published yet.
 
-## Installation et démarrage
+## Setup and run
 
-Configuration vérifiée : **Windows, Python 3.14.5, uv 0.11.14**. Les commandes se lancent depuis la racine du dépôt.
+Verified environment: **Windows, Python 3.14.5, uv 0.11.14**. Run commands from the repository root.
 
 ```powershell
 python3.14.exe -m venv .venv --without-pip
@@ -29,9 +30,9 @@ uv run --locked python -B -X utf8 scripts/check_environment.py
 uv run --locked python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
 
-`uv.lock` fixe les versions résolues. `--locked` refuse une modification implicite du lockfile ; `--no-build` utilise des distributions précompilées. Le premier téléchargement demande Internet. L'activation PowerShell de l'environnement n'est pas nécessaire. Dans VS Code, sélectionner `.venv\Scripts\python.exe`.
+`uv.lock` records resolved versions. `--locked` prevents implicit lockfile changes; `--no-build` uses prebuilt distributions. The first download requires internet access. PowerShell environment activation is optional. In VS Code, select `.venv\Scripts\python.exe` as the interpreter.
 
-Dans un autre terminal :
+In another terminal:
 
 ```powershell
 Invoke-RestMethod http://127.0.0.1:8000/health
@@ -41,11 +42,11 @@ Invoke-RestMethod http://127.0.0.1:8000/health
 {"status":"ok","corpus_version":null}
 ```
 
-Le point de santé indique que le processus répond. `corpus_version: null` indique qu'aucun corpus n'est chargé. Le contrat est disponible sur `/openapi.json` et la documentation interactive sur `/docs`. Le serveur écoute sur `127.0.0.1` ; **Ctrl+C** l'arrête. Aucune clé de fournisseur n'est requise pour ce socle.
+The health endpoint confirms that the process responds. `corpus_version: null` means no corpus is loaded. The schema is available at `/openapi.json`, with interactive documentation at `/docs`. The server listens on `127.0.0.1`; press **Ctrl+C** to stop it. This foundation requires no provider key.
 
-## Préparation des données
+## Prepare the data
 
-Source : [FinQA](https://github.com/czyssrs/FinQA), textes et tableaux publics accompagnés d'annotations. Sur une nouvelle copie, télécharger le brut puis générer les exports séparés :
+[FinQA](https://github.com/czyssrs/FinQA) supplies public text and tables with evaluation annotations. On a fresh checkout, download the raw file and generate separate exports:
 
 ```powershell
 New-Item -ItemType Directory -Force -Path data/raw | Out-Null
@@ -53,13 +54,13 @@ Invoke-WebRequest -UseBasicParsing -Uri 'https://raw.githubusercontent.com/czyss
 uv run --locked python -B -X utf8 scripts/inspect_finqa.py --case all
 ```
 
-Si le brut est déjà présent, conserver ce fichier et lancer la génération. Son empreinte est vérifiée avant lecture. Une modification de la source nécessite une revue de provenance.
+If the raw file already exists, keep it and run the export command. Its hash is checked before processing. A source change requires a provenance review.
 
-Les exports sources contiennent uniquement `filename`, `pre_text`, `post_text`, `table` et `table_ori`. Les questions, réponses, programmes et preuves annotées restent dans les références d'évaluation. Les dix cas sont des cas de développement ; les rapports PDF originaux n'ont pas été inspectés.
+Source exports contain only `filename`, `pre_text`, `post_text`, `table` and `table_ori`. Questions, answers, programs and annotated evidence remain in evaluation references. All ten cases are development cases. The original report PDFs have not been inspected.
 
-## Vérifications
+## Run checks
 
-Après préparation des données :
+After preparing the data:
 
 ```powershell
 uv run --locked ruff check .
@@ -68,41 +69,43 @@ uv run --locked python -B -X utf8 scripts/inspect_finqa.py --case all --check
 uv run --locked python -B -X utf8 -m unittest discover -s tests -p test_b01_verification.py -v
 ```
 
-Résultats vérifiés : **10 cas conformes et 3 tests négatifs réussis**. Les tests rejettent une mauvaise année, une confusion ratio/pourcentage et une réponse introduite dans un export source. Le script de vérification refuse le mode Python `-O`, qui désactive ses assertions.
+Verified results: **10 valid cases and 3 passing negative tests**. The tests reject the wrong year, confusion between ratios and percentages, and answers leaked into source exports. The verifier rejects Python's `-O` mode because it disables assertions.
 
-Ruff contrôle le lint de l'ensemble du code et le format des fichiers du socle API. Les scripts de contrôle FinQA fonctionnent également avec la bibliothèque standard seule. Les contrôles de données sont distincts des futures évaluations de retrieval et de réponse.
+Ruff checks lint across the codebase and formatting in the API foundation files. FinQA verification also runs with the Python standard library alone. These data checks are separate from future retrieval and answer evaluations.
 
-## Organisation
+## Repository layout
 
 ```text
-app/                    API et contrats actuellement implémentés
-scripts/                Préparation des données et contrôles d'environnement
-tests/                  Tests automatisés
-evals/cases/            Références ; réservées à l'évaluation
-data/                   Sources locales, provenance et notice de licence
-docs/architecture/     Conception, contrats et décisions techniques
-docs/Backlog/           Roadmap B01–B13 et cas de référence
-docs/verification/     Rapports, résultats et limites vérifiés
+app/                    Implemented API and application contracts
+scripts/                Data preparation and environment checks
+tests/                  Automated tests
+evals/cases/            References for evaluation only
+data/                   Local sources, provenance and license notice
+docs/architecture/      Design, contracts and technical decisions
+docs/Backlog/           B01–B13 roadmap and reference cases
+docs/verification/      Verification reports, results and limitations
 ```
 
-Les données téléchargées, exports générés, traces et `.venv/` restent hors du suivi Git. Les modules applicatifs sont ajoutés avec leur première fonctionnalité, selon la roadmap.
+Downloads, generated exports, execution records and `.venv/` are excluded from Git. Application modules are added with their first working feature.
 
-## Principes de conception
+## Design principles
 
-- **Preuves avant calcul** : références de cellules, unités et périodes contrôlées ; calcul déterministe.
-- **Évaluation indépendante** : annotations et rapports de vérification exclus du corpus d'inférence.
-- **Comparaisons mesurées** : référence lexicale, variante sémantique, puis agent borné sur les mêmes conditions.
-- **Exécution contrôlée** : permissions des outils, limites d'appels, coûts, erreurs et versions explicites.
+- **Evidence before calculation:** validate cell references, units and periods, then calculate deterministically.
+- **Independent evaluation:** keep annotations and verification reports out of the inference corpus.
+- **Measured comparisons:** compare lexical retrieval, semantic retrieval and a bounded agent under the same conditions.
+- **Controlled execution:** enforce tool permissions and record call limits, costs, errors and versions.
 
-La prochaine étape technique est l'intégration d'un fournisseur hébergé avec contrat de sortie, mesure coût/latence et premières traces. Le fournisseur et les modèles restent à sélectionner.
+Use clear, concise English for project documentation, diagrams, comments, diagnostics and GitHub issues. Preserve original source quotations and technical identifiers. Do not rewrite source evidence to improve its wording.
+
+The next technical step is a hosted-provider integration with structured output, cost/latency measurement and initial execution records. Provider and model selection remain open.
 
 ## Documentation
 
-- [Architecture et contrats](docs/architecture/ARCHITECTURE_PROJET_IA.md)
-- [Standards techniques](docs/architecture/AI_PROJECT_BLUEPRINT.md) et [revue de conception sourcée](docs/verification/AI_PROJECT_BLUEPRINT_REVIEW.md)
-- [Roadmap et critères d'acceptation](docs/Backlog/BACKLOG_PROJET_IA.md)
-- [Vérification des données](docs/verification/B01_VERIFICATION_DONNEES.md), [résultats exacts](docs/verification/B01_VERIFICATION_RESULTS.json) et [validation de l'environnement](docs/verification/B02_ENVIRONNEMENT.md)
-- [Revue de structure](docs/verification/STRUCTURE_REVIEW.md) et [consignes de contribution](AGENTS.md)
-- [Provenance FinQA](data/FINQA_PROVENANCE.md) et [notice de licence](data/FINQA_LICENSE.txt)
+- [Architecture and contracts](docs/architecture/ARCHITECTURE.md)
+- [Engineering standards](docs/architecture/AI_PROJECT_BLUEPRINT.md) and [standards review](docs/verification/AI_PROJECT_BLUEPRINT_REVIEW.md)
+- [Roadmap and acceptance criteria](docs/Backlog/BACKLOG.md)
+- [Data verification](docs/verification/B01_DATA_VERIFICATION.md), [exact results](docs/verification/B01_VERIFICATION_RESULTS.json) and [environment verification](docs/verification/B02_ENVIRONMENT.md)
+- [Repository review](docs/verification/STRUCTURE_REVIEW.md) and [contribution instructions](AGENTS.md)
+- [FinQA provenance](data/FINQA_PROVENANCE.md) and [license notice](data/FINQA_LICENSE.txt)
 
-La notice FinQA s'applique aux données concernées. La licence générale du code FigureTrail reste à définir avant une distribution sous licence explicite.
+The FinQA notice applies to the relevant data. A general license for FigureTrail code has not yet been selected.

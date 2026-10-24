@@ -25,7 +25,7 @@ figuretrail/
 ├── evals/
 │   ├── cases/                   # references; evaluator only
 │   ├── run.py                   # invokes the application service
-│   └── results/                 # selected, sanitised experiment artifacts
+│   └── results/                 # selected, sanitized experiment artifacts
 ├── data/                        # ignore generated/private subdirectories
 │   ├── raw/                     # original download, including annotations
 │   ├── samples/                 # source-only development exports
@@ -37,7 +37,7 @@ figuretrail/
 │   └── verification/
 ├── .github/workflows/ci.yml     # credential-free checks
 ├── pyproject.toml               # dependencies and tool configuration
-├── uv.lock                     # resolved dependencies, if uv adopted
+├── uv.lock                     # resolved dependencies
 ├── .python-version             # tested interpreter
 ├── .env.example                # variable names; no secrets
 ├── README.md
@@ -46,7 +46,7 @@ figuretrail/
 └── .editorconfig
 ```
 
-Preserve existing files, including data attribution/licence. Create modules with working behaviour, not empty placeholders. The flat `app/` layout fits the current design; `src/figuretrail/` is an alternative requiring packaging/install configuration. [PyPA](https://packaging.python.org/en/latest/discussions/src-layout-vs-flat-layout/)
+Preserve existing files, including data attribution/license. Create modules with working behavior, not empty placeholders. The flat `app/` layout fits the current design; `src/figuretrail/` is an alternative requiring packaging/install configuration. [PyPA](https://packaging.python.org/en/latest/discussions/src-layout-vs-flat-layout/)
 
 ## 2. Runtime architecture
 
@@ -74,7 +74,7 @@ Use uv with committed `pyproject.toml`/`uv.lock`, tested Python, and locked CI i
 
 Use Ruff lint/format checks; add type checking where useful. Ruff does not replace a type checker. [Ruff](https://docs.astral.sh/ruff/faq/)
 
-Validate API/model boundaries with Pydantic, plus explicit domain checks. Keep settings centralised, secrets in environment variables, and long-lived database transactions away from network calls.
+Validate API/model boundaries with Pydantic, plus explicit domain checks. Keep settings centralized, secrets in environment variables, and long-lived database transactions away from network calls.
 
 ## 5. Evaluation and release evidence
 
@@ -86,7 +86,7 @@ Use deterministic reference checks first. Judge-based faithfulness scores are su
 
 ## 6. Safety, operations and delivery
 
-Treat questions, retrieved text and tool outputs as untrusted. Enforce tool allowlists, immutable scope and validated arguments in code; expose no shell, arbitrary URL, filesystem or generated-code execution. Escape displayed source text. Filters are supplementary. Minimise submitted data; redact sensitive fields if introduced. [OWASP](https://genai.owasp.org/llmrisk/llm01-prompt-injection/)
+Treat questions, retrieved text and tool outputs as untrusted. Enforce tool allowlists, immutable scope and validated arguments in code; expose no shell, arbitrary URL, filesystem or generated-code execution. Escape displayed source text. Filters are supplementary. Minimize submitted data; redact sensitive fields if introduced. [OWASP](https://genai.owasp.org/llmrisk/llm01-prompt-injection/)
 
 Bound every model/embedding call centrally: deadline, output tokens, retries, tool steps and conservative spending checks. Agent ceiling: four generation calls and six tool calls. Disable hidden SDK retries initially. Local cost estimates alone cannot guarantee a billing cap.
 

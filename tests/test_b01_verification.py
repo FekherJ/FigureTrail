@@ -1,4 +1,4 @@
-"""Contrôles négatifs hors ligne des frontières utiles à la référence B01."""
+"""Offline negative checks for B01 reference-data boundaries."""
 
 import copy
 import importlib.util
@@ -25,13 +25,13 @@ class VerificationGuards(unittest.TestCase):
 
     def test_wrong_year_rejected(self):
         changed = copy.deepcopy(self.growth)
-        changed["operands"][0]["cell"] = [1, 3]  # 2015 au lieu de 2017.
+        changed["operands"][0]["cell"] = [1, 3]  # 2015 instead of 2017.
         with self.assertRaises(AssertionError):
             inspection.verify_case(self.cases[changed["case_id"]], changed)
 
     def test_ratio_percentage_confusion_rejected(self):
         changed = copy.deepcopy(self.growth)
-        changed["exe_ans_unit"] = "percent"  # 0,0289 n'est pas 2,89 %.
+        changed["exe_ans_unit"] = "percent"  # 0.0289 is not 2.89%.
         with self.assertRaises(AssertionError):
             inspection.verify_case(self.cases[changed["case_id"]], changed)
 
@@ -49,7 +49,7 @@ class VerificationGuards(unittest.TestCase):
             source["answer"] = "24.69%"
             path.write_text(json.dumps(source), encoding="utf-8")
             with patch.object(inspection, "ROOT", root), patch.object(sys, "argv", ["inspect_finqa.py", "--check"]):
-                with self.assertRaisesRegex(AssertionError, "Export différent"):
+                with self.assertRaisesRegex(AssertionError, "Export mismatch"):
                     inspection.main()
 
 

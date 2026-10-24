@@ -2,16 +2,17 @@
 
 ## References and scope
 
-- Read [README](README.md), [architecture](docs/architecture/ARCHITECTURE_PROJET_IA.md), [engineering standards](docs/architecture/AI_PROJECT_BLUEPRINT.md) and [backlog](docs/Backlog/BACKLOG_PROJET_IA.md) before changes.
+- Read [README](README.md), [architecture](docs/architecture/ARCHITECTURE.md), [engineering standards](docs/architecture/AI_PROJECT_BLUEPRINT.md) and [backlog](docs/Backlog/BACKLOG.md) before changes.
 - Keep the existing `docs/architecture/`, `docs/Backlog/` and `docs/verification/` names and case. Use repository-relative runtime paths.
 - Preserve existing work. Add modules, dependencies and services only when required by the current issue. The target directory tree is not a scaffolding checklist.
-- Document product behaviour, contracts, decisions, verification evidence and operational limits in an impersonal, technical style. Distinguish implemented capabilities from design targets.
+- Write project documentation, diagrams, comments, diagnostic messages and GitHub issues in clear, concise US English. Use English document filenames. Preserve original source quotations, legal notices and technical identifiers.
+- Document product behavior, contracts, decisions, verification evidence and operational limits in an impersonal, technical style. Distinguish implemented capabilities from design targets.
 - Follow B01–B13 dependencies and priorities: LLM/RAG, API/architecture and evaluations first; bounded tools, security and observability next.
 
 ## Current baseline
 
-- B01: ten development cases verified against supplied FinQA text/tables. See [data verification](docs/verification/B01_VERIFICATION_DONNEES.md). These checks do not establish model or retrieval performance.
-- B02: local environment and `/health` verified. See [runtime verification](docs/verification/B02_ENVIRONNEMENT.md). Git remote `origin` is configured; issue-board status is tracked separately in the backlog.
+- B01: ten development cases verified against supplied FinQA text/tables. See [data verification](docs/verification/B01_DATA_VERIFICATION.md). These checks do not establish model or retrieval performance.
+- B02: local environment and `/health` verified. See [runtime verification](docs/verification/B02_ENVIRONMENT.md). Git remote `origin` is configured; issue-board status is tracked separately in the backlog.
 - B03 is the next technical issue. No provider or model is configured. Do not make paid calls before provider capabilities, dated prices, cost limits and credentials are configured for that issue.
 
 ## Development and verification
@@ -31,7 +32,7 @@
 - `evals/` and `docs/verification/` contain reference answers and evidence coordinates. Exclude both from inference ingestion, corpus construction and model context.
 - The evaluator forwards only the question and explicit user scope to the shared analysis service. Never derive retrieval filters or supplied evidence from gold annotations.
 - Validate stable cell/source IDs and resolve operands from source data. Calculate approved operations using `Decimal`; never execute generated Python, SQL or `eval`.
-- Preserve source attribution, licence notices and provenance. Record and resolve table-normalisation conflicts before indexing; retain report groups when splitting evaluation cases.
+- Preserve source attribution, license notices and provenance. Record and resolve table-normalization conflicts before indexing; retain report groups when splitting evaluation cases.
 
 ## Operational limits
 
@@ -39,4 +40,4 @@
 - Use a single hosted provider module. Apply deadlines, output-token bounds, retry limits, usage accounting and spending checks to every generation and embedding call.
 - Keep cumulative hosted-AI spending strictly below €30. Preparation, evaluations, errors and retries count toward this limit. Local estimates are not a guaranteed provider billing cap.
 - Introduce the agent only after the fixed baseline is measured. Initial ceiling: four generation calls and six tool calls, including at most two searches; enforce limits in code.
-- Minimise provider payloads, redact secrets from traces and escape displayed source content. Guardrails supplement explicit permissions and boundary validation.
+- Minimize provider payloads, redact secrets from traces and escape displayed source content. Guardrails supplement explicit permissions and boundary validation.

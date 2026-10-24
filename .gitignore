@@ -1,4 +1,4 @@
-# Python : environnements, caches, construction
+# Python environments, caches and build artifacts
 .venv/
 venv/
 env/
@@ -14,7 +14,7 @@ dist/
 *.egg-info/
 .ipynb_checkpoints/
 
-# Secrets : ne versionner que des exemples sans valeurs réelles
+# Secrets: track examples without real values only
 .env
 .env.*
 !.env.example
@@ -25,7 +25,7 @@ credentials*.json
 *.key
 .aws/
 
-# Données et traces générées localement ; conserver les références dans evals/cases
+# Generated local data and traces; retain references in evals/cases
 data/raw/
 data/samples/
 data/corpus/
@@ -43,12 +43,12 @@ runs/
 *.sqlite3-shm
 evals/results/local/
 
-# Fichiers locaux de l'éditeur / système
+# Local editor and operating-system files
 .vscode/
 .idea/
 Thumbs.db
 .DS_Store
 *.swp
 
-# Données temporaires laissées si une vérification B01 est interrompue
+# Temporary files left by interrupted B01 checks
 /tests/.b01-*/
