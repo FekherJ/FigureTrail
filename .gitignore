@@ -1,0 +1,54 @@
+# Python : environnements, caches, construction
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+build/
+dist/
+*.egg-info/
+.ipynb_checkpoints/
+
+# Secrets : ne versionner que des exemples sans valeurs réelles
+.env
+.env.*
+!.env.example
+!.env.*.example
+secrets/
+credentials*.json
+*.pem
+*.key
+.aws/
+
+# Données et traces générées localement ; conserver les références dans evals/cases
+data/raw/
+data/samples/
+data/corpus/
+data/indexes/
+data/local/
+traces/
+logs/
+runs/
+*.log
+*.sqlite
+*.sqlite3
+*.sqlite-wal
+*.sqlite-shm
+*.sqlite3-wal
+*.sqlite3-shm
+evals/results/local/
+
+# Fichiers locaux de l'éditeur / système
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
+*.swp
+
+# Données temporaires laissées si une vérification B01 est interrompue
+/tests/.b01-*/

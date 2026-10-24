@@ -1,0 +1,12 @@
+{
+  "case_id": "ETR/2004/page_213.pdf-4",
+  "partition": "development",
+  "question": "what is the growth rate in net revenue in 2003 for entergy louisiana , inc.?",
+  "answer": "5.5%",
+  "exe_ans": 0.05504,
+  "program": "subtract(973.7, 922.9), divide(#0, 922.9)",
+  "gold_inds": {
+    "table_1": "the 2002 net revenue of ( in millions ) is $ 922.9 ;",
+    "table_7": "the 2003 net revenue of ( in millions ) is $ 973.7 ;"
+  }
+}

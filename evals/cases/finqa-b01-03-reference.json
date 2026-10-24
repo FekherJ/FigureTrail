@@ -1,0 +1,12 @@
+{
+  "case_id": "PKG/2009/page_65.pdf-4",
+  "partition": "development",
+  "question": "what percentage of total purchase commitments are due after 2014?",
+  "answer": "56%",
+  "exe_ans": 0.56197,
+  "program": "divide(25048, 44572)",
+  "gold_inds": {
+    "table_6": "the thereafter of ( in thousands ) is 25048 ;",
+    "table_7": "the total of ( in thousands ) is $ 44572 ;"
+  }
+}

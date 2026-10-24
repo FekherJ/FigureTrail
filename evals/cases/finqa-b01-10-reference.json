@@ -1,0 +1,12 @@
+{
+  "case_id": "ETR/2017/page_26.pdf-4",
+  "partition": "development",
+  "question": "what is the growth rate in net revenue in 2016?",
+  "answer": "-7.4%",
+  "exe_ans": -0.07443,
+  "program": "subtract(1542, 1666), divide(#0, 1666)",
+  "gold_inds": {
+    "table_1": "the 2015 net revenue of amount ( in millions ) is $ 1666 ;",
+    "table_8": "the 2016 net revenue of amount ( in millions ) is $ 1542 ;"
+  }
+}

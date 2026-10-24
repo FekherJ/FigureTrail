@@ -1,0 +1,11 @@
+{
+  "case_id": "FBHS/2017/page_23.pdf-2",
+  "partition": "development",
+  "question": "what was the percentage growth in sales of cabinets from 2016 to 2017",
+  "answer": "2.9%",
+  "exe_ans": 0.0289,
+  "program": "subtract(2467.1, 2397.8), divide(#0, 2397.8)",
+  "gold_inds": {
+    "table_1": "( in millions ) the cabinets of 2017 is $ 2467.1 ; the cabinets of 2016 is $ 2397.8 ; the cabinets of 2015 is $ 2173.4 ;"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "case_id": "ZBH/2017/page_53.pdf-1",
+  "partition": "development",
+  "question": "what is the company's net earnings as a percent of net sales in 2015 ? ( net profit margin )",
+  "answer": "4.392%",
+  "exe_ans": 0.04392,
+  "program": "divide(330.2, 7517.8)",
+  "gold_inds": {
+    "table_2": "the net earnings of year ended december 31 2015 ( in millions ) is $ 330.2 ;",
+    "table_1": "the net sales of year ended december 31 2015 ( in millions ) is $ 7517.8 ;"
+  }
+}

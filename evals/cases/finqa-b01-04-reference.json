@@ -1,0 +1,12 @@
+{
+  "case_id": "UNP/2008/page_77.pdf-1",
+  "partition": "development",
+  "question": "as of december 31 , 2008 what was the percent of the total accounts payable and other liabilities that was accrued wages and vacation",
+  "answer": "14.3%",
+  "exe_ans": 0.14336,
+  "program": "divide(367, 2560)",
+  "gold_inds": {
+    "table_2": "millions of dollars the accrued wages and vacation of dec . 31 2008 is 367 ; the accrued wages and vacation of dec . 31 2007 is 394 ;",
+    "table_8": "millions of dollars the total accounts payable and other current liabilities of dec . 31 2008 is $ 2560 ; the total accounts payable and other current liabilities of dec . 31 2007 is $ 2902 ;"
+  }
+}

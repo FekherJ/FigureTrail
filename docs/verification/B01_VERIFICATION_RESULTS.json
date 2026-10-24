@@ -1,0 +1,318 @@
+{
+  "review_date": "2026-10-24",
+  "milestone": "B01",
+  "status": "data_feasibility_verified",
+  "reviewed_by": "assistant; user delegated document checks",
+  "python_version": "3.14.5",
+  "raw_sha256": "a847fb7e0d61a3125a1e2909852df6b89f1ee64d2c5ff1bf689e332214deee51",
+  "manifest_sha256": "7c0e87927c808edc104b4e512fe99dd1eeefac83adfa901268cfbd488bb01a0d",
+  "verifier_sha256": "02c3a6814b727fbaee76545d0fae8bc038764b682cb96ebc7ccb5eb4fbabfff9",
+  "scope": "FinQA supplied text and tables; original PDFs not inspected",
+  "model_calls": 0,
+  "api_cost_eur": "0",
+  "negative_tests_passed": 3,
+  "cases": [
+    {
+      "key": "ratio",
+      "case_id": "DVN/2007/page_58.pdf-2",
+      "filename": "DVN/2007/page_58.pdf",
+      "document_group": "DVN/2007",
+      "operation": "ratio_percent",
+      "expected_percent": "24.69135802469135802469135802",
+      "display": "24.69%",
+      "formula": "100 * 60 / 243",
+      "exe_ans_unit": "percent",
+      "reference_error_native_unit": "0.00000197530864197530864198",
+      "context_sha256": "ddee65244925e6d89dd5f7be2fd11ae8260c822c250b50181cbbc9a1765cb1cb",
+      "status": "verified"
+    },
+    {
+      "key": "growth",
+      "case_id": "FBHS/2017/page_23.pdf-2",
+      "filename": "FBHS/2017/page_23.pdf",
+      "document_group": "FBHS/2017",
+      "operation": "percent_change",
+      "expected_percent": "2.890149303528234214696805405",
+      "display": "2.9%",
+      "formula": "100 * (2467.1 - 2397.8) / 2397.8",
+      "exe_ans_unit": "ratio",
+      "reference_error_native_unit": "0.00000149303528234214696805405",
+      "context_sha256": "f509e04dc7bc093781fec58b11c5751ef82c0d7dfcae87f7c7959c3bc636947b",
+      "status": "verified"
+    },
+    {
+      "key": "case03",
+      "case_id": "PKG/2009/page_65.pdf-4",
+      "filename": "PKG/2009/page_65.pdf",
+      "document_group": "PKG/2009",
+      "operation": "ratio_percent",
+      "expected_percent": "56.19671542672529839361033833",
+      "display": "56%",
+      "formula": "100 * 25048 / 44572",
+      "exe_ans_unit": "ratio",
+      "reference_error_native_unit": "0.0000028457327470160638966167",
+      "context_sha256": "484fffcbeebb4e48fe61130696cef81236ff38949318e4e2d71647580a9e75b7",
+      "status": "verified"
+    },
+    {
+      "key": "case04",
+      "case_id": "UNP/2008/page_77.pdf-1",
+      "filename": "UNP/2008/page_77.pdf",
+      "document_group": "UNP/2008",
+      "operation": "ratio_percent",
+      "expected_percent": "14.3359375",
+      "display": "14.3%",
+      "formula": "100 * 367 / 2560",
+      "exe_ans_unit": "ratio",
+      "reference_error_native_unit": "6.25E-7",
+      "context_sha256": "63ba1d71b82f2443cfaf30e1cea02e82b2471b06e7d20ac0fc91f4386d0e54c2",
+      "status": "verified"
+    },
+    {
+      "key": "case05",
+      "case_id": "INTC/2013/page_29.pdf-3",
+      "filename": "INTC/2013/page_29.pdf",
+      "document_group": "INTC/2013",
+      "operation": "ratio_percent",
+      "expected_percent": "35.83690987124463519313304721",
+      "display": "35.8%",
+      "formula": "100 * 16.7 / 46.6",
+      "exe_ans_unit": "ratio",
+      "reference_error_native_unit": "9.012875536480686695279E-7",
+      "context_sha256": "65897fb63c26327604cee95f78f2c50b973d4cef6708efbc9a0303407862d4ea",
+      "status": "verified"
+    },
+    {
+      "key": "case06",
+      "case_id": "ZBH/2017/page_53.pdf-1",
+      "filename": "ZBH/2017/page_53.pdf",
+      "document_group": "ZBH/2017",
+      "operation": "ratio_percent",
+      "expected_percent": "4.392242411343744180478331427",
+      "display": "4.392%",
+      "formula": "100 * 330.2 / 7517.8",
+      "exe_ans_unit": "ratio",
+      "reference_error_native_unit": "0.00000242411343744180478331427",
+      "context_sha256": "0ab38946d11fdc10d7604528d3f7f80aeb30e2a554a6a6a67eda503b4e9d0c4d",
+      "status": "verified"
+    },
+    {
+      "key": "case07",
+      "case_id": "LMT/2012/page_47.pdf-3",
+      "filename": "LMT/2012/page_47.pdf",
+      "document_group": "LMT/2012",
+      "operation": "percent_change",
+      "expected_percent": "3.203883495145631067961165049",
+      "display": "3.2%",
+      "formula": "100 * (1063 - 1030) / 1030",
+      "exe_ans_unit": "ratio",
+      "reference_error_native_unit": "0.00000116504854368932038834951",
+      "context_sha256": "45ca855444df95cd692b558d1b22943e41accc03e178675a244aab5090727aac",
+      "status": "verified"
+    },
+    {
+      "key": "case08",
+      "case_id": "MAS/2018/page_35.pdf-3",
+      "filename": "MAS/2018/page_35.pdf",
+      "document_group": "MAS/2018",
+      "operation": "percent_change",
+      "expected_percent": "1.423785594639865996649916248",
+      "display": "1.4%",
+      "formula": "100 * (1211 - 1194) / 1194",
+      "exe_ans_unit": "ratio",
+      "reference_error_native_unit": "0.00000214405360134003350083752",
+      "context_sha256": "4ec3e05962cf29f79d3ab629b9378c0e0597757032e23669c6dbcd88208cc9ab",
+      "status": "verified"
+    },
+    {
+      "key": "case09",
+      "case_id": "ETR/2004/page_213.pdf-4",
+      "filename": "ETR/2004/page_213.pdf",
+      "document_group": "ETR/2004",
+      "operation": "percent_change",
+      "expected_percent": "5.504388341098710586195687507",
+      "display": "5.5%",
+      "formula": "100 * (973.7 - 922.9) / 922.9",
+      "exe_ans_unit": "ratio",
+      "reference_error_native_unit": "0.00000388341098710586195687507",
+      "context_sha256": "206b6621998493dc768e695150c37a16443aceab3ec3c8bbb4c3a82e7d236464",
+      "status": "verified"
+    },
+    {
+      "key": "case10",
+      "case_id": "ETR/2017/page_26.pdf-4",
+      "filename": "ETR/2017/page_26.pdf",
+      "document_group": "ETR/2017",
+      "operation": "percent_change",
+      "expected_percent": "-7.442977190876350540216086435",
+      "display": "-7.4%",
+      "formula": "100 * (1542 - 1666) / 1666",
+      "exe_ans_unit": "ratio",
+      "reference_error_native_unit": "2.2809123649459783913565E-7",
+      "context_sha256": "874c4080b5e67e5965affb0886812ef53e826113834df49c790ebede80212270",
+      "status": "verified"
+    }
+  ],
+  "duplicate_audit": {
+    "raw_entries": 883,
+    "unique_exact_contexts": 299,
+    "unique_filenames": 299,
+    "exact_context_groups_with_multiple_questions": 272,
+    "selected_unique_contexts": 10,
+    "selected_unique_report_groups": 10,
+    "selected_matches": [
+      {
+        "case_id": "DVN/2007/page_58.pdf-2",
+        "same_exact_context_ids": [
+          "DVN/2007/page_58.pdf-2",
+          "DVN/2007/page_58.pdf-3"
+        ],
+        "same_filename_ids": [
+          "DVN/2007/page_58.pdf-2",
+          "DVN/2007/page_58.pdf-3"
+        ]
+      },
+      {
+        "case_id": "FBHS/2017/page_23.pdf-2",
+        "same_exact_context_ids": [
+          "FBHS/2017/page_23.pdf-2",
+          "FBHS/2017/page_23.pdf-1"
+        ],
+        "same_filename_ids": [
+          "FBHS/2017/page_23.pdf-2",
+          "FBHS/2017/page_23.pdf-1"
+        ]
+      },
+      {
+        "case_id": "PKG/2009/page_65.pdf-4",
+        "same_exact_context_ids": [
+          "PKG/2009/page_65.pdf-4",
+          "PKG/2009/page_65.pdf-2",
+          "PKG/2009/page_65.pdf-1",
+          "PKG/2009/page_65.pdf-3"
+        ],
+        "same_filename_ids": [
+          "PKG/2009/page_65.pdf-4",
+          "PKG/2009/page_65.pdf-2",
+          "PKG/2009/page_65.pdf-1",
+          "PKG/2009/page_65.pdf-3"
+        ]
+      },
+      {
+        "case_id": "UNP/2008/page_77.pdf-1",
+        "same_exact_context_ids": [
+          "UNP/2008/page_77.pdf-1",
+          "UNP/2008/page_77.pdf-2",
+          "UNP/2008/page_77.pdf-3"
+        ],
+        "same_filename_ids": [
+          "UNP/2008/page_77.pdf-1",
+          "UNP/2008/page_77.pdf-2",
+          "UNP/2008/page_77.pdf-3"
+        ]
+      },
+      {
+        "case_id": "INTC/2013/page_29.pdf-3",
+        "same_exact_context_ids": [
+          "INTC/2013/page_29.pdf-3",
+          "INTC/2013/page_29.pdf-1",
+          "INTC/2013/page_29.pdf-4",
+          "INTC/2013/page_29.pdf-2"
+        ],
+        "same_filename_ids": [
+          "INTC/2013/page_29.pdf-3",
+          "INTC/2013/page_29.pdf-1",
+          "INTC/2013/page_29.pdf-4",
+          "INTC/2013/page_29.pdf-2"
+        ]
+      },
+      {
+        "case_id": "ZBH/2017/page_53.pdf-1",
+        "same_exact_context_ids": [
+          "ZBH/2017/page_53.pdf-1"
+        ],
+        "same_filename_ids": [
+          "ZBH/2017/page_53.pdf-1"
+        ]
+      },
+      {
+        "case_id": "LMT/2012/page_47.pdf-3",
+        "same_exact_context_ids": [
+          "LMT/2012/page_47.pdf-3",
+          "LMT/2012/page_47.pdf-1",
+          "LMT/2012/page_47.pdf-4",
+          "LMT/2012/page_47.pdf-2"
+        ],
+        "same_filename_ids": [
+          "LMT/2012/page_47.pdf-3",
+          "LMT/2012/page_47.pdf-1",
+          "LMT/2012/page_47.pdf-4",
+          "LMT/2012/page_47.pdf-2"
+        ]
+      },
+      {
+        "case_id": "MAS/2018/page_35.pdf-3",
+        "same_exact_context_ids": [
+          "MAS/2018/page_35.pdf-3",
+          "MAS/2018/page_35.pdf-1",
+          "MAS/2018/page_35.pdf-2"
+        ],
+        "same_filename_ids": [
+          "MAS/2018/page_35.pdf-3",
+          "MAS/2018/page_35.pdf-1",
+          "MAS/2018/page_35.pdf-2"
+        ]
+      },
+      {
+        "case_id": "ETR/2004/page_213.pdf-4",
+        "same_exact_context_ids": [
+          "ETR/2004/page_213.pdf-2",
+          "ETR/2004/page_213.pdf-4",
+          "ETR/2004/page_213.pdf-3",
+          "ETR/2004/page_213.pdf-1"
+        ],
+        "same_filename_ids": [
+          "ETR/2004/page_213.pdf-2",
+          "ETR/2004/page_213.pdf-4",
+          "ETR/2004/page_213.pdf-3",
+          "ETR/2004/page_213.pdf-1"
+        ]
+      },
+      {
+        "case_id": "ETR/2017/page_26.pdf-4",
+        "same_exact_context_ids": [
+          "ETR/2017/page_26.pdf-4",
+          "ETR/2017/page_26.pdf-3",
+          "ETR/2017/page_26.pdf-2",
+          "ETR/2017/page_26.pdf-1"
+        ],
+        "same_filename_ids": [
+          "ETR/2017/page_26.pdf-4",
+          "ETR/2017/page_26.pdf-3",
+          "ETR/2017/page_26.pdf-2",
+          "ETR/2017/page_26.pdf-1"
+        ]
+      }
+    ],
+    "distractors": [
+      {
+        "case_id": "AES/2017/page_157.pdf-1",
+        "reason": "Autre entreprise, revenus 2017/2016/2015 ; années et montants similaires.",
+        "filename": "AES/2017/page_157.pdf",
+        "context_sha256": "0a8f34939bfff38ac73bede38bf407c335897a77f361e1136c5d0cff9b15a6c3"
+      },
+      {
+        "case_id": "LMT/2015/page_56.pdf-4",
+        "reason": "Même entreprise LMT, autre rapport et autres années ; tableau de net sales / operating profit.",
+        "filename": "LMT/2015/page_56.pdf",
+        "context_sha256": "3f3ddfd7166c1cfaa14746a0371d4902bdab9c22858f4ecd7a0e497d032ed98f"
+      },
+      {
+        "case_id": "UNP/2007/page_65.pdf-1",
+        "reason": "Autre échéancier de paiements futurs ; peut concurrencer celui des engagements PKG.",
+        "filename": "UNP/2007/page_65.pdf",
+        "context_sha256": "8f5a9ef7ee2e6ab9da167671b67881805b7b1fe04bcba088df7dd141dea5e884"
+      }
+    ]
+  }
+}

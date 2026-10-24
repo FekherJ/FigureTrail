@@ -1,0 +1,11 @@
+{
+  "case_id": "LMT/2012/page_47.pdf-3",
+  "partition": "development",
+  "question": "what is the growth rate in operating profit for space systems in 2011?",
+  "answer": "3.2%",
+  "exe_ans": 0.03204,
+  "program": "subtract(1063, 1030), divide(#0, 1030)",
+  "gold_inds": {
+    "table_2": "the operating profit of 2012 is 1083 ; the operating profit of 2011 is 1063 ; the operating profit of 2010 is 1030 ;"
+  }
+}

@@ -1,0 +1,846 @@
+{
+  "version": 1,
+  "review_date": "2026-10-24",
+  "partition": "development",
+  "raw_sha256": "a847fb7e0d61a3125a1e2909852df6b89f1ee64d2c5ff1bf689e332214deee51",
+  "reviewed_by": "assistant; verification delegated by user",
+  "cases": [
+    {
+      "key": "ratio",
+      "case_id": "DVN/2007/page_58.pdf-2",
+      "stem": "finqa-b01",
+      "operation": "ratio_percent",
+      "title": "Part du Canada dans la production totale estimée",
+      "unit": "MMBoe",
+      "scale": "million de barils équivalent pétrole",
+      "nature": "Prévision de production pour 2008",
+      "exe_ans_unit": "percent",
+      "precision": 2,
+      "operands": [
+        {
+          "role": "numerator",
+          "cell": [
+            3,
+            4
+          ],
+          "value": "60",
+          "period": "Estimation 2008"
+        },
+        {
+          "role": "denominator",
+          "cell": [
+            5,
+            4
+          ],
+          "value": "243",
+          "period": "Estimation 2008"
+        }
+      ],
+      "checks": [
+        {
+          "path": [
+            "table",
+            0,
+            4
+          ],
+          "contains": "total ( mmboe )"
+        },
+        {
+          "path": [
+            "table",
+            3,
+            0
+          ],
+          "contains": "canada"
+        },
+        {
+          "path": [
+            "table",
+            5,
+            0
+          ],
+          "contains": "total"
+        },
+        {
+          "path": [
+            "pre_text",
+            30
+          ],
+          "contains": "estimates of oil , gas and ngl production for 2008"
+        },
+        {
+          "path": [
+            "pre_text",
+            33
+          ],
+          "contains": "midpoint"
+        }
+      ],
+      "notes": [
+        "2007 est l'année du rapport, pas celle des valeurs : prévisions 2008.",
+        "La colonne Total inclut les NGLs ; conserver ce périmètre tabulé.",
+        "Anomalie hors opérandes : table[4][3] = 2014, table_ori[4][3] = tiret. La bloquer/normaliser explicitement en B04."
+      ],
+      "application_question": "In Devon's estimated 2008 production table, what percentage of total production in MMBoe comes from Canada?",
+      "expected_percent": "24.69135802469135802469135802",
+      "exe_ans_tolerance": "0.000005",
+      "question_scope": "Question adaptée avec entreprise, périodes et périmètre explicites ; ne fournit ni réponse ni identifiant documentaire au moteur de recherche."
+    },
+    {
+      "key": "growth",
+      "case_id": "FBHS/2017/page_23.pdf-2",
+      "stem": "finqa-b01-growth",
+      "operation": "percent_change",
+      "title": "Croissance des ventes de Cabinets",
+      "unit": "dollar ($)",
+      "scale": "million",
+      "nature": "Ventes annuelles historiques",
+      "exe_ans_unit": "ratio",
+      "precision": 1,
+      "operands": [
+        {
+          "role": "new",
+          "cell": [
+            1,
+            1
+          ],
+          "value": "2467.1",
+          "period": "Exercice 2017"
+        },
+        {
+          "role": "old",
+          "cell": [
+            1,
+            2
+          ],
+          "value": "2397.8",
+          "period": "Exercice 2016"
+        }
+      ],
+      "checks": [
+        {
+          "path": [
+            "table",
+            0,
+            0
+          ],
+          "contains": "in millions"
+        },
+        {
+          "path": [
+            "table",
+            0,
+            1
+          ],
+          "contains": "2017"
+        },
+        {
+          "path": [
+            "table",
+            0,
+            2
+          ],
+          "contains": "2016"
+        },
+        {
+          "path": [
+            "table",
+            1,
+            0
+          ],
+          "contains": "cabinets"
+        },
+        {
+          "path": [
+            "pre_text",
+            22
+          ],
+          "contains": "annual net sales for each of the last three fiscal years"
+        }
+      ],
+      "notes": [
+        "Utiliser la division Cabinets, pas les ventes totales ou Plumbing.",
+        "Le symbole $ est explicite ; aucun code ISO de devise n'est ajouté par supposition."
+      ],
+      "application_question": "For FBHS, what was the percentage growth in annual Cabinets segment net sales from 2016 to 2017?",
+      "expected_percent": "2.890149303528234214696805405",
+      "exe_ans_tolerance": "0.000005",
+      "question_scope": "Question adaptée avec entreprise, périodes et périmètre explicites ; ne fournit ni réponse ni identifiant documentaire au moteur de recherche."
+    },
+    {
+      "key": "case03",
+      "case_id": "PKG/2009/page_65.pdf-4",
+      "stem": "finqa-b01-03",
+      "operation": "ratio_percent",
+      "title": "Part des engagements d'achat exigibles après 2014",
+      "unit": "dollar ($)",
+      "scale": "millier",
+      "nature": "Échéancier d'engagements futurs du rapport 2009",
+      "exe_ans_unit": "ratio",
+      "precision": 0,
+      "operands": [
+        {
+          "role": "numerator",
+          "cell": [
+            6,
+            1
+          ],
+          "value": "25048",
+          "period": "Après 2014 : thereafter"
+        },
+        {
+          "role": "denominator",
+          "cell": [
+            7,
+            1
+          ],
+          "value": "44572",
+          "period": "Total de l'échéancier 2010 et suivants"
+        }
+      ],
+      "checks": [
+        {
+          "path": [
+            "table",
+            0,
+            1
+          ],
+          "contains": "in thousands"
+        },
+        {
+          "path": [
+            "table",
+            5,
+            0
+          ],
+          "contains": "2014"
+        },
+        {
+          "path": [
+            "table",
+            6,
+            0
+          ],
+          "contains": "thereafter"
+        },
+        {
+          "path": [
+            "table",
+            7,
+            0
+          ],
+          "contains": "total"
+        },
+        {
+          "path": [
+            "pre_text",
+            0
+          ],
+          "contains": "purchase commitments"
+        },
+        {
+          "path": [
+            "pre_text",
+            1
+          ],
+          "contains": "total purchase commitments"
+        }
+      ],
+      "notes": [
+        "Thereafter signifie après la dernière année explicite 2014 ; ne pas inclure 2014.",
+        "Les engagements futurs ne sont pas des achats déjà réalisés."
+      ],
+      "application_question": "In PKG's 2009 purchase commitments schedule, what percentage of the total is due after 2014?",
+      "expected_percent": "56.19671542672529839361033833",
+      "exe_ans_tolerance": "0.000005",
+      "question_scope": "Question adaptée avec entreprise, périodes et périmètre explicites ; ne fournit ni réponse ni identifiant documentaire au moteur de recherche."
+    },
+    {
+      "key": "case04",
+      "case_id": "UNP/2008/page_77.pdf-1",
+      "stem": "finqa-b01-04",
+      "operation": "ratio_percent",
+      "title": "Part des salaires et congés à payer dans les dettes courantes",
+      "unit": "dollar ($)",
+      "scale": "million",
+      "nature": "Solde historique au 31 décembre 2008",
+      "exe_ans_unit": "ratio",
+      "precision": 1,
+      "operands": [
+        {
+          "role": "numerator",
+          "cell": [
+            2,
+            1
+          ],
+          "value": "367",
+          "period": "31 décembre 2008"
+        },
+        {
+          "role": "denominator",
+          "cell": [
+            8,
+            1
+          ],
+          "value": "2560",
+          "period": "31 décembre 2008"
+        }
+      ],
+      "checks": [
+        {
+          "path": [
+            "table",
+            0,
+            0
+          ],
+          "contains": "millions of dollars"
+        },
+        {
+          "path": [
+            "table",
+            0,
+            1
+          ],
+          "contains": "2008"
+        },
+        {
+          "path": [
+            "table",
+            2,
+            0
+          ],
+          "contains": "accrued wages and vacation"
+        },
+        {
+          "path": [
+            "table",
+            8,
+            0
+          ],
+          "contains": "total accounts payable and other current liabilities"
+        },
+        {
+          "path": [
+            "pre_text",
+            15
+          ],
+          "contains": "accounts payable and other current liabilities"
+        }
+      ],
+      "notes": [
+        "La question abrège le libellé ; le dénominateur est le total des passifs courants du tableau, pas seulement Accounts payable.",
+        "Ne pas utiliser la colonne 2007."
+      ],
+      "application_question": "For Union Pacific at December 31, 2008, what percentage of total accounts payable and other current liabilities was accrued wages and vacation?",
+      "expected_percent": "14.3359375",
+      "exe_ans_tolerance": "0.000005",
+      "question_scope": "Question adaptée avec entreprise, périodes et périmètre explicites ; ne fournit ni réponse ni identifiant documentaire au moteur de recherche."
+    },
+    {
+      "key": "case05",
+      "case_id": "INTC/2013/page_29.pdf-3",
+      "stem": "finqa-b01-05",
+      "operation": "ratio_percent",
+      "title": "Part des surfaces détenues situées hors États-Unis",
+      "unit": "pied carré",
+      "scale": "million",
+      "nature": "Surfaces des installations au 28 décembre 2013",
+      "exe_ans_unit": "ratio",
+      "precision": 1,
+      "operands": [
+        {
+          "role": "numerator",
+          "cell": [
+            1,
+            2
+          ],
+          "value": "16.7",
+          "period": "28 décembre 2013"
+        },
+        {
+          "role": "denominator",
+          "cell": [
+            1,
+            3
+          ],
+          "value": "46.6",
+          "period": "28 décembre 2013"
+        }
+      ],
+      "checks": [
+        {
+          "path": [
+            "table",
+            0,
+            0
+          ],
+          "contains": "square feet in millions"
+        },
+        {
+          "path": [
+            "table",
+            0,
+            2
+          ],
+          "contains": "othercountries"
+        },
+        {
+          "path": [
+            "table",
+            0,
+            3
+          ],
+          "contains": "total"
+        },
+        {
+          "path": [
+            "table",
+            1,
+            0
+          ],
+          "contains": "owned facilities"
+        },
+        {
+          "path": [
+            "pre_text",
+            3
+          ],
+          "contains": "as of december 28 , 2013"
+        }
+      ],
+      "notes": [
+        "Le dénominateur est le total Owned facilities 46,6, pas Total facilities 54,9.",
+        "Unité de surface ; aucune conversion en monnaie. Les exposants des libellés sont des appels de note."
+      ],
+      "application_question": "For Intel at December 28, 2013, what percentage of the total square footage of owned facilities was in other countries?",
+      "expected_percent": "35.83690987124463519313304721",
+      "exe_ans_tolerance": "0.000005",
+      "question_scope": "Question adaptée avec entreprise, périodes et périmètre explicites ; ne fournit ni réponse ni identifiant documentaire au moteur de recherche."
+    },
+    {
+      "key": "case06",
+      "case_id": "ZBH/2017/page_53.pdf-1",
+      "stem": "finqa-b01-06",
+      "operation": "ratio_percent",
+      "title": "Marge nette sur les chiffres pro forma 2015",
+      "unit": "dollar ($)",
+      "scale": "million",
+      "nature": "Données pro forma non auditées, année terminée le 31 décembre 2015",
+      "exe_ans_unit": "ratio",
+      "precision": 3,
+      "operands": [
+        {
+          "role": "numerator",
+          "cell": [
+            2,
+            1
+          ],
+          "value": "330.2",
+          "period": "Année terminée le 31 décembre 2015, pro forma"
+        },
+        {
+          "role": "denominator",
+          "cell": [
+            1,
+            1
+          ],
+          "value": "7517.8",
+          "period": "Année terminée le 31 décembre 2015, pro forma"
+        }
+      ],
+      "checks": [
+        {
+          "path": [
+            "table",
+            0,
+            1
+          ],
+          "contains": "2015 ( in millions )"
+        },
+        {
+          "path": [
+            "table",
+            2,
+            0
+          ],
+          "contains": "net earnings"
+        },
+        {
+          "path": [
+            "table",
+            1,
+            0
+          ],
+          "contains": "net sales"
+        },
+        {
+          "path": [
+            "pre_text",
+            34
+          ],
+          "contains": "unaudited pro forma financial information"
+        },
+        {
+          "path": [
+            "pre_text",
+            36
+          ],
+          "contains": "pro forma financial information ( unaudited )"
+        },
+        {
+          "path": [
+            "post_text",
+            0
+          ],
+          "contains": "comparative purposes only"
+        }
+      ],
+      "notes": [
+        "Rapport identifié 2017 mais valeurs portant sur 2015.",
+        "Préciser pro forma non audité : ne pas présenter ces valeurs comme des résultats historiques consolidés sans retraitement.",
+        "Le calcul porte sur les valeurs fournies ; aucune reconstitution comptable de la fusion."
+      ],
+      "application_question": "Using Zimmer Biomet's unaudited pro forma figures for the year ended December 31, 2015, what were net earnings as a percentage of net sales?",
+      "expected_percent": "4.392242411343744180478331427",
+      "exe_ans_tolerance": "0.000005",
+      "question_scope": "Question adaptée avec entreprise, périodes et périmètre explicites ; ne fournit ni réponse ni identifiant documentaire au moteur de recherche."
+    },
+    {
+      "key": "case07",
+      "case_id": "LMT/2012/page_47.pdf-3",
+      "stem": "finqa-b01-07",
+      "operation": "percent_change",
+      "title": "Croissance du résultat opérationnel de Space Systems en 2011",
+      "unit": "dollar ($)",
+      "scale": "million",
+      "nature": "Résultats annuels historiques du segment Space Systems",
+      "exe_ans_unit": "ratio",
+      "precision": 1,
+      "operands": [
+        {
+          "role": "new",
+          "cell": [
+            2,
+            2
+          ],
+          "value": "1063",
+          "period": "Exercice 2011"
+        },
+        {
+          "role": "old",
+          "cell": [
+            2,
+            3
+          ],
+          "value": "1030",
+          "period": "Exercice 2010"
+        }
+      ],
+      "checks": [
+        {
+          "path": [
+            "table",
+            0,
+            2
+          ],
+          "contains": "2011"
+        },
+        {
+          "path": [
+            "table",
+            0,
+            3
+          ],
+          "contains": "2010"
+        },
+        {
+          "path": [
+            "table",
+            2,
+            0
+          ],
+          "contains": "operating profit"
+        },
+        {
+          "path": [
+            "table",
+            1,
+            1
+          ],
+          "contains": "$"
+        },
+        {
+          "path": [
+            "pre_text",
+            16
+          ],
+          "contains": "space systems 2019 operating results included the following ( in millions )"
+        }
+      ],
+      "notes": [
+        "Interprétation annuelle de growth in 2011 : 2011 comparé à 2010 ; la question d'origine ne précise pas explicitement la base.",
+        "Les paragraphes initiaux parlent de MST et d'une baisse : ce n'est pas le segment Space Systems du tableau.",
+        "La colonne 2012 ne sert pas à la variation en 2011."
+      ],
+      "application_question": "For Lockheed Martin Space Systems, what was the percentage change in operating profit from 2010 to 2011?",
+      "expected_percent": "3.203883495145631067961165049",
+      "exe_ans_tolerance": "0.000005",
+      "question_scope": "Question adaptée avec entreprise, périodes et périmètre explicites ; ne fournit ni réponse ni identifiant documentaire au moteur de recherche."
+    },
+    {
+      "key": "case08",
+      "case_id": "MAS/2018/page_35.pdf-3",
+      "stem": "finqa-b01-08",
+      "operation": "percent_change",
+      "title": "Croissance du résultat opérationnel publié de 2017 à 2018",
+      "unit": "dollar ($)",
+      "scale": "million",
+      "nature": "Résultat annuel historique, as reported",
+      "exe_ans_unit": "ratio",
+      "precision": 1,
+      "operands": [
+        {
+          "role": "new",
+          "cell": [
+            1,
+            1
+          ],
+          "value": "1211",
+          "period": "Exercice 2018"
+        },
+        {
+          "role": "old",
+          "cell": [
+            1,
+            2
+          ],
+          "value": "1194",
+          "period": "Exercice 2017"
+        }
+      ],
+      "checks": [
+        {
+          "path": [
+            "table",
+            0,
+            1
+          ],
+          "contains": "2018"
+        },
+        {
+          "path": [
+            "table",
+            0,
+            2
+          ],
+          "contains": "2017"
+        },
+        {
+          "path": [
+            "table",
+            1,
+            0
+          ],
+          "contains": "operating profit as reported"
+        },
+        {
+          "path": [
+            "pre_text",
+            10
+          ],
+          "contains": "dollars in millions"
+        }
+      ],
+      "notes": [
+        "Choisir as reported, pas as adjusted ni les lignes de marge déjà en pourcentage.",
+        "Anomalies hors opérandes : table[3][2] et [3][3] = 2014, mais table_ori contient des tirets. À traiter en B04."
+      ],
+      "application_question": "For Masco, what was the percentage growth in operating profit as reported from 2017 to 2018?",
+      "expected_percent": "1.423785594639865996649916248",
+      "exe_ans_tolerance": "0.000005",
+      "question_scope": "Question adaptée avec entreprise, périodes et périmètre explicites ; ne fournit ni réponse ni identifiant documentaire au moteur de recherche."
+    },
+    {
+      "key": "case09",
+      "case_id": "ETR/2004/page_213.pdf-4",
+      "stem": "finqa-b01-09",
+      "operation": "percent_change",
+      "title": "Croissance du net revenue d'Entergy Louisiana de 2002 à 2003",
+      "unit": "dollar ($)",
+      "scale": "million",
+      "nature": "Mesure annuelle historique net revenue / marge brute définie dans le rapport",
+      "exe_ans_unit": "ratio",
+      "precision": 1,
+      "operands": [
+        {
+          "role": "new",
+          "cell": [
+            7,
+            1
+          ],
+          "value": "973.7",
+          "period": "Exercice 2003"
+        },
+        {
+          "role": "old",
+          "cell": [
+            1,
+            1
+          ],
+          "value": "922.9",
+          "period": "Exercice 2002"
+        }
+      ],
+      "checks": [
+        {
+          "path": [
+            "table",
+            0,
+            1
+          ],
+          "contains": "in millions"
+        },
+        {
+          "path": [
+            "table",
+            7,
+            0
+          ],
+          "contains": "2003 net revenue"
+        },
+        {
+          "path": [
+            "table",
+            1,
+            0
+          ],
+          "contains": "2002 net revenue"
+        },
+        {
+          "path": [
+            "pre_text",
+            0
+          ],
+          "contains": "entergy louisiana"
+        },
+        {
+          "path": [
+            "pre_text",
+            5
+          ],
+          "contains": "2003 compared to 2002 net revenue"
+        },
+        {
+          "path": [
+            "pre_text",
+            6
+          ],
+          "contains": "comparing 2003 to 2002"
+        }
+      ],
+      "notes": [
+        "Net revenue est ici une mesure de marge brute définie dans pre_text[5], pas gross operating revenues.",
+        "Ne pas utiliser les variations intermédiaires du tableau comme valeurs annuelles ; le rapport 2004 décrit ici 2003/2002."
+      ],
+      "application_question": "For Entergy Louisiana, what was the percentage change in the reported net revenue measure from 2002 to 2003?",
+      "expected_percent": "5.504388341098710586195687507",
+      "exe_ans_tolerance": "0.000005",
+      "question_scope": "Question adaptée avec entreprise, périodes et périmètre explicites ; ne fournit ni réponse ni identifiant documentaire au moteur de recherche."
+    },
+    {
+      "key": "case10",
+      "case_id": "ETR/2017/page_26.pdf-4",
+      "stem": "finqa-b01-10",
+      "operation": "percent_change",
+      "title": "Baisse du net revenue d'Entergy Wholesale Commodities en 2016",
+      "unit": "dollar ($)",
+      "scale": "million",
+      "nature": "Mesure annuelle historique du segment Entergy Wholesale Commodities",
+      "exe_ans_unit": "ratio",
+      "precision": 1,
+      "operands": [
+        {
+          "role": "new",
+          "cell": [
+            8,
+            1
+          ],
+          "value": "1542",
+          "period": "Exercice 2016"
+        },
+        {
+          "role": "old",
+          "cell": [
+            1,
+            1
+          ],
+          "value": "1666",
+          "period": "Exercice 2015"
+        }
+      ],
+      "checks": [
+        {
+          "path": [
+            "table",
+            0,
+            1
+          ],
+          "contains": "in millions"
+        },
+        {
+          "path": [
+            "table",
+            8,
+            0
+          ],
+          "contains": "2016 net revenue"
+        },
+        {
+          "path": [
+            "table",
+            1,
+            0
+          ],
+          "contains": "2015 net revenue"
+        },
+        {
+          "path": [
+            "pre_text",
+            8
+          ],
+          "contains": "entergy wholesale commodities"
+        },
+        {
+          "path": [
+            "post_text",
+            0
+          ],
+          "contains": "decreased by approximately $ 124 million in 2016"
+        }
+      ],
+      "notes": [
+        "Le résultat est négatif malgré le mot growth ; conserver le signe.",
+        "La question ne donne pas les années de base ni le segment : le contexte explicite une comparaison 2016/2015 de ce segment.",
+        "Ne pas confondre ce segment avec Entergy Louisiana dans l'autre rapport retenu."
+      ],
+      "application_question": "For Entergy Wholesale Commodities, what was the signed percentage change in net revenue from 2015 to 2016?",
+      "expected_percent": "-7.442977190876350540216086435",
+      "exe_ans_tolerance": "0.000005",
+      "question_scope": "Question adaptée avec entreprise, périodes et périmètre explicites ; ne fournit ni réponse ni identifiant documentaire au moteur de recherche."
+    }
+  ],
+  "distractor_candidates": [
+    {
+      "case_id": "AES/2017/page_157.pdf-1",
+      "reason": "Autre entreprise, revenus 2017/2016/2015 ; années et montants similaires."
+    },
+    {
+      "case_id": "LMT/2015/page_56.pdf-4",
+      "reason": "Même entreprise LMT, autre rapport et autres années ; tableau de net sales / operating profit."
+    },
+    {
+      "case_id": "UNP/2007/page_65.pdf-1",
+      "reason": "Autre échéancier de paiements futurs ; peut concurrencer celui des engagements PKG."
+    }
+  ]
+}

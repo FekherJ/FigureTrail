@@ -1,0 +1,13 @@
+{
+  "case_id": "DVN/2007/page_58.pdf-2",
+  "partition": "development",
+  "question": "what percentage of the total oil and gas mmboe comes from canada?",
+  "answer": "24.69%",
+  "exe_ans": 24.69136,
+  "program": "divide(60, 243), multiply(#0, const_100)",
+  "gold_inds": {
+    "table_3": "the canada of oil ( mmbbls ) is 23 ; the canada of gas ( bcf ) is 198 ; the canada of ngls ( mmbbls ) is 4 ; the canada of total ( mmboe ) is 60 ;",
+    "table_5": "the total of oil ( mmbbls ) is 66 ; the total of gas ( bcf ) is 894 ; the total of ngls ( mmbbls ) is 28 ; the total of total ( mmboe ) is 243 ;",
+    "text_34": "oil gas ngls total ( mmbbls ) ( bcf ) ( mmbbls ) ( mmboe ) ."
+  }
+}

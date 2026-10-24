@@ -1,0 +1,3 @@
+# Use LF for text; retain exact JSON bytes used by B01 verification hashes.
+* text=auto eol=lf
+*.json -text

@@ -1,0 +1,11 @@
+{
+  "case_id": "MAS/2018/page_35.pdf-3",
+  "partition": "development",
+  "question": "what was the percentage growth in the operating profit as reported from 2017 to 2018",
+  "answer": "1.4%",
+  "exe_ans": 0.01424,
+  "program": "subtract(1211, 1194), divide(#0, 1194)",
+  "gold_inds": {
+    "table_1": "the operating profit as reported of 2018 is $ 1211 ; the operating profit as reported of 2017 is $ 1194 ; the operating profit as reported of 2016 is $ 1087 ;"
+  }
+}

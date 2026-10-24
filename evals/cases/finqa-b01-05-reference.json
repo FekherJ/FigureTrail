@@ -1,0 +1,11 @@
+{
+  "case_id": "INTC/2013/page_29.pdf-3",
+  "partition": "development",
+  "question": "what is the percent of the square feet in owned facilities in other countries?",
+  "answer": "35.8%",
+  "exe_ans": 0.35837,
+  "program": "divide(16.7, 46.6)",
+  "gold_inds": {
+    "table_1": "( square feet in millions ) the owned facilities1 of unitedstates is 29.9 ; the owned facilities1 of othercountries is 16.7 ; the owned facilities1 of total is 46.6 ;"
+  }
+}
