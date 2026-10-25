@@ -4,7 +4,7 @@
 
 FigureTrail answers simple numerical questions about public reports. It finds evidence, calculates a result and shows a verifiable analysis: values, periods, units, sources and formula. Example: “What was the percentage change in this measure between these two years?”
 
-The design uses a measurable fixed workflow, followed by a bounded agent variant. P0 covers LLM/RAG, API contracts and evaluations. P1 adds tools, security and observability. Reference data, the health API, a provider connection check and a controlled source-selection pilot are verified. Retrieval and the complete analysis workflow remain planned.
+The design uses a measurable fixed workflow, followed by a bounded agent variant. P0 covers LLM/RAG, API contracts and evaluations. P1 adds tools, security and observability. Reference data, the health API, provider connection, controlled source selection and one bounded native tool call are verified. Retrieval and the complete analysis workflow remain planned.
 
 Diagrams use Markdown and Mermaid so they can be reviewed and versioned with code. [GitHub diagram support](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/creating-diagrams).
 
@@ -63,7 +63,7 @@ flowchart TD
 
 ## 2. Technical choices
 
-Python, FastAPI, Pydantic, Uvicorn, NumPy and SQLite FTS5 were verified in B02. Google GenAI SDK 2.33.0, a generation/embedding connection check and the [B03 source-case pilot](../verification/B03_SOURCE_CASE.md) are verified. `app/llm.py` centralizes SDK requests and SQLite call allowances. The corpus, corpus embeddings, tools, calculator and complete analysis service remain to be built. See [B02 verification](../verification/B02_ENVIRONMENT.md).
+Python, FastAPI, Pydantic, Uvicorn, NumPy and SQLite FTS5 were verified in B02. Google GenAI SDK 2.33.0, a generation/embedding connection check and the [B03 source-case pilot](../verification/B03_SOURCE_CASE.md) are verified. `app/llm.py` centralizes SDK requests and SQLite call allowances. The corpus, corpus embeddings, retrieval/calculation tools and complete analysis service remain to be built. One source-bound `read_evidence` native call is verified in the [B03 tool check](../verification/B03_TOOL_CALL.md). See [B02 verification](../verification/B02_ENVIRONMENT.md).
 
 | Need | Initial choice | Reason and limitation |
 |---|---|---|
@@ -82,7 +82,7 @@ Python, FastAPI, Pydantic, Uvicorn, NumPy and SQLite FTS5 were verified in B02. 
 
 References: [FastAPI validation](https://fastapi.tiangolo.com/tutorial/body/), [Python SQLite](https://docs.python.org/3/library/sqlite3.html), [FTS5/BM25](https://sqlite.org/fts5.html), [NumPy dot product](https://numpy.org/doc/stable/reference/generated/numpy.dot.html). Cosine search requires normalized vectors; reject zero vectors and incompatible dimensions.
 
-The [B03 provider decision](PROVIDER_SELECTION.md) selects Google's Gemini Developer API with `gemini-3.5-flash-lite` and `gemini-embedding-2`, starting free. The one-case pilot passed its 0.950 s median latency gate and selected the reviewed cells three times. Broader task quality, numeric account quotas and tool-call compatibility remain unverified. A prompt requesting JSON does not establish structured-output or tool-call support. Configure API access and any later billing separately.
+The [B03 provider decision](PROVIDER_SELECTION.md) selects Google's Gemini Developer API with `gemini-3.5-flash-lite` and `gemini-embedding-2`, starting free. The one-case pilot passed its 0.950 s median latency gate and selected the reviewed cells three times. [Free-tier account quotas](../verification/B03_ACCOUNT_LIMITS.md) are recorded; one bounded [native tool call](../verification/B03_TOOL_CALL.md) is also verified. Broader task quality and multi-step agent behavior remain unverified. A prompt requesting JSON does not establish structured-output or tool-call support. Configure API access and any later billing separately.
 
 ## 3. Data scope and preparation
 
@@ -339,4 +339,4 @@ Release gates:
 3. **P1 demonstrated:** real tool choices, limit checks, inspectable traces and a measured comparison.
 4. **Release ready:** documented setup, real results, failures, trade-offs and a short demonstration.
 
-The initial ten-case data gate, provider connection and one-case source-selection latency gate are verified. Numeric account quotas, tool-call compatibility, the indexed corpus and broader task-performance thresholds remain unverified. Reliability depends on implementation and these checks, rather than the diagram alone. Add cloud deployment, agent frameworks or remote vector storage only for demonstrated requirements.
+The initial ten-case data gate, provider connection and one-case source-selection latency gate are verified. Account quotas are recorded from the [AI Studio observation](../verification/B03_ACCOUNT_LIMITS.md). One bounded native call is verified; the indexed corpus, multi-step agent behavior and broader task-performance thresholds remain unverified. Reliability depends on implementation and these checks, rather than the diagram alone. Add cloud deployment, agent frameworks or remote vector storage only for demonstrated requirements.

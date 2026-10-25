@@ -2,7 +2,7 @@
 
 **Reviewed 24 October 2026. Proposed target; build incrementally.**
 
-Purpose: answer numerical questions from public reports with traceable evidence. Scope: one local Python service, a bounded report corpus, deterministic calculations and measured retrieval/model variants. Data references and the HTTP health contract are verified; analysis capabilities follow the implementation roadmap.
+Purpose: answer numerical questions from public reports with traceable evidence. Scope: one local Python service, a bounded report corpus, deterministic calculations and measured retrieval/model variants. Data references, the HTTP health contract, provider access and a bounded native tool call are verified; retrieval and full analysis capabilities follow the implementation roadmap.
 
 ## 1. Repository responsibilities
 

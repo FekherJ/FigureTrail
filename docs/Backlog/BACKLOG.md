@@ -12,12 +12,11 @@ Track work in the existing board and keep one issue in progress. Each Bxx sectio
 
 | Work items | Issue state | Board status |
 |---|---|---|
-| B01–B02 | Closed | Done |
-| B03 | Open | In progress |
+| B01–B03 | Closed | Done |
 | B04–B06 | Open | Ready |
 | B07–B13 | Open | Backlog |
 
-B02's final review is complete. B03 is the only active item; its local and GitHub checklists match: five completed tasks and two remaining. B04–B06 retain their existing planning status; completion still follows the dependencies below. All thirteen issues and board-item identities were preserved. This was a one-time alignment; pushing Markdown does not automatically synchronize issue bodies or board fields.
+B03's seven checklist items are verified, including the account-limit observation and one native tool call with validated arguments and original source values. B01–B03 are complete; B04 is the next work item. The B03 issue body and Done status are aligned with this completion review. B04–B06 retain their existing planning status; completion still follows the dependencies below. All thirteen issues and board-item identities were preserved. This was a one-time alignment; pushing Markdown does not automatically synchronize issue bodies or board fields.
 
 Record priority (`P0`/`P1`), milestone and estimated hours. Optional labels are `data`, `llm`, `rag`, `api`, `evals`, `agents`, `security`, `observability` and `docs`. These values are currently documented in issue descriptions; importing them did not create labels or GitHub milestones.
 
@@ -73,7 +72,7 @@ The [engineering blueprint](../architecture/AI_PROJECT_BLUEPRINT.md) adds standa
 | B09–B12 | Safe evidence display, bounded tools, negative cases and complete traces. |
 | B13 | Checks without secrets, reproducible demo and measured results/limits. |
 
-B01 and the B02 foundation are verified, including the final B02 review on 25 October. GitHub import is complete. B03 has a verified source-case pilot; retrieval and the complete analysis workflow remain planned.
+B01 and the B02 foundation are verified, including the final B02 review on 25 October. GitHub import is complete. B03 is complete, including source selection and a native tool check; retrieval and the complete analysis workflow remain planned.
 
 ## 3. Work items
 
@@ -123,12 +122,12 @@ Objective: create a reproducible environment and a verifiable HTTP foundation.
 
 Objective: rule out unsuitable latency/access early and make a controlled real model call.
 
-**Progress recorded on 25 October 2026:** Gemini Developer API, `gemini-3.5-flash-lite` and `gemini-embedding-2`; SDK 2.33.0. The [connection check](../verification/B03_PROVIDER_CONNECTION.md) and [source-case pilot](../verification/B03_SOURCE_CASE.md) passed. Three source selections matched reviewed cells at a 0.950 s median; one missing-period request abstained. Shared calls, SQLite records, local allowance checks and simulated failures are implemented. Numeric project quotas and live tool-call compatibility remain pending, so B03 is open. See the [implementation log](../verification/IMPLEMENTATION_LOG.md) for commands and scope limits.
+**Progress recorded on 25 October 2026:** Gemini Developer API, `gemini-3.5-flash-lite` and `gemini-embedding-2`; SDK 2.33.0. The [connection check](../verification/B03_PROVIDER_CONNECTION.md) and [source-case pilot](../verification/B03_SOURCE_CASE.md) passed. Three source selections matched reviewed cells at a 0.950 s median; one missing-period request abstained. Shared calls, SQLite records, local allowance checks and simulated failures are implemented. The [account-limit screenshot](../verification/B03_ACCOUNT_LIMITS.md) records the free tier and model-specific quotas. The [native tool check](../verification/B03_TOOL_CALL.md) passed: one request, one local read, the reviewed Canada/total cells and a 1.302 s model duration. B03 is complete. See the [implementation log](../verification/IMPLEMENTATION_LOG.md) for commands and scope limits.
 
 - [x] Select generation and embedding models from documented capabilities and dated prices.
 - [x] Verify model access, structured generation and a normalized 768-dimension text embedding.
-- [ ] Record the project's actual model-specific RPM, TPM and daily quotas, with the observation date and tier.
-- [ ] Verify a bounded model-selected tool call with validated arguments; the B10 agent is not required for this compatibility check.
+- [x] Record the project's actual model-specific RPM, TPM and daily quotas, with the observation date and tier.
+- [x] Verify a bounded model-selected tool call with validated arguments; the B10 agent is not required for this compatibility check.
 - [x] Call the model on a source case: request an operation and cell references, or abstention; validate the schema in Python.
 - [x] Centralize calls in one module without a multi-provider layer. Disable hidden retries; enforce output bounds, timeouts and usage tracking.
 - [x] Create a `run_id`; record model, prompt version, duration, tokens, estimated cost and errors. Test a simulated failure without fees.
@@ -326,4 +325,4 @@ Objective: release a reproducible version with measured results and documented t
 
 Exclude arbitrary PDF/OCR ingestion, user-supplied URL downloads, slow local models, fine-tuning, multi-agent systems, multiple providers, SSO, distributed cloud deployment, full dashboards and systematic LLM judging from this cycle.
 
-Add an extension only to address an observed weakness, and replace another task within the available allowance. The next technical step is **B03**, before indexed corpus construction and the complete analysis workflow.
+Add an extension only to address an observed weakness, and replace another task within the available allowance. The next technical step is **B04**: indexed corpus construction before retrieval and the complete analysis workflow.

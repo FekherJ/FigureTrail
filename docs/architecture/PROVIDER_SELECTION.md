@@ -1,6 +1,6 @@
 # Hosted provider and model selection
 
-**Decision date: 25 October 2026. Status: connection and source-case pilot verified; quotas/tool-call check pending.**
+**Decision date: 25 October 2026. Status: B03 complete; connection, source selection, account quotas and one native tool call verified.**
 
 ## Decision
 
@@ -33,7 +33,7 @@ Illustration, not a project-cost forecast: 1,000 generation calls using 5,000 in
 
 Start without enabling paid billing. If quotas repeatedly interrupt work, first evaluate the paid tier for the same models; that avoids a provider migration. This is a fallback decision, not a billing change. Keep the existing cumulative budget strictly below **EUR 30**, including all calls and preparation. Local estimates are not a guaranteed billing cap.
 
-Limits depend on the account/project and model. Inspect the project's active RPM, TPM and daily quotas in AI Studio; do not assume a fixed number of free requests. Free access does not guarantee capacity or response time. Stop with a clear quota error rather than silently waiting through long retries. [Rate limits](https://ai.google.dev/gemini-api/docs/rate-limits).
+Limits depend on the account/project and model. The [AI Studio screenshot supplied on 25 October](../verification/B03_ACCOUNT_LIMITS.md) shows FigureTrail on the free tier: generation 15 RPM / 250,000 input TPM / 500 RPD; embeddings 100 RPM / 30,000 input TPM / 1,000 RPD. These are dated observations; recheck before a larger campaign. Free access does not guarantee capacity or response time. Stop with a clear quota error rather than silently waiting through long retries. [Rate limits](https://ai.google.dev/gemini-api/docs/rate-limits).
 
 ## Integration requirements
 
@@ -46,7 +46,7 @@ Limits depend on the account/project and model. Inspect the project's active RPM
 
 ## Validation gate
 
-B03 remains open. The local key, locked SDK 2.33.0 and [connection check](../verification/B03_PROVIDER_CONNECTION.md) are verified. The [source-case pilot](../verification/B03_SOURCE_CASE.md) then produced three matching operation/cell selections at a 0.950-second median and one missing-period abstention. `app/llm.py` now centralizes generation/embedding requests, limits and SQLite allowances. Numeric project quotas and tool-call compatibility remain pending. No corpus embeddings or complete analysis workflow exist yet.
+B03 is complete. The local key, locked SDK 2.33.0 and [connection check](../verification/B03_PROVIDER_CONNECTION.md) are verified. The [source-case pilot](../verification/B03_SOURCE_CASE.md) then produced three matching operation/cell selections at a 0.950-second median and one missing-period abstention. `app/llm.py` now centralizes generation/embedding requests, limits and SQLite allowances. Project quotas and the displayed free tier are recorded in the [account-limit evidence](../verification/B03_ACCOUNT_LIMITS.md). One [native tool call](../verification/B03_TOOL_CALL.md) passed at 1.302 seconds, with validated arguments and source values; B03 is complete. No corpus embeddings or complete analysis workflow exist yet.
 
 The connection check uses the supported `generateContent` and `embedContent` SDK paths. An offline quota test exposed inconsistent retry-count translation in the SDK's Interactions path. The selected paths were verified to send exactly one request on a simulated 429 error; no private SDK configuration is patched. Recheck this boundary after SDK upgrades.
 
@@ -54,4 +54,4 @@ The controlled pilot records model/prompt/code/source versions, duration, tokens
 
 Initial latency target: a median of at most five seconds across three sequential successful structured-output requests, each configured with a 20-second transport timeout. The source-case pilot passed at 0.950 seconds. This is a small-context feasibility result, not a speed guarantee or end-to-end RAG measurement. Reassess using broader cases and payloads during evaluation.
 
-Record actual account quotas and measurements in B03 verification evidence. Revisit this selection if access, latency, cost or evaluation results are unsuitable; publish the findings rather than claiming an unmeasured benefit.
+Account quotas and bounded native tool calling are recorded in B03 verification evidence; proceed to corpus preparation in B04. Revisit this selection if access, latency, cost or evaluation results are unsuitable; publish the findings rather than claiming an unmeasured benefit.

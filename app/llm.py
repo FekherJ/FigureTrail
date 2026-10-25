@@ -44,6 +44,7 @@ def create_client() -> genai.Client:
         http_options=types.HttpOptions(
             api_version="v1beta",
             timeout=20_000,
+            # One total attempt prevents hidden retries from multiplying usage.
             retry_options=types.HttpRetryOptions(attempts=1),
         ),
     )
@@ -76,6 +77,8 @@ class GeminiProvider:
 
     def _reserve(self, record: dict, allowance: Decimal) -> None:
         with closing(sqlite3.connect(self.journal)) as database, database:
+            # Serialize the budget check and reservation across concurrent calls.
+            # The transaction ends before the network request begins.
             database.execute("BEGIN IMMEDIATE")
             total = sum(
                 (Decimal(row[0]) for row in database.execute("SELECT allowance_eur FROM calls")),
@@ -137,6 +140,7 @@ class GeminiProvider:
             result = parse(response, record)
             record["status"] = "passed"
         except Exception as error:
+            # Raw provider errors may contain request data; store safe metadata only.
             code = getattr(error, "code", None)
             record.update(
                 status="failed",
@@ -162,6 +166,36 @@ class GeminiProvider:
             raise ProviderError(record["error_code"], record) from None
         return result, record
 
+    def _generation_config(
+        self,
+        text: str,
+        instruction: str,
+        max_output_tokens: int,
+        deadline: float | None,
+    ):
+        if not text or len(text) > 22_000 or len(instruction) > 5_000:
+            raise ValueError("Generation input is empty or exceeds its size limit.")
+        if not 1 <= max_output_tokens <= 1000:
+            raise ValueError("Output tokens must be between 1 and 1000.")
+        remaining = 20 if deadline is None else min(20, deadline - monotonic())
+        if remaining <= 0:
+            raise ValueError("The execution deadline has been reached.")
+        tags = {
+            "input_sha256": sha256(text.encode()).hexdigest(),
+            "instruction_sha256": sha256(instruction.encode()).hexdigest(),
+            "max_output_tokens": max_output_tokens,
+            "timeout_seconds": remaining,
+        }
+        config = types.GenerateContentConfig(
+            system_instruction=instruction or None,
+            max_output_tokens=max_output_tokens,
+            thinking_config=types.ThinkingConfig(thinking_level=types.ThinkingLevel.MINIMAL),
+            # Application code must control tool execution explicitly.
+            automatic_function_calling=types.AutomaticFunctionCallingConfig(disable=True),
+            http_options=types.HttpOptions(timeout=max(1, int(remaining * 1000))),
+        )
+        return config, tags
+
     def generate_json(
         self,
         text: str,
@@ -173,20 +207,9 @@ class GeminiProvider:
         max_output_tokens: int = 1000,
         deadline: float | None = None,
     ):
-        if not text or len(text) > 22_000 or len(instruction) > 5_000:
-            raise ValueError("Generation input is empty or exceeds its size limit.")
-        if not 1 <= max_output_tokens <= 1000:
-            raise ValueError("Output tokens must be between 1 and 1000.")
-        remaining = 20 if deadline is None else min(20, deadline - monotonic())
-        if remaining <= 0:
-            raise ValueError("The execution deadline has been reached.")
-        tags = {
-            **(metadata or {}),
-            "input_sha256": sha256(text.encode()).hexdigest(),
-            "instruction_sha256": sha256(instruction.encode()).hexdigest(),
-            "max_output_tokens": max_output_tokens,
-            "timeout_seconds": remaining,
-        }
+        config, tags = self._generation_config(text, instruction, max_output_tokens, deadline)
+        config.response_mime_type = "application/json"
+        config.response_json_schema = schema.model_json_schema()
 
         def parse(response, record):
             if (
@@ -194,6 +217,7 @@ class GeminiProvider:
                 or response.candidates[0].finish_reason != types.FinishReason.STOP
             ):
                 raise ValueError("Generation was blocked, truncated or incomplete.")
+            # Validate locally even when the provider enforces a JSON schema.
             result = schema.model_validate_json(response.text)
             record["validated_output"] = result.model_dump(mode="json")
             return result
@@ -204,20 +228,74 @@ class GeminiProvider:
             lambda: self.client.models.generate_content(
                 model=GENERATION_MODEL,
                 contents=text,
-                config=types.GenerateContentConfig(
-                    system_instruction=instruction or None,
-                    response_mime_type="application/json",
-                    response_json_schema=schema.model_json_schema(),
-                    max_output_tokens=max_output_tokens,
-                    thinking_config=types.ThinkingConfig(
-                        thinking_level=types.ThinkingLevel.MINIMAL
-                    ),
-                    automatic_function_calling=types.AutomaticFunctionCallingConfig(disable=True),
-                    http_options=types.HttpOptions(timeout=max(1, int(remaining * 1000))),
-                ),
+                config=config,
             ),
             parse,
-            tags,
+            {**(metadata or {}), **tags},
+        )
+
+    def request_tool(
+        self,
+        text: str,
+        arguments_schema: type[BaseModel],
+        *,
+        tool_name: str,
+        description: str,
+        run_id: str,
+        instruction: str = "",
+        metadata: dict | None = None,
+        deadline: float | None = None,
+    ):
+        config, tags = self._generation_config(text, instruction, 256, deadline)
+        parameters = arguments_schema.model_json_schema()
+        config.tools = [
+            types.Tool(
+                function_declarations=[
+                    types.FunctionDeclaration(
+                        name=tool_name, description=description, parameters_json_schema=parameters
+                    )
+                ]
+            )
+        ]
+        config.tool_config = types.ToolConfig(
+            function_calling_config=types.FunctionCallingConfig(mode="AUTO")
+        )
+        tags.update(
+            allowed_tool=tool_name,
+            tool_choice="AUTO",
+            tool_schema_sha256=sha256(json.dumps(parameters, sort_keys=True).encode()).hexdigest(),
+        )
+
+        def parse(response, record):
+            if len(response.candidates or []) != 1:
+                raise ValueError("Expected one tool-call candidate.")
+            candidate = response.candidates[0]
+            if candidate.finish_reason != types.FinishReason.STOP or not candidate.content:
+                raise ValueError("Tool generation was blocked, truncated or incomplete.")
+            calls = [
+                part.function_call
+                for part in candidate.content.parts or []
+                if part.function_call is not None
+            ]
+            # Native calls only: text that looks like a tool request is not executable.
+            if len(calls) != 1 or calls[0].name != tool_name:
+                raise ValueError("Expected exactly one call to the allowed tool.")
+            arguments = arguments_schema.model_validate(calls[0].args)
+            record["validated_output"] = {
+                "name": tool_name,
+                "arguments": arguments.model_dump(mode="json"),
+                "provider_call_id": calls[0].id,
+            }
+            return arguments
+
+        return self._call(
+            "generation",
+            run_id,
+            lambda: self.client.models.generate_content(
+                model=GENERATION_MODEL, contents=text, config=config
+            ),
+            parse,
+            {**(metadata or {}), **tags},
         )
 
     def embed_text(self, text: str, *, run_id: str):
@@ -230,6 +308,7 @@ class GeminiProvider:
             values = response.embeddings[0].values
             if not values or len(values) != DIMENSIONS or not all(math.isfinite(x) for x in values):
                 raise ValueError("Invalid embedding dimensions or values.")
+            # Unit-length vectors are required by the planned cosine-similarity search.
             norm = math.sqrt(math.fsum(x * x for x in values))
             if not math.isclose(norm, 1, rel_tol=1e-3, abs_tol=1e-3):
                 raise ValueError("Embedding is not normalized.")

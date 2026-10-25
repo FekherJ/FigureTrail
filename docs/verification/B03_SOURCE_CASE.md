@@ -1,6 +1,6 @@
 # B03 controlled source-case verification
 
-**25 October 2026. Four live generation requests: three repetitions of one ratio question and one missing-period question. B03 remains open.**
+**25 October 2026. Four live generation requests: three repetitions of one ratio question and one missing-period question. Original source-case snapshot; B03 was subsequently completed.**
 
 ## Result
 
@@ -31,7 +31,7 @@ No retrieval occurs: the source document is deliberately supplied for this feasi
 
 The four requests reported **9,631 total tokens**. Thought-token counters were absent and remain `null`. A conservative paid-equivalent upper estimate prices every reported token at $2.50/million: **$0.0240775**, rather than treating this as an actual charge. [Dated provider prices](https://ai.google.dev/gemini-api/docs/pricing).
 
-The local SQLite journal contains four call records plus a **€0.02 opening allowance** for the two earlier connection requests. The combined local allowance is **€0.0681550**, not provider-billed spending. Actual charges and the account's billing tier remain unverified; billing settings were not changed.
+The local SQLite journal contains four call records plus a **€0.02 opening allowance** for the two earlier connection requests. The combined local allowance is **€0.0681550**, not provider-billed spending. Actual charges and the account's billing tier were unverified at the time of these requests; billing settings were not changed. A later [AI Studio screenshot](B03_ACCOUNT_LIMITS.md) shows the free tier and project quotas, without changing this historical snapshot.
 
 Before each request, the journal atomically reserves €1 for generation or €0.01 for a text embedding against a **€25 local limit**. The generation reservation covers the published model token ceilings at the dated rates with a planning buffer of €2/USD. This factor is a conservative assumption, not a market exchange rate. Known usage can reduce an allowance; unavailable usage retains the reservation. Rows marked `started` after interruption also retain it. Recording failure prevents further untracked requests. Local limits cannot guarantee provider billing, tax or currency conversion.
 
@@ -41,6 +41,8 @@ Records include `run_id`, `call_id`, requested/returned model, SDK version, prom
 
 Offline checks cover annotation leakage, invalid outcome combinations, invented cell IDs, one request per simulated quota failure, retained unknown-usage allowances and a budget block before any network call. Seven tests pass, including the existing three data-verification guards.
 
-Ruff lint/format, lockfile and Git whitespace checks passed. Documentation checks validated 98 local links; 22 protected data/reference/license files were unchanged. All four measured inputs and their code/prompt hashes were reconstructed from current files without provider requests.
+Ruff lint/format, lockfile and Git whitespace checks passed. Documentation checks validated 98 local links; 22 protected data/reference/license files were unchanged. All four measured inputs and their code/prompt hashes were reconstructed from the pilot files without provider requests.
 
-The [provider decision](../architecture/PROVIDER_SELECTION.md) now passes its three-request source-case latency gate. Actual project quotas and a real tool-call compatibility check are still pending, so B03 is not closed. Full RAG quality, numerical answer accuracy, general abstention behavior, strict wall-clock cancellation and complete API execution records require later work.
+The recorded code fingerprint belongs to the pilot revision, available in commit `f3be9ea`. A later comments-only review changed file bytes while preserving the Python syntax trees and all non-comment tokens. Historical request hashes and measurements remain unchanged; a new execution will record the current code fingerprint.
+
+The [provider decision](../architecture/PROVIDER_SELECTION.md) now passes its three-request source-case latency gate. Actual project quotas are now recorded in the [account-limit evidence](B03_ACCOUNT_LIMITS.md). The subsequent [native tool check](B03_TOOL_CALL.md) passed and completed B03. Its provider/source-reader changes are separate from this historical pilot revision. Full RAG quality, numerical answer accuracy, general abstention behavior, strict wall-clock cancellation and complete API execution records require later work.

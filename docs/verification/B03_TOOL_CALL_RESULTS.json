@@ -1,0 +1,88 @@
+{
+  "run_id": "4003b7f3-68ff-4330-9652-2a3e733ee4d5",
+  "checked_at_utc": "2026-10-25T15:57:02.532922+00:00",
+  "check_version": "native-tool-call-v1",
+  "scope": "One generation request and at most one local evidence read; no agent loop or tool-result continuation.",
+  "status": "passed",
+  "max_model_requests": 1,
+  "max_tool_executions": 1,
+  "question": "What percentage of the total oil and gas MMBoe comes from Canada?",
+  "tool_event": {
+    "name": "read_evidence",
+    "arguments": {
+      "cell_ids": [
+        "DVN/2007/page_58.pdf#table[3][4]",
+        "DVN/2007/page_58.pdf#table[5][4]"
+      ]
+    },
+    "status": "executed",
+    "result": [
+      {
+        "cell_id": "DVN/2007/page_58.pdf#table[3][4]",
+        "source_value": "60",
+        "row_label": "Canada",
+        "column_header": "Total   (MMBoe)"
+      },
+      {
+        "cell_id": "DVN/2007/page_58.pdf#table[5][4]",
+        "source_value": "243",
+        "row_label": "Total",
+        "column_header": "Total   (MMBoe)"
+      }
+    ]
+  },
+  "call": {
+    "call_id": "4fba734c-88ab-43fe-8494-ede4971e0237",
+    "run_id": "4003b7f3-68ff-4330-9652-2a3e733ee4d5",
+    "kind": "generation",
+    "status": "passed",
+    "created_at_utc": "2026-10-25T15:57:02.654555+00:00",
+    "requested_model": "gemini-3.5-flash-lite",
+    "sdk_version": "2.33.0",
+    "automatic_retries": 0,
+    "price_date": "2026-10-25",
+    "planning_eur_per_usd": "2",
+    "reserved_eur": "1",
+    "allowance_eur": "0.01156",
+    "usage": {
+      "input_tokens": 2250,
+      "output_tokens": 62,
+      "thought_tokens": null,
+      "total_tokens": 2312
+    },
+    "estimated_paid_cost_usd": "0.00578",
+    "actual_charge_eur": null,
+    "metadata": {
+      "prompt_version": "tool-call-check-v1",
+      "source_id": "DVN/2007/page_58.pdf",
+      "source_sha256": "9b5797c7159ee1ac17773a84d3d3d6be0e8e0de946951277f67b36e75e6b54d6",
+      "code_sha256": "db2ba7277d6df35b516b37cd3a3566c42d15454fdba9edf60930840e73b65f90",
+      "input_sha256": "34dcdfa9d50f78be88b65e54f7e840f193cfce5a0660b8601713f03611721fe5",
+      "instruction_sha256": "5464386f196199a8b81db04b6cd2f3b3dbac3b2849d59e050cfdf006d87092b1",
+      "max_output_tokens": 256,
+      "timeout_seconds": 20,
+      "allowed_tool": "read_evidence",
+      "tool_choice": "AUTO",
+      "tool_schema_sha256": "0cc3748b6a1e9463ed0908be2e8ee70bd97c15ce7261588f2e8de8f912a5f20e"
+    },
+    "returned_model": "gemini-3.5-flash-lite",
+    "validated_output": {
+      "name": "read_evidence",
+      "arguments": {
+        "cell_ids": [
+          "DVN/2007/page_58.pdf#table[3][4]",
+          "DVN/2007/page_58.pdf#table[5][4]"
+        ]
+      },
+      "provider_call_id": "call_1710299"
+    },
+    "duration_seconds": 1.302
+  },
+  "duration_seconds": 1.337,
+  "matches_reviewed_cells": true,
+  "journal_snapshot": {
+    "row_count": 6,
+    "total_allowance_eur": "0.0797150",
+    "actual_charge_eur": null
+  }
+}

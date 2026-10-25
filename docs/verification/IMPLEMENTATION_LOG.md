@@ -276,3 +276,139 @@ Result, confirmed by rereading issue bodies/states and board fields:
 Local backlog, README, instructions and B02 status notes were aligned. Historical import snapshots retain their original observations. Issue changes are already live; provider/pilot files and these local documentation changes await the user's commit/push. This is a one-time synchronization; a push does not automatically update GitHub issue bodies or board status.
 
 Final review checks: 100 local Markdown links validated, 22 protected artifacts unchanged, and the four measured source requests/code/prompt hashes still reconstructible. Git whitespace checks passed. No application code or model request was needed for the backlog alignment.
+
+## 12. Architecture walkthrough and contribution guidance - 25 October 2026
+
+Reviewed the README, architecture, blueprint, backlog, HTTP entry point, dependency configuration and contributor instructions after a request to clarify the project and development workflow.
+
+- The backend foundation is `app/`; only `/health` is exposed today. The provider/source-case experiments run through scripts and are not yet integrated into an analysis endpoint.
+- The target frontend is one HTML/CSS/JavaScript page served by FastAPI in B09. The analysis service, retrieval, calculator and corpus access will be added with their working features. The current flat modules express responsibilities without requiring separate deployments or empty controller/service/repository directories.
+- `.venv/` isolates Python dependencies. A `.env` file is a separate configuration convention and is not currently loaded. The provider reads `GEMINI_API_KEY` from the process environment; no credential value was read or displayed during this review.
+- PowerShell is the current Windows shell. It is independent of the Python virtual environment and application architecture. A Unix shell is optional and is not required for the current verified setup.
+- Added a communication section to `AGENTS.md`: explain each step's purpose and place in the architecture, unfamiliar commands, implemented versus planned behavior, verification and the next step.
+
+Repository checks used ordinary Git operations:
+
+```powershell
+git status --short
+git log -1 --format='%H %s'
+```
+
+Before these documentation edits, the working tree was clean at `f3be9ea2fbac4f8395689e07d276d5ee1e40b0ca` (`feat: add Gemini source-selection pilot and usage tracking`). The sandbox initially could not access the installed Git executable; the read succeeded with the permitted execution context. This was an assistant execution constraint, not a change to project commands. The temporary PowerShell documentation patch was blocked by the machine's script execution policy before it changed files. A Python helper applied the reviewed text instead; no execution policy was changed. The final documentation diff was checked with `git diff --check` and reviewed for scope.
+
+No runtime code, dependencies, data, model settings or backlog status changed. No live model request, billing change, commit or push was made. Next technical work remains the two B03 checks: actual account quotas and bounded tool-call compatibility.
+
+## 13. README consistency review - 25 October 2026
+
+Compared the README with the current HTTP entry point, shared Gemini module, provider/source-case scripts, dependency configuration, architecture and backlog.
+
+The existing measurements, model configuration, setup commands and B03 status were consistent with the implementation. Updated the README to show the planned frontend explicitly, explain the target workflow and current script/API boundary, distinguish `.venv` from `.env`, describe PowerShell and command flags, include `prompts/` and the provider module in the repository overview, and identify the remaining B03 work before B04.
+
+Verification: all local README links resolve with matching case, existing command targets and the implemented `/health` contract were checked against code, and `git diff --check` passed. This review did not repeat runtime tests or live model calls; existing measurement dates and scope remain unchanged. No application code, dependency, data, credentials or backlog state changed. Earlier AGENTS/log edits were preserved; no commit or push was made.
+
+Git commands used for this review:
+
+```powershell
+git status --short
+git diff --stat
+git diff --check
+git diff -- README.md
+```
+
+## 14. Focused code comments - 25 October 2026
+
+Added comments only around non-obvious decisions in `app/llm.py` and `app/schemas.py`: one-attempt SDK calls, atomic allowance reservations, safe error metadata, local output validation, explicit tool control, normalized embeddings, source-only fields, original-table coordinates and source-derived operands. Existing explanations in the pilot/data scripts were retained; self-explanatory health code was left unchanged. AGENTS now records the preference for sparse comments that explain decisions and boundaries.
+
+A temporary standard-library review helper compared the Python syntax trees and all non-comment tokens before and after the edits. Both were identical in both modules. Ruff lint, formatting and Git whitespace checks passed:
+
+```powershell
+uv run --locked --offline ruff check app/llm.py app/schemas.py
+uv run --locked --offline ruff format --check app/llm.py app/schemas.py
+git diff --check
+git diff -- app/llm.py app/schemas.py
+```
+
+The three-file pilot fingerprint changed from `668d9ca89a4fabae1139494140c8325198935c32df104dcff63599dc34a4aff2` to `8118671e0047a3ad583d855782fd373fbcafd77f613bca0891b6af7e1ed4ebad` because comments change source bytes. The original fingerprint matches the historical measured requests. Their JSON snapshot remains byte-for-byte unchanged; the pilot report now identifies the historical revision (`f3be9ea`) explicitly. No model measurements were repeated or relabeled as current.
+
+No executable statements, contracts, dependencies, prompts or data changed. Existing README/AGENTS/log changes were preserved. No runtime test campaign, live provider request, commit or push was made. Next technical work remains the B03 quota and tool-call checks.
+
+## 15. Account quota evidence - 25 October 2026
+
+Transcribed the user-supplied Google AI Studio screenshot into `B03_ACCOUNT_LIMITS.md`. Project label: FigureTrail; displayed tier: free; reporting period: 28 days. The screenshot has no visible capture timestamp; the observation date records its receipt.
+
+- Generation: 15 RPM, 250,000 input TPM, 500 RPD.
+- Embedding: 100 RPM, 30,000 input TPM, 1,000 RPD.
+- Values before each slash are peaks over the selected period, not remaining quota or today's usage.
+
+Updated current local status in README, AGENTS, architecture, provider decision, backlog and verification notes. B03 now has six completed checklist items and one remaining: a bounded model-selected tool call with validated arguments. B03 remains open. The last GitHub alignment still had five completed tasks; no remote issue or board update was made during this screenshot review. A push does not automatically synchronize issue bodies.
+
+Historical connection/pilot JSON snapshots and all current Python code, evaluation fixtures and prompts were preserved. The displayed free tier was observed later than those requests and does not establish their actual charges. No new runtime quota enforcement was implemented and no model request, billing change, commit or push was made.
+
+Verified the local checklist count, local documentation links, protected artifact hashes and `git diff --check`. Review commands included:
+
+```powershell
+git status --short
+git diff --check
+git diff --stat
+```
+
+Next: verify one bounded native tool call through the shared provider module; the full B10 agent remains outside this compatibility check.
+
+## 16. B03 native tool check and completion - 25 October 2026
+
+Purpose: verify native function calling and validated execution before corpus/retrieval implementation. This is a single-request compatibility check, not the B10 agent.
+
+Implemented:
+
+- `app/llm.py`: shared bounded generation configuration, plus `request_tool` for exactly one native call to the configured function. The existing reservation/journal path is reused; AUTO mode exposes one function, and automatic SDK tool execution stays disabled.
+- `app/schemas.py`: strict `EvidenceRead` arguments and a shared source-bound numeric-cell reader. Existing cell selection delegates to that reader; original values and coordinates are preserved.
+- `scripts/check_tool_call.py` and `prompts/tool_call_check.md`: explicit live opt-in, one allowed `read_evidence` function, one model request and at most one local read, saved metadata and post-run reference comparison. No dynamic dispatch, calculation, retrieval or tool-result continuation.
+- `tests/test_tool_call.py`: eleven simulated response/execution cases and one simulated quota failure. Existing data, budget, credential and source checks remain intact.
+
+Offline commands:
+
+```powershell
+uv run --locked --offline ruff format app/llm.py app/schemas.py scripts/check_tool_call.py tests/test_tool_call.py
+uv run --locked --offline ruff check .
+uv run --locked --offline ruff format --check app scripts/check_environment.py scripts/check_provider.py scripts/run_source_case.py scripts/check_tool_call.py tests/test_provider_connection.py tests/test_source_case.py tests/test_tool_call.py
+uv run --locked --offline python -B -X utf8 -m unittest discover -s tests -v
+```
+
+The first test run failed: the test expected `parametersJsonSchema`, while SDK 2.33.0 emits `parameters_json_schema`. A temporary fake-response inspection confirmed the actual SDK request. Correcting the test field name resolved the failures without changing provider behavior or relaxing validation. All nine tests and Ruff checks passed before the live call. These tests used fake credentials and an intercepted HTTP transport; no model requests occurred.
+
+Actual live command, with the already configured user-level credential read only into the process environment:
+
+```powershell
+$env:GEMINI_API_KEY = [Environment]::GetEnvironmentVariable('GEMINI_API_KEY', 'User')
+uv run --locked --offline python -B -X utf8 -m scripts.check_tool_call --live
+```
+
+Observed run `4003b7f3-68ff-4330-9652-2a3e733ee4d5`: one generation request, one native `read_evidence` call and one validated local read. The model selected `DVN/2007/page_58.pdf#table[3][4]` and `DVN/2007/page_58.pdf#table[5][4]`; Python returned original values 60 and 243. The cell set matched the reviewed reference, loaded only after execution. Model duration: 1.302 s; local check duration: 1.337 s, excluding client setup and post-run scoring. Usage: 2,250 input, 62 output, 2,312 total tokens; thoughts unknown. Paid-equivalent upper estimate: USD 0.00578; call allowance: EUR 0.01156. The six-row local journal totals EUR 0.0797150 in allowances, not actual charges. No billing settings changed and no additional live request was needed.
+
+Evidence: `B03_TOOL_CALL.md` and `B03_TOOL_CALL_RESULTS.json`. The measured code/prompt fingerprints match the final files. Earlier connection/source-case result snapshots, all ten source exports, evaluation references, the health module and existing prompt were preserved (26 protected artifacts). Unknown charges remain unknown. The free-tier account observation is recorded separately.
+
+Final offline commands:
+
+```powershell
+uv run --locked --offline python -B -X utf8 -m scripts.check_tool_call
+uv run --locked --offline python -B -X utf8 scripts/inspect_finqa.py --case all --check
+git diff --check
+```
+
+The first command intentionally returned exit code 2: without `--live`, the command refuses before creating a client. All ten reference cases passed. Local documentation checks validated 128 links and their case; no additional model calls occurred.
+
+Updated README, AGENTS, architecture/blueprint, provider decision, local backlog and current verification notes. B03 has seven completed checklist items. The existing GitHub issue was patched with the reviewed completion body and `state: closed`, `state_reason: completed`; its existing board card was set to Done. Commands used the already authenticated GitHub CLI:
+
+```powershell
+gh issue view 3 --repo FekherJ/FigureTrail --json number,title,state,body,url
+gh project item-list 2 --owner FekherJ --format json
+gh project field-list 2 --owner FekherJ --format json
+gh api --method PATCH repos/FekherJ/FigureTrail/issues/3 --input prepared-b03-completion.json
+gh project item-edit --id PVTI_lAHOBWzpAs4BolTFzhDR8IE --project-id PVT_kwHOBWzpAs4BolTF --field-id $statusField.id --single-select-option-id $doneOption.id
+gh api repos/FekherJ/FigureTrail/issues/3
+gh project item-list 2 --owner FekherJ --format json
+```
+
+The prepared payload filename represents a temporary task-local file, not a setup input. `$statusField` and `$doneOption` were resolved from the current field listing. Readback confirmed the exact reviewed issue body, seven checked tasks, closed/completed and Done. All thirteen item identities and the other twelve board items were preserved. B04–B06 remain Ready; B04 has not started. The issue body identifies evidence paths awaiting publication; no unavailable main-branch links were presented as live. This is a one-time update, not recurring Markdown synchronization.
+
+No dependency changes, commit or push were made. Next: B04, preparing a versioned annotation-free corpus with original cell IDs, table context, normalization-conflict handling and paced embedding preparation.

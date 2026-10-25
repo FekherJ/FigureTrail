@@ -23,7 +23,19 @@ class CellSelection(BaseModel):
         return self
 
 
+class EvidenceRead(BaseModel):
+    model_config = ConfigDict(extra="forbid", strict=True)
+    cell_ids: list[str] = Field(min_length=1, max_length=2)
+
+    @model_validator(mode="after")
+    def check_distinct_cells(self):
+        if len(set(self.cell_ids)) != len(self.cell_ids):
+            raise ValueError("Evidence cell IDs must be distinct.")
+        return self
+
+
 class SourceDocument(BaseModel):
+    # Accept source fields only; answers and programs belong in evaluation.
     model_config = ConfigDict(extra="forbid", strict=True)
     filename: str = Field(min_length=1, max_length=300)
     pre_text: list[str]
@@ -43,11 +55,13 @@ class SourceDocument(BaseModel):
         return self
 
     def cell_id(self, row: int, column: int) -> str:
+        # Coordinates are zero-based in table_ori, including its header row and column.
         return f"{self.filename}#table[{row}][{column}]"
 
     def model_input(self, question: str) -> str:
         if not question.strip() or len(question) > 2_000:
             raise ValueError("Question is empty or exceeds 2000 characters.")
+        # Normalized FinQA tables have known conflicts; retain original cell text.
         context = {
             "source_id": self.filename,
             "pre_text": self.pre_text,
@@ -62,6 +76,10 @@ class SourceDocument(BaseModel):
         return json.dumps({"question": question, "source": context}, ensure_ascii=False)
 
     def resolve_selection(self, selection: CellSelection) -> list[dict]:
+        return self.read_evidence(selection.cell_ids)
+
+    def read_evidence(self, cell_ids: list[str]) -> list[dict]:
+        # Resolve operands from the supplied source, never from model-generated numbers.
         cells = {
             self.cell_id(r, c): (r, c, value)
             for r, row in enumerate(self.table_ori)
@@ -69,7 +87,7 @@ class SourceDocument(BaseModel):
             if r > 0 and c > 0
         }
         evidence = []
-        for cell_id in selection.cell_ids:
+        for cell_id in cell_ids:
             if cell_id not in cells:
                 raise ValueError("Cell is outside the supplied numeric evidence.")
             row, column, value = cells[cell_id]

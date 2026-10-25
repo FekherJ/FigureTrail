@@ -37,6 +37,6 @@ Observed: one passing test with two endpoint subcases; no network or real key re
 
 Regression verification also passed: locked offline synchronization (33 installed packages), Ruff lint, formatting of the five selected files, ten FinQA case checks and all four offline tests. No additional inference requests were used for these checks.
 
-## Remaining B03 work
+## Subsequent B03 completion
 
-The subsequent [source-case pilot](B03_SOURCE_CASE.md) implemented the shared provider boundary, source selection, versions, SQLite allowances and three-call latency check. Numeric project quotas and tool-call compatibility remain pending. The connection response above does not establish RAG quality. See the [implementation log](IMPLEMENTATION_LOG.md) for commands and historical versus current behavior.
+The subsequent [source-case pilot](B03_SOURCE_CASE.md) implemented the shared provider boundary, source selection, versions, SQLite allowances and three-call latency check. A later [AI Studio screenshot](B03_ACCOUNT_LIMITS.md) records project quotas and the displayed free tier; a later [native tool check](B03_TOOL_CALL.md) passed with one request and one source-bound read, completing B03. The connection response above does not establish RAG quality. See the [implementation log](IMPLEMENTATION_LOG.md) for commands and historical versus current behavior.

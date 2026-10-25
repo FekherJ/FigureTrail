@@ -13,13 +13,23 @@ The design combines retrieval, structured LLM selection and deterministic calcul
 | Data references | 10 FinQA cases verified: cells, units, periods, formulas and results |
 | Reproducibility | Isolated Python environment, locked dependencies and repeatable checks |
 | API | Working `/health` endpoint, Pydantic response contract and OpenAPI schema |
+| Frontend | One HTML/CSS/JavaScript page planned for B09; no browser interface yet |
 | Provider connection | Gemini SDK connection verified: one structured response and one 768-dimension embedding |
 | Source-case pilot | Three matching operation/cell selections; 0.950 s median; one observed missing-period abstention |
+| Native tool check | One validated `read_evidence` request and local execution; model request took 1.302 s |
 | Retrieval and analysis | Indexed corpus, lexical/semantic retrieval and LLM analysis planned |
 | Tools and operations | Provider call journal and local allowances implemented; bounded agent and complete analysis records planned |
-| Delivery tracking | [Repository issues](https://github.com/FekherJ/FigureTrail/issues): B01–B02 completed; B03 In progress with quota/tool-call checks remaining |
+| Delivery tracking | [Repository issues](https://github.com/FekherJ/FigureTrail/issues): B01–B03 completed; B04 is next |
 
 Existing checks validate the reference data, HTTP foundation and one controlled LLM source-selection pilot. Broader task quality and RAG performance remain unmeasured; no benchmark accuracy score is published.
+
+## How the application fits together
+
+The target workflow is **question → retrieve report evidence → LLM selects cells and an operation → Python validates and calculates → result with sources**.
+
+The backend lives in `app/` and runs as one local Python service. FastAPI handlers receive HTTP requests; analysis orchestration, retrieval and data access will be added as separate modules when their features are implemented. A browser page served by the same backend is planned for B09. Gemini runs remotely and is called by Python; its API key stays out of the browser.
+
+Currently, the backend exposes only `/health`. The provider and source-selection checks run through command-line scripts using shared application modules. They are not yet connected to an analysis endpoint. Retrieval, the runtime calculator and the browser interface remain planned. See the [architecture](docs/architecture/ARCHITECTURE.md) for the target design.
 
 ## Setup and run
 
@@ -32,7 +42,11 @@ uv run --locked python -B -X utf8 scripts/check_environment.py
 uv run --locked python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
 
-`uv.lock` records resolved versions. `--locked` prevents implicit lockfile changes; `--no-build` uses prebuilt distributions. The first download requires internet access. PowerShell environment activation is optional. In VS Code, select `.venv\Scripts\python.exe` as the interpreter.
+`.venv/` isolates the project's Python interpreter and packages. It is separate from a `.env` configuration file; this project does not automatically load `.env` files. `uv run` uses the project environment without manual activation. In VS Code, select `.venv\Scripts\python.exe` as the interpreter.
+
+`uv.lock` records resolved versions. `--locked` prevents implicit lockfile changes; `--no-build` uses prebuilt distributions. The first download requires internet access. The examples use PowerShell, the verified Windows shell; it launches the application and does not determine its architecture.
+
+In the commands below, `python -m` runs a Python module, `-B` skips bytecode-cache files, and `-X utf8` selects UTF-8 text handling. `--live` is the provider scripts' explicit opt-in for real hosted requests; offline checks do not require it.
 
 In another terminal:
 
@@ -54,7 +68,7 @@ Configure `GEMINI_API_KEY` in your local environment using [Google's key setup i
 uv run --locked python -B -X utf8 -m scripts.check_provider --live
 ```
 
-This explicit live command makes at most two model requests: a small JSON response and one text embedding. It uses a 20-second transport timeout, a 64-token generation ceiling and no automatic retries. The first failure stops the check. Without `--live`, it refuses to send requests. Local records go under the ignored `data/local/provider-checks/` directory. No billing settings are changed; account quotas and charges must be checked separately.
+This explicit live command makes at most two model requests: a small JSON response and one text embedding. It uses a 20-second transport timeout, a 64-token generation ceiling and no automatic retries. The first failure stops the check. Without `--live`, it refuses to send requests. Local records go under the ignored `data/local/provider-checks/` directory. No billing settings are changed. [Observed free-tier quotas](docs/verification/B03_ACCOUNT_LIMITS.md) are recorded separately; actual charges remain unverified.
 
 On 25 October 2026, both checks passed: **1.015 seconds** for the structured response and **0.376 seconds** for the embedding. These are single-request connection measurements, not report-analysis or RAG benchmarks. See the [results and limitations](docs/verification/B03_PROVIDER_CONNECTION.md).
 
@@ -72,6 +86,16 @@ Gemini proposes the operation and ordered cell IDs; Python validates and resolve
 Observed: three matching selections of Canada 60 / total 243 MMBoe, with a **0.950-second median**, and one `insufficient_evidence` response for 2035. These results cover one development example and one negative variant. See the [pilot evidence](docs/verification/B03_SOURCE_CASE.md).
 
 The shared provider module records calls in the ignored `data/local/runs.sqlite`. It reserves allowances before requests against a €25 local limit, retains unknown usage and disables automatic retries. Allowances are conservative estimates, not provider charges or a guaranteed billing cap. Full commands, decisions and troubleshooting are in the [implementation log](docs/verification/IMPLEMENTATION_LOG.md).
+
+## Check a native tool call
+
+The B03 compatibility command exposes one allowed `read_evidence` function for the supplied report:
+
+```powershell
+uv run --locked python -B -X utf8 -m scripts.check_tool_call --live
+```
+
+Gemini chooses cell IDs in a native function call. Python validates the name and arguments, then reads the original source values. The command makes at most one model request and one local read. It does not continue the conversation or run an agent loop. Observed: the correct Canada/total cells, values 60 and 243, and a 1.302-second model request. See the [verification and limits](docs/verification/B03_TOOL_CALL.md).
 
 ## Prepare the data
 
@@ -93,20 +117,21 @@ After preparing the data:
 
 ```powershell
 uv run --locked ruff check .
-uv run --locked ruff format --check app scripts/check_environment.py scripts/check_provider.py scripts/run_source_case.py tests/test_provider_connection.py tests/test_source_case.py
+uv run --locked ruff format --check app scripts/check_environment.py scripts/check_provider.py scripts/run_source_case.py scripts/check_tool_call.py tests/test_provider_connection.py tests/test_source_case.py tests/test_tool_call.py
 uv run --locked python -B -X utf8 scripts/inspect_finqa.py --case all --check
 uv run --locked python -B -X utf8 -m unittest discover -s tests -v
 ```
 
 Verified results: **10 valid cases and 3 passing negative tests**. The tests reject the wrong year, confusion between ratios and percentages, and answers leaked into source exports. The verifier rejects Python's `-O` mode because it disables assertions.
 
-All **seven offline tests** pass. The provider tests additionally simulate quota errors on both SDK endpoints and verify credential exclusion, retained unknown usage, source/plan boundaries, invented cells and a budget block before network access. Ruff checks lint across the codebase and formatting in the API and B03 files. FinQA verification also runs with the Python standard library alone. These checks are separate from future retrieval and answer evaluations.
+All **nine offline tests** pass. Native-tool tests also cover eleven response/execution cases and a simulated quota failure. The provider tests additionally simulate quota errors on both SDK endpoints and verify credential exclusion, retained unknown usage, source/plan boundaries, invented cells and a budget block before network access. Ruff checks lint across the codebase and formatting in the API and B03 files. FinQA verification also runs with the Python standard library alone. These checks are separate from future retrieval and answer evaluations.
 
 ## Repository layout
 
 ```text
-app/                    Implemented API and application contracts
-scripts/                Data preparation, environment and provider checks
+app/                    HTTP entry point, contracts and shared Gemini integration
+prompts/                Versioned model instructions
+scripts/                Data preparation, environment, source-case and tool checks
 tests/                  Automated tests
 evals/cases/            References for evaluation only
 data/                   Local sources, provenance and license notice
@@ -126,7 +151,11 @@ Downloads, generated exports, execution records and `.venv/` are excluded from G
 
 Use clear, concise English for project documentation, diagrams, comments, diagnostics and GitHub issues. Preserve original source quotations and technical identifiers. Do not rewrite source evidence to improve its wording.
 
-The B03 pilot uses Google's Gemini Developer API: `gemini-3.5-flash-lite` for generation and `gemini-embedding-2` for embeddings, starting on the free tier. See the [provider decision](docs/architecture/PROVIDER_SELECTION.md). Model access, SDK compatibility, the source-selection contract, one-case latency and the provider allowance journal are verified. Numeric project quotas and tool-call compatibility remain pending. B03 is open.
+The B03 pilot uses Google's Gemini Developer API: `gemini-3.5-flash-lite` for generation and `gemini-embedding-2` for embeddings, starting on the free tier. See the [provider decision](docs/architecture/PROVIDER_SELECTION.md). Model access, SDK compatibility, the source-selection contract, one-case latency and the provider allowance journal are verified. [Free-tier project quotas](docs/verification/B03_ACCOUNT_LIMITS.md) are recorded from AI Studio. The [bounded native tool check](docs/verification/B03_TOOL_CALL.md) also passed. B03 is complete; retrieval and the full analysis workflow remain planned.
+
+## Next milestone
+
+B03's provider, contract, trace, quota and native-tool checks are complete. Next, prepare the annotation-free corpus and indexes in B04, preserving original cell values, context and source identifiers. The [backlog](docs/Backlog/BACKLOG.md) contains the acceptance criteria and dependencies.
 
 ## Documentation
 
