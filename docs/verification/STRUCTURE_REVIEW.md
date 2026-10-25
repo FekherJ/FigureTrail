@@ -59,7 +59,7 @@ See the [backlog](../Backlog/BACKLOG.md), [B01 report](B01_DATA_VERIFICATION.md)
 
 ## Pre-commit verification — 25 October 2026
 
-The README, implementation, dependency metadata and roadmap describe the same baseline: ten reviewed data cases and a working health API. LLM integration, indexed retrieval, the analysis API, UI and agent remain planned. B03 is the next technical step.
+At the time of this structure review, the README, implementation, dependency metadata and roadmap described ten reviewed data cases and a working health API; LLM integration and the later analysis workflow were planned. Subsequent B03 work added a shared provider module, source-selection pilot and SQLite allowances. The current README and implementation log describe that progress. Indexed retrieval, the analysis API, calculator, UI and agent remain planned; B03's quota and tool-call checks are pending.
 
 The review corrected two remaining US-spelling inconsistencies and changed the README's delivery-tracking link to public repository issues; the project board is private. Board visibility was not changed.
 

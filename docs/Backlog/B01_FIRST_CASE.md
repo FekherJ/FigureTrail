@@ -55,7 +55,7 @@ Gold evidence names `table_3`, `table_5` and `text_34` for units. Reviewed conte
 
 `table[4][3]` contains `2014`, while `table_ori[4][3]` contains a dash. This International/NGLs cell is not an operand. The anomaly is recorded in the review metadata; the verifier checks only selected evidence/operands and does not repair it. B04 must resolve it explicitly before indexing.
 
-This case establishes no model score. No indexed corpus, live LLM, abstention evaluation or reserved final split is available yet. Evaluation references must never enter the analysis service's inference inputs.
+This B01 review establishes no model score. At the time of that review, no indexed corpus, live LLM, abstention evaluation or reserved final split was available. The subsequent B03 pilot selected these cells three times and tested one missing-period abstention; broader model quality and RAG remain unmeasured. Evaluation references must never enter the analysis service's inference inputs.
 
 ## Reproduce
 
@@ -69,4 +69,4 @@ Assertions belong to this offline verifier, not runtime API validation. Do not u
 
 ## Related evidence
 
-The [second case](B01_SECOND_CASE.md) covers percentage change. Review combines AI-assisted source inspection and deterministic calculation; it is not an independent human review. The [B01 report](../verification/B01_DATA_VERIFICATION.md) records all ten cases, duplicate checks and distractor candidates. B03 is the next technical step.
+The [second case](B01_SECOND_CASE.md) covers percentage change. Review combines AI-assisted source inspection and deterministic calculation; it is not an independent human review. The [B01 report](../verification/B01_DATA_VERIFICATION.md) records all ten cases, duplicate checks and distractor candidates. B03's controlled pilot is now verified; its quota and tool-call checks remain pending.

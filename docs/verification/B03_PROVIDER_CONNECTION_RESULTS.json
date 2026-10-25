@@ -1,0 +1,96 @@
+{
+  "scope": "Connection check only; not a report-analysis evaluation",
+  "model_metadata": {
+    "checked_at_utc": "2026-10-25T11:27:38.252642+01:00",
+    "automatic_retries": 0,
+    "generation_calls": 0,
+    "embedding_calls": 0,
+    "results": [
+      {
+        "model": "gemini-3.5-flash-lite",
+        "method": "GET",
+        "request_type": "model_metadata",
+        "http_status": 200,
+        "returned_name": "models/gemini-3.5-flash-lite",
+        "version": "3.5-flash-lite-07-2026",
+        "supported_methods": [
+          "generateContent",
+          "countTokens",
+          "createCachedContent",
+          "batchGenerateContent"
+        ],
+        "duration_seconds": 0.231
+      },
+      {
+        "model": "gemini-embedding-2",
+        "method": "GET",
+        "request_type": "model_metadata",
+        "http_status": 200,
+        "returned_name": "models/gemini-embedding-2",
+        "version": "2",
+        "supported_methods": [
+          "embedContent",
+          "countTextTokens",
+          "countTokens",
+          "asyncBatchEmbedContent"
+        ],
+        "duration_seconds": 0.113
+      }
+    ]
+  },
+  "live_inference": {
+    "run_id": "b7934f23-fa8c-44e0-a81f-08cb8e7c5df9",
+    "checked_at_utc": "2026-10-25T11:35:19.067534+01:00",
+    "check_version": "provider-connection-v1",
+    "sdk_version": "2.33.0",
+    "status": "passed",
+    "max_model_requests": 2,
+    "automatic_retries": 0,
+    "transport_timeout_seconds": 20,
+    "max_output_tokens": 64,
+    "generation_prompt": "Return the JSON object with status set to ready. This is a connection check.",
+    "embedding_input": "task: search result | query: public report numerical evidence",
+    "price_date": "2026-10-25",
+    "price_source": "https://ai.google.dev/gemini-api/docs/pricing",
+    "billing_tier": "not_verified",
+    "actual_charge_usd": null,
+    "checks": [
+      {
+        "check": "structured_generation",
+        "requested_model": "gemini-3.5-flash-lite",
+        "status": "passed",
+        "usage": {
+          "total_input_tokens": 17,
+          "total_output_tokens": 6,
+          "total_thought_tokens": null,
+          "total_tokens": 23
+        },
+        "conservative_paid_equivalent_usd": null,
+        "returned_model": "gemini-3.5-flash-lite",
+        "validated_response": {
+          "status": "ready"
+        },
+        "duration_seconds": 1.015
+      },
+      {
+        "check": "text_embedding",
+        "requested_model": "gemini-embedding-2",
+        "status": "passed",
+        "usage": null,
+        "conservative_paid_equivalent_usd": null,
+        "dimensions": 768,
+        "finite_values": true,
+        "norm": 1.000000458832834,
+        "duration_seconds": 0.376
+      }
+    ],
+    "duration_seconds": 1.392
+  },
+  "offline_checks": {
+    "result": "passed",
+    "real_model_requests": 0,
+    "test": "test_provider_connection.py",
+    "tests": 1,
+    "endpoint_subcases": 2
+  }
+}

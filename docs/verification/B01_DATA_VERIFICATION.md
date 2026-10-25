@@ -426,6 +426,6 @@ These JSON/Markdown snapshots are dated evidence, not automatically regenerated 
 
 This verifies ten selected FinQA examples, not the independent truth of original reports or the entire dataset. There is no original-PDF review, reserved-case test, generalization measurement or model cost/latency result.
 
-B02's local foundation is verified separately. B03 must test a hosted LLM with structured output and measure latency/usage before a campaign. Provider/model selection remains open. B04 must resolve known table conflicts and keep references outside the inference corpus.
+B02's local foundation is verified separately. The [provider selection](../architecture/PROVIDER_SELECTION.md), [connection check](B03_PROVIDER_CONNECTION.md) and [controlled source-case pilot](B03_SOURCE_CASE.md) were recorded on 25 October 2026. The pilot selected the reviewed Canada/total cells three times and abstained once on an absent period. Broader task quality and RAG remain unmeasured. B04 must resolve known table conflicts and keep references outside the inference corpus.
 
 The model will propose operation/cell IDs; code will calculate. These references support separate checks of retrieval, cell selection and numerical results.

@@ -4,7 +4,7 @@
 
 FigureTrail answers simple numerical questions about public reports. It finds evidence, calculates a result and shows a verifiable analysis: values, periods, units, sources and formula. Example: “What was the percentage change in this measure between these two years?”
 
-The design uses a measurable fixed workflow, followed by a bounded agent variant. P0 covers LLM/RAG, API contracts and evaluations. P1 adds tools, security and observability. Reference data and the health API are verified; analysis features remain planned.
+The design uses a measurable fixed workflow, followed by a bounded agent variant. P0 covers LLM/RAG, API contracts and evaluations. P1 adds tools, security and observability. Reference data, the health API, a provider connection check and a controlled source-selection pilot are verified. Retrieval and the complete analysis workflow remain planned.
 
 Diagrams use Markdown and Mermaid so they can be reviewed and versioned with code. [GitHub diagram support](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/creating-diagrams).
 
@@ -63,7 +63,7 @@ flowchart TD
 
 ## 2. Technical choices
 
-Python, FastAPI, Pydantic, Uvicorn, NumPy and SQLite FTS5 were verified in B02. The corpus, LLM integration, embeddings, tools and analysis service remain to be built. See [B02 verification](../verification/B02_ENVIRONMENT.md).
+Python, FastAPI, Pydantic, Uvicorn, NumPy and SQLite FTS5 were verified in B02. Google GenAI SDK 2.33.0, a generation/embedding connection check and the [B03 source-case pilot](../verification/B03_SOURCE_CASE.md) are verified. `app/llm.py` centralizes SDK requests and SQLite call allowances. The corpus, corpus embeddings, tools, calculator and complete analysis service remain to be built. See [B02 verification](../verification/B02_ENVIRONMENT.md).
 
 | Need | Initial choice | Reason and limitation |
 |---|---|---|
@@ -82,11 +82,11 @@ Python, FastAPI, Pydantic, Uvicorn, NumPy and SQLite FTS5 were verified in B02. 
 
 References: [FastAPI validation](https://fastapi.tiangolo.com/tutorial/body/), [Python SQLite](https://docs.python.org/3/library/sqlite3.html), [FTS5/BM25](https://sqlite.org/fts5.html), [NumPy dot product](https://numpy.org/doc/stable/reference/generated/numpy.dot.html). Cosine search requires normalized vectors; reject zero vectors and incompatible dimensions.
 
-Provider, models, access and dated prices must be verified in B03. A prompt requesting JSON does not establish structured-output or tool-call support. Configure API access and billing separately, then record the selected models.
+The [B03 provider decision](PROVIDER_SELECTION.md) selects Google's Gemini Developer API with `gemini-3.5-flash-lite` and `gemini-embedding-2`, starting free. The one-case pilot passed its 0.950 s median latency gate and selected the reviewed cells three times. Broader task quality, numeric account quotas and tool-call compatibility remain unverified. A prompt requesting JSON does not establish structured-output or tool-call support. Configure API access and any later billing separately.
 
 ## 3. Data scope and preparation
 
-Start from a public [FinQA](https://github.com/czyssrs/FinQA) subset. The first ten cases were verified on 24 October 2026; see [B01 verification](../verification/B01_DATA_VERIFICATION.md). There is no indexed corpus or measured LLM yet.
+Start from a public [FinQA](https://github.com/czyssrs/FinQA) subset. The first ten cases were verified on 24 October 2026; see [B01 verification](../verification/B01_DATA_VERIFICATION.md). The source-selection pilot measures one controlled example. There is no indexed corpus or end-to-end answer evaluation yet.
 
 ### Initial scope
 
@@ -242,7 +242,7 @@ RAG and prompt delimiters do not guarantee injection resistance. Code restrictio
 - Disable hidden SDK retries. Initially, do not automatically retry timeouts or invalid responses. Additional attempts must be explicit, bounded and recorded.
 - Reuse embeddings for an unchanged corpus. Reading a stored result makes no model call; rerunning creates a new execution.
 
-Actual latency and cost are unmeasured. Reject an inaccessible, slow or expensive model during B03 before building around it.
+The source-case pilot records three generation timings and dated conservative cost estimates. Broader report-analysis latency and actual charges remain unmeasured. The current provider module atomically reserves €1/generation or €0.01/embedding against a €25 local allowance cap in `data/local/runs.sqlite`; unknown usage retains its reservation. See the [pilot report](../verification/B03_SOURCE_CASE.md) for accounting assumptions and limits. Reject an unsuitable model during B03 before building around it.
 
 ### Execution records
 
@@ -339,4 +339,4 @@ Release gates:
 3. **P1 demonstrated:** real tool choices, limit checks, inspectable traces and a measured comparison.
 4. **Release ready:** documented setup, real results, failures, trade-offs and a short demonstration.
 
-The initial ten-case data gate is verified. Provider suitability, indexed corpus and performance thresholds remain unverified. Reliability depends on implementation and these checks, rather than the diagram alone. Add cloud deployment, agent frameworks or remote vector storage only for demonstrated requirements.
+The initial ten-case data gate, provider connection and one-case source-selection latency gate are verified. Numeric account quotas, tool-call compatibility, the indexed corpus and broader task-performance thresholds remain unverified. Reliability depends on implementation and these checks, rather than the diagram alone. Add cloud deployment, agent frameworks or remote vector storage only for demonstrated requirements.

@@ -8,7 +8,16 @@ The target is a local application that retrieves cells from public reports, calc
 
 ## 1. GitHub tracking
 
-Track work in the existing board and keep one issue in progress. Each Bxx section defines an issue; retain its checklist and dependencies in the issue body. B01 is closed/Done. B02–B13 remain open/Backlog; B02 is awaiting final review. Issue import and membership have been verified, but recurring Markdown synchronization is not configured by that import.
+Track work in the existing board and keep one issue in progress. Each Bxx section defines an issue; retain its checklist and dependencies in the issue body. The following issue/board states were read back and verified on 25 October 2026:
+
+| Work items | Issue state | Board status |
+|---|---|---|
+| B01–B02 | Closed | Done |
+| B03 | Open | In progress |
+| B04–B06 | Open | Ready |
+| B07–B13 | Open | Backlog |
+
+B02's final review is complete. B03 is the only active item; its local and GitHub checklists match: five completed tasks and two remaining. B04–B06 retain their existing planning status; completion still follows the dependencies below. All thirteen issues and board-item identities were preserved. This was a one-time alignment; pushing Markdown does not automatically synchronize issue bodies or board fields.
 
 Record priority (`P0`/`P1`), milestone and estimated hours. Optional labels are `data`, `llm`, `rag`, `api`, `evals`, `agents`, `security`, `observability` and `docs`. These values are currently documented in issue descriptions; importing them did not create labels or GitHub milestones.
 
@@ -50,7 +59,7 @@ Milestones describe outcomes, not fixed calendar weeks. Keep the existing J1–J
 
 Suggested order: B01 → B02 → B03 → B04 → B05 → B06 → B07 → B08 → B09 → B10 → B11 → B12 → B13. Validate J1 before completing the P0 workflow, and revisit estimates after B03.
 
-Validation allowance: **€20 API usage plus €5 reserve**, within a cumulative ceiling strictly below €30. No provider or spending commitment is selected yet. Count pilots, embeddings, evaluations and failed calls. Estimate a campaign before running it and reduce repetitions if necessary. Verify API access, dated prices and billing separately.
+Validation allowance: **€20 API usage plus €5 reserve**, within a cumulative ceiling strictly below €30. The [provider decision](../architecture/PROVIDER_SELECTION.md) starts with the Gemini free tier; no paid billing has been enabled by the project. Count pilots, embeddings, evaluations and failed calls. Estimate a campaign before running it and reduce repetitions if necessary. Verify actual API access, dated prices and any later billing separately.
 
 ### Apply standards incrementally
 
@@ -64,7 +73,7 @@ The [engineering blueprint](../architecture/AI_PROJECT_BLUEPRINT.md) adds standa
 | B09–B12 | Safe evidence display, bounded tools, negative cases and complete traces. |
 | B13 | Checks without secrets, reproducible demo and measured results/limits. |
 
-B01 and the local B02 foundation are verified. GitHub import is complete; B02 remains open for final review. Analysis features are still planned.
+B01 and the B02 foundation are verified, including the final B02 review on 25 October. GitHub import is complete. B03 has a verified source-case pilot; retrieval and the complete analysis workflow remain planned.
 
 ## 3. Work items
 
@@ -106,7 +115,7 @@ Objective: create a reproducible environment and a verifiable HTTP foundation.
 
 **Design note:** configuration, inference sources and evaluation references have separate responsibilities.
 
-**Verified status:** local foundation passed on 24 October; board/issues verified on 25 October. [Issue #2](https://github.com/FekherJ/FigureTrail/issues/2) remains open for final review. See [B02 report](../verification/B02_ENVIRONMENT.md). LLM/RAG features remain unimplemented; B03 is next.
+**Verified status:** final review completed on 25 October: published foundation commit `d5c26ca`, current dependency/FTS5/NumPy checks and in-process `/health`/OpenAPI contracts confirmed. The original live HTTP results remain in the [B02 report](../verification/B02_ENVIRONMENT.md). [Issue #2](https://github.com/FekherJ/FigureTrail/issues/2) is closed as completed and its board item is Done; both were read back. B03 is the active item; its source-case pilot exists, while retrieval and the complete analysis workflow remain planned.
 
 ### B03 — Verify a hosted LLM, its output contract and cost
 
@@ -114,10 +123,15 @@ Objective: create a reproducible environment and a verifiable HTTP foundation.
 
 Objective: rule out unsuitable latency/access early and make a controlled real model call.
 
-- [ ] Verify a provider's access, prices, structured output, embeddings and tool calling; select generation and embedding models within budget.
-- [ ] Call the model on a source case: request an operation and cell references, or abstention; validate the schema in Python.
-- [ ] Centralize calls in one module without a multi-provider layer. Disable hidden retries; enforce output bounds, timeouts and usage tracking.
-- [ ] Create a `run_id`; record model, prompt version, duration, tokens, estimated cost and errors. Test a simulated failure without fees.
+**Progress recorded on 25 October 2026:** Gemini Developer API, `gemini-3.5-flash-lite` and `gemini-embedding-2`; SDK 2.33.0. The [connection check](../verification/B03_PROVIDER_CONNECTION.md) and [source-case pilot](../verification/B03_SOURCE_CASE.md) passed. Three source selections matched reviewed cells at a 0.950 s median; one missing-period request abstained. Shared calls, SQLite records, local allowance checks and simulated failures are implemented. Numeric project quotas and live tool-call compatibility remain pending, so B03 is open. See the [implementation log](../verification/IMPLEMENTATION_LOG.md) for commands and scope limits.
+
+- [x] Select generation and embedding models from documented capabilities and dated prices.
+- [x] Verify model access, structured generation and a normalized 768-dimension text embedding.
+- [ ] Record the project's actual model-specific RPM, TPM and daily quotas, with the observation date and tier.
+- [ ] Verify a bounded model-selected tool call with validated arguments; the B10 agent is not required for this compatibility check.
+- [x] Call the model on a source case: request an operation and cell references, or abstention; validate the schema in Python.
+- [x] Centralize calls in one module without a multi-provider layer. Disable hidden retries; enforce output bounds, timeouts and usage tracking.
+- [x] Create a `run_id`; record model, prompt version, duration, tokens, estimated cost and errors. Test a simulated failure without fees.
 
 **Acceptance criteria:** inspect a real result; never use a freely generated number as an operand. Measure latency/cost and compare with a written limit before proceeding. Preserve unknown usage and explicit errors. Keep keys out of the browser and traces.
 

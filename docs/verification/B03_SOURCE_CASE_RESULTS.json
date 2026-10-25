@@ -1,0 +1,296 @@
+{
+  "scope": "B03 controlled source-case pilot; four generation requests, no retrieval or calculation.",
+  "ratio": {
+    "scope": "Controlled source selection only; not retrieval, calculation or a benchmark.",
+    "question": "what percentage of the total oil and gas mmboe comes from canada?",
+    "scenario": "ratio",
+    "source_id": "DVN/2007/page_58.pdf",
+    "requested_repetitions": 3,
+    "results": [
+      {
+        "run_id": "465f108a-da90-48b7-855e-93c85a8604cd",
+        "plan": {
+          "status": "ready",
+          "operation": "ratio_percent",
+          "cell_ids": [
+            "DVN/2007/page_58.pdf#table[3][4]",
+            "DVN/2007/page_58.pdf#table[5][4]"
+          ]
+        },
+        "call": {
+          "call_id": "570b554a-c9ba-43ff-a560-edc41d0e78a1",
+          "run_id": "465f108a-da90-48b7-855e-93c85a8604cd",
+          "kind": "generation",
+          "status": "passed",
+          "created_at_utc": "2026-10-25T10:59:40.345811+00:00",
+          "requested_model": "gemini-3.5-flash-lite",
+          "sdk_version": "2.33.0",
+          "automatic_retries": 0,
+          "price_date": "2026-10-25",
+          "planning_eur_per_usd": "2",
+          "reserved_eur": "1",
+          "allowance_eur": "0.0120950",
+          "usage": {
+            "input_tokens": 2339,
+            "output_tokens": 80,
+            "thought_tokens": null,
+            "total_tokens": 2419
+          },
+          "estimated_paid_cost_usd": "0.0060475",
+          "actual_charge_eur": null,
+          "metadata": {
+            "prompt_version": "cell-selection-v1",
+            "source_id": "DVN/2007/page_58.pdf",
+            "source_sha256": "9b5797c7159ee1ac17773a84d3d3d6be0e8e0de946951277f67b36e75e6b54d6",
+            "code_sha256": "668d9ca89a4fabae1139494140c8325198935c32df104dcff63599dc34a4aff2",
+            "input_sha256": "248631471fc816ccb21eab310b7c5602a6a91cedddd448a6f2aa1ab8e0cde2db",
+            "instruction_sha256": "1dc60575cf0bae9a9adc4dc681305d2611f60bf0a698cd2f0b7f05e79686120e",
+            "max_output_tokens": 1000,
+            "timeout_seconds": 20
+          },
+          "returned_model": "gemini-3.5-flash-lite",
+          "validated_output": {
+            "status": "ready",
+            "operation": "ratio_percent",
+            "cell_ids": [
+              "DVN/2007/page_58.pdf#table[3][4]",
+              "DVN/2007/page_58.pdf#table[5][4]"
+            ]
+          },
+          "duration_seconds": 1.056
+        },
+        "resolved_evidence": [
+          {
+            "cell_id": "DVN/2007/page_58.pdf#table[3][4]",
+            "source_value": "60",
+            "row_label": "Canada",
+            "column_header": "Total   (MMBoe)"
+          },
+          {
+            "cell_id": "DVN/2007/page_58.pdf#table[5][4]",
+            "source_value": "243",
+            "row_label": "Total",
+            "column_header": "Total   (MMBoe)"
+          }
+        ],
+        "status": "references_validated",
+        "matches_reviewed_selection": true,
+        "matches_expected_outcome": true
+      },
+      {
+        "run_id": "3baedd11-efd9-4cfc-bbc5-98565de171a0",
+        "plan": {
+          "status": "ready",
+          "operation": "ratio_percent",
+          "cell_ids": [
+            "DVN/2007/page_58.pdf#table[3][4]",
+            "DVN/2007/page_58.pdf#table[5][4]"
+          ]
+        },
+        "call": {
+          "call_id": "a84015a8-0050-430e-8958-cbe3f28ef67f",
+          "run_id": "3baedd11-efd9-4cfc-bbc5-98565de171a0",
+          "kind": "generation",
+          "status": "passed",
+          "created_at_utc": "2026-10-25T10:59:41.424253+00:00",
+          "requested_model": "gemini-3.5-flash-lite",
+          "sdk_version": "2.33.0",
+          "automatic_retries": 0,
+          "price_date": "2026-10-25",
+          "planning_eur_per_usd": "2",
+          "reserved_eur": "1",
+          "allowance_eur": "0.0120950",
+          "usage": {
+            "input_tokens": 2339,
+            "output_tokens": 80,
+            "thought_tokens": null,
+            "total_tokens": 2419
+          },
+          "estimated_paid_cost_usd": "0.0060475",
+          "actual_charge_eur": null,
+          "metadata": {
+            "prompt_version": "cell-selection-v1",
+            "source_id": "DVN/2007/page_58.pdf",
+            "source_sha256": "9b5797c7159ee1ac17773a84d3d3d6be0e8e0de946951277f67b36e75e6b54d6",
+            "code_sha256": "668d9ca89a4fabae1139494140c8325198935c32df104dcff63599dc34a4aff2",
+            "input_sha256": "248631471fc816ccb21eab310b7c5602a6a91cedddd448a6f2aa1ab8e0cde2db",
+            "instruction_sha256": "1dc60575cf0bae9a9adc4dc681305d2611f60bf0a698cd2f0b7f05e79686120e",
+            "max_output_tokens": 1000,
+            "timeout_seconds": 20
+          },
+          "returned_model": "gemini-3.5-flash-lite",
+          "validated_output": {
+            "status": "ready",
+            "operation": "ratio_percent",
+            "cell_ids": [
+              "DVN/2007/page_58.pdf#table[3][4]",
+              "DVN/2007/page_58.pdf#table[5][4]"
+            ]
+          },
+          "duration_seconds": 0.95
+        },
+        "resolved_evidence": [
+          {
+            "cell_id": "DVN/2007/page_58.pdf#table[3][4]",
+            "source_value": "60",
+            "row_label": "Canada",
+            "column_header": "Total   (MMBoe)"
+          },
+          {
+            "cell_id": "DVN/2007/page_58.pdf#table[5][4]",
+            "source_value": "243",
+            "row_label": "Total",
+            "column_header": "Total   (MMBoe)"
+          }
+        ],
+        "status": "references_validated",
+        "matches_reviewed_selection": true,
+        "matches_expected_outcome": true
+      },
+      {
+        "run_id": "b29704d6-cc50-4175-8cf9-3b12012fe2e8",
+        "plan": {
+          "status": "ready",
+          "operation": "ratio_percent",
+          "cell_ids": [
+            "DVN/2007/page_58.pdf#table[3][4]",
+            "DVN/2007/page_58.pdf#table[5][4]"
+          ]
+        },
+        "call": {
+          "call_id": "45e43889-3ed9-4800-8579-ea4ecafa8f3b",
+          "run_id": "b29704d6-cc50-4175-8cf9-3b12012fe2e8",
+          "kind": "generation",
+          "status": "passed",
+          "created_at_utc": "2026-10-25T10:59:42.413397+00:00",
+          "requested_model": "gemini-3.5-flash-lite",
+          "sdk_version": "2.33.0",
+          "automatic_retries": 0,
+          "price_date": "2026-10-25",
+          "planning_eur_per_usd": "2",
+          "reserved_eur": "1",
+          "allowance_eur": "0.0120950",
+          "usage": {
+            "input_tokens": 2339,
+            "output_tokens": 80,
+            "thought_tokens": null,
+            "total_tokens": 2419
+          },
+          "estimated_paid_cost_usd": "0.0060475",
+          "actual_charge_eur": null,
+          "metadata": {
+            "prompt_version": "cell-selection-v1",
+            "source_id": "DVN/2007/page_58.pdf",
+            "source_sha256": "9b5797c7159ee1ac17773a84d3d3d6be0e8e0de946951277f67b36e75e6b54d6",
+            "code_sha256": "668d9ca89a4fabae1139494140c8325198935c32df104dcff63599dc34a4aff2",
+            "input_sha256": "248631471fc816ccb21eab310b7c5602a6a91cedddd448a6f2aa1ab8e0cde2db",
+            "instruction_sha256": "1dc60575cf0bae9a9adc4dc681305d2611f60bf0a698cd2f0b7f05e79686120e",
+            "max_output_tokens": 1000,
+            "timeout_seconds": 20
+          },
+          "returned_model": "gemini-3.5-flash-lite",
+          "validated_output": {
+            "status": "ready",
+            "operation": "ratio_percent",
+            "cell_ids": [
+              "DVN/2007/page_58.pdf#table[3][4]",
+              "DVN/2007/page_58.pdf#table[5][4]"
+            ]
+          },
+          "duration_seconds": 0.876
+        },
+        "resolved_evidence": [
+          {
+            "cell_id": "DVN/2007/page_58.pdf#table[3][4]",
+            "source_value": "60",
+            "row_label": "Canada",
+            "column_header": "Total   (MMBoe)"
+          },
+          {
+            "cell_id": "DVN/2007/page_58.pdf#table[5][4]",
+            "source_value": "243",
+            "row_label": "Total",
+            "column_header": "Total   (MMBoe)"
+          }
+        ],
+        "status": "references_validated",
+        "matches_reviewed_selection": true,
+        "matches_expected_outcome": true
+      }
+    ],
+    "median_generation_seconds": 0.95,
+    "latency_gate_met": true,
+    "all_selections_match": true
+  },
+  "missing_period": {
+    "scope": "Controlled source selection only; not retrieval, calculation or a benchmark.",
+    "question": "What percentage of total actual production in MMBoe came from Canada in 2035?",
+    "scenario": "missing-period",
+    "source_id": "DVN/2007/page_58.pdf",
+    "requested_repetitions": 1,
+    "results": [
+      {
+        "run_id": "138f6c6a-cac3-424b-9acf-14f1195f64be",
+        "plan": {
+          "status": "insufficient_evidence",
+          "operation": null,
+          "cell_ids": []
+        },
+        "call": {
+          "call_id": "f99a6fbe-d76a-466a-9892-3f35a2c82a2e",
+          "run_id": "138f6c6a-cac3-424b-9acf-14f1195f64be",
+          "kind": "generation",
+          "status": "passed",
+          "created_at_utc": "2026-10-25T10:59:51.549680+00:00",
+          "requested_model": "gemini-3.5-flash-lite",
+          "sdk_version": "2.33.0",
+          "automatic_retries": 0,
+          "price_date": "2026-10-25",
+          "planning_eur_per_usd": "2",
+          "reserved_eur": "1",
+          "allowance_eur": "0.011870",
+          "usage": {
+            "input_tokens": 2345,
+            "output_tokens": 29,
+            "thought_tokens": null,
+            "total_tokens": 2374
+          },
+          "estimated_paid_cost_usd": "0.005935",
+          "actual_charge_eur": null,
+          "metadata": {
+            "prompt_version": "cell-selection-v1",
+            "source_id": "DVN/2007/page_58.pdf",
+            "source_sha256": "9b5797c7159ee1ac17773a84d3d3d6be0e8e0de946951277f67b36e75e6b54d6",
+            "code_sha256": "668d9ca89a4fabae1139494140c8325198935c32df104dcff63599dc34a4aff2",
+            "input_sha256": "03fc7f79e3111eea28e30cd71dd3a7eb2403da0919a92e9d18502d6b0110551a",
+            "instruction_sha256": "1dc60575cf0bae9a9adc4dc681305d2611f60bf0a698cd2f0b7f05e79686120e",
+            "max_output_tokens": 1000,
+            "timeout_seconds": 20
+          },
+          "returned_model": "gemini-3.5-flash-lite",
+          "validated_output": {
+            "status": "insufficient_evidence",
+            "operation": null,
+            "cell_ids": []
+          },
+          "duration_seconds": 0.961
+        },
+        "resolved_evidence": [],
+        "status": "references_validated",
+        "matches_reviewed_selection": false,
+        "matches_expected_outcome": true
+      }
+    ],
+    "median_generation_seconds": 0.961,
+    "latency_gate_met": false,
+    "all_selections_match": true
+  },
+  "journal_summary": {
+    "records": 5,
+    "allowance_eur": "0.0681550",
+    "limit_eur": "25",
+    "actual_charge_eur": null,
+    "opening_allowance_eur": "0.02",
+    "note": "Local conservative allowances, not measured provider charges."
+  }
+}
