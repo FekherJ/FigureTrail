@@ -1,0 +1,118 @@
+{
+  "status": "prepared_and_reproduced",
+  "corpus_version": "32a94d8310f88e3987e833044c6131c808e4ac7da7391270aec098e59f062887",
+  "path": "data/corpus/prepared/32a94d8310f88e3987e833044c6131c808e4ac7da7391270aec098e59f062887.json",
+  "sources": 20,
+  "report_groups": 20,
+  "cells": 243,
+  "chunks": 186,
+  "selected_entries": 64,
+  "normalization_differences": 179,
+  "numeric_conflicts": 8,
+  "model_requests": 0,
+  "indexes_ready": false,
+  "prepared_file_sha256": "f3d780c569b8523cd8128c4e643d9385bb1e1335a3b0d94cad40163647916890",
+  "preparation_code_sha256": "0ddd9108917b8c850c1eb1bdfe573a3c4bd0370bdfb19d1f6e3bd7527af2026d",
+  "raw_sha256": "a847fb7e0d61a3125a1e2909852df6b89f1ee64d2c5ff1bf689e332214deee51",
+  "selection_sha256": "a7645d37ddd50541ba1a1311d24abbda9b75baaba7b1ee035ac8e97490ce9010",
+  "manifest": {
+    "chunking": {
+      "max_chunk_chars": 6000,
+      "post_context_paragraphs": 3,
+      "pre_context_paragraphs": 5,
+      "text_target_chars": 1200
+    },
+    "corpus_version": "32a94d8310f88e3987e833044c6131c808e4ac7da7391270aec098e59f062887",
+    "counts": {
+      "cells": 243,
+      "chunks": 186,
+      "report_groups": 20,
+      "sources": 20
+    },
+    "preparation_version": "finqa-prepared-v1",
+    "raw_sha256": "a847fb7e0d61a3125a1e2909852df6b89f1ee64d2c5ff1bf689e332214deee51",
+    "selection_sha256": "a7645d37ddd50541ba1a1311d24abbda9b75baaba7b1ee035ac8e97490ce9010",
+    "source_policy": "original-table-v1"
+  },
+  "repeated_question_copies_collapsed": 44,
+  "duplicate_contexts": [],
+  "difference_counts": {
+    "formatting_difference": 104,
+    "text_difference": 33,
+    "numeric_conflict": 8,
+    "label_difference": 34
+  },
+  "numeric_conflict_resolutions": [
+    {
+      "cell_id": "AON/2011/page_134.pdf#table[5][1]",
+      "kind": "numeric_conflict",
+      "original": "\u2014",
+      "normalized": "2014",
+      "resolution": "use_original"
+    },
+    {
+      "cell_id": "AON/2011/page_134.pdf#table[5][2]",
+      "kind": "numeric_conflict",
+      "original": "\u2014",
+      "normalized": "2014",
+      "resolution": "use_original"
+    },
+    {
+      "cell_id": "DVN/2007/page_58.pdf#table[4][3]",
+      "kind": "numeric_conflict",
+      "original": "\u2014",
+      "normalized": "2014",
+      "resolution": "use_original"
+    },
+    {
+      "cell_id": "HII/2017/page_124.pdf#table[2][1]",
+      "kind": "numeric_conflict",
+      "original": "\u2014",
+      "normalized": "2014",
+      "resolution": "use_original"
+    },
+    {
+      "cell_id": "HII/2017/page_124.pdf#table[2][2]",
+      "kind": "numeric_conflict",
+      "original": "\u2014",
+      "normalized": "2014",
+      "resolution": "use_original"
+    },
+    {
+      "cell_id": "HII/2017/page_124.pdf#table[2][3]",
+      "kind": "numeric_conflict",
+      "original": "\u2014",
+      "normalized": "2014",
+      "resolution": "use_original"
+    },
+    {
+      "cell_id": "MAS/2018/page_35.pdf#table[3][2]",
+      "kind": "numeric_conflict",
+      "original": "\u2014",
+      "normalized": "2014",
+      "resolution": "use_original"
+    },
+    {
+      "cell_id": "MAS/2018/page_35.pdf#table[3][3]",
+      "kind": "numeric_conflict",
+      "original": "\u2014",
+      "normalized": "2014",
+      "resolution": "use_original"
+    }
+  ],
+  "curation_exclusions": [
+    {
+      "source": "AES/2017/page_157.pdf",
+      "reason": "Original/normalized table shape is unsupported."
+    },
+    {
+      "source": "RE/2017/page_159.pdf",
+      "reason": "Original/normalized table shape is unsupported."
+    }
+  ],
+  "reviewed_operand_cells_preserved": 20,
+  "dvn_2008_context_retained": true,
+  "protected_artifacts_unchanged": 45,
+  "max_chunk_chars": 2048,
+  "offline_tests_passed": 14
+}

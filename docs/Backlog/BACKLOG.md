@@ -12,11 +12,11 @@ Track work in the existing board and keep one issue in progress. Each Bxx sectio
 
 | Work items | Issue state | Board status |
 |---|---|---|
-| B01–B03 | Closed | Done |
-| B04–B06 | Open | Ready |
+| B01–B04 | Closed | Done |
+| B05–B06 | Open | Ready |
 | B07–B13 | Open | Backlog |
 
-B03's seven checklist items are verified, including the account-limit observation and one native tool call with validated arguments and original source values. B01–B03 are complete; B04 is the next work item. The B03 issue body and Done status are aligned with this completion review. B04–B06 retain their existing planning status; completion still follows the dependencies below. All thirteen issues and board-item identities were preserved. This was a one-time alignment; pushing Markdown does not automatically synchronize issue bodies or board fields.
+B03's seven checklist items are verified, including the account-limit observation and one native tool call with validated arguments and original source values. B01–B04 are complete; B04's source, SQLite/FTS5, embedding and alignment checks are verified. The B03 issue body and Done status are aligned with this completion review. B04 has four completed tasks and its issue/card are closed/Done. B05–B06 retain Ready; B05 retrieval measurement is next and completion follows the dependencies below. All thirteen issues and board-item identities were preserved. This was a one-time alignment; pushing Markdown does not automatically synchronize issue bodies or board fields.
 
 Record priority (`P0`/`P1`), milestone and estimated hours. Optional labels are `data`, `llm`, `rag`, `api`, `evals`, `agents`, `security`, `observability` and `docs`. These values are currently documented in issue descriptions; importing them did not create labels or GitHub milestones.
 
@@ -114,7 +114,7 @@ Objective: create a reproducible environment and a verifiable HTTP foundation.
 
 **Design note:** configuration, inference sources and evaluation references have separate responsibilities.
 
-**Verified status:** final review completed on 25 October: published foundation commit `d5c26ca`, current dependency/FTS5/NumPy checks and in-process `/health`/OpenAPI contracts confirmed. The original live HTTP results remain in the [B02 report](../verification/B02_ENVIRONMENT.md). [Issue #2](https://github.com/FekherJ/FigureTrail/issues/2) is closed as completed and its board item is Done; both were read back. B03 is the active item; its source-case pilot exists, while retrieval and the complete analysis workflow remain planned.
+**Verified status:** final review completed on 25 October: published foundation commit `d5c26ca`, current dependency/FTS5/NumPy checks and in-process `/health`/OpenAPI contracts confirmed. The original live HTTP results remain in the [B02 report](../verification/B02_ENVIRONMENT.md). [Issue #2](https://github.com/FekherJ/FigureTrail/issues/2) is closed as completed and its board item is Done; both were read back. B03's source-case pilot and native tool check are complete. B04 indexing is also complete; B05 retrieval measurement is next, and the complete analysis workflow remains planned.
 
 ### B03 — Verify a hosted LLM, its output contract and cost
 
@@ -144,10 +144,12 @@ Objective: rule out unsuitable latency/access early and make a controlled real m
 
 Objective: transform public text/tables into retrievable evidence.
 
-- [ ] Prepare a small corpus with distractors; deduplicate, assign `report_id`, `source_id` and `cell_id`, and retain original numbers.
-- [ ] Build text/table-row chunks preserving labels, headers, periods, units and context. Do not invent missing company or unit metadata.
-- [ ] Create SQLite/FTS5 and corpus embeddings; store vectors, chunk mappings and a version/hash manifest.
-- [ ] Physically separate references; check annotation leakage and corpus/index/vector alignment.
+**Progress on 25 October 2026:** [offline preparation](../verification/B04_CORPUS_PREPARATION.md) verified: 20 source contexts/report groups, 186 chunks, 243 original cells and 44 repeated question copies collapsed. Eight numeric conflicts retain original missing-value dashes. All twenty reviewed B01 operands are preserved; fourteen offline tests passed at that preparation snapshot. Prepared artifacts reproduce exactly without model calls. The [complete index build](../verification/B04_INDEX_BUILD.md) also passed: 186 aligned matrix/FTS rows, 768 dimensions and 184 distinct cached inputs. The Windows recording interruption and extra request are retained in evidence. Twenty offline tests pass; cached rebuilding makes zero requests. All four criteria are verified and B04 is complete.
+
+- [x] Prepare a small corpus with distractors; deduplicate, assign `report_id`, `source_id` and `cell_id`, and retain original numbers.
+- [x] Build text/table-row chunks preserving labels, headers, periods, units and context. Do not invent missing company or unit metadata.
+- [x] Create SQLite/FTS5 and corpus embeddings; store vectors, chunk mappings and a version/hash manifest.
+- [x] Physically separate references; check annotation leakage and corpus/index/vector alignment.
 
 **Acceptance criteria:** repeatable preparation, no answers/programs/gold evidence in inference artifacts, and valid source resolution for every ID. Reject inconsistent indexes at load time. Preserve traces during rebuilds.
 
@@ -325,4 +327,4 @@ Objective: release a reproducible version with measured results and documented t
 
 Exclude arbitrary PDF/OCR ingestion, user-supplied URL downloads, slow local models, fine-tuning, multi-agent systems, multiple providers, SSO, distributed cloud deployment, full dashboards and systematic LLM judging from this cycle.
 
-Add an extension only to address an observed weakness, and replace another task within the available allowance. The next technical step is **B04**: indexed corpus construction before retrieval and the complete analysis workflow.
+Add an extension only to address an observed weakness, and replace another task within the available allowance. The next technical step is **B05**: implement and measure retrieval against the completed index bundle.

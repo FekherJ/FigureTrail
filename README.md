@@ -11,15 +11,17 @@ The design combines retrieval, structured LLM selection and deterministic calcul
 | Component | Status |
 |---|---|
 | Data references | 10 FinQA cases verified: cells, units, periods, formulas and results |
+| Prepared corpus | 20 contexts, 186 chunks and 243 original cells; offline preparation verified |
+| Search bundle | SQLite/FTS5 plus an aligned 186 × 768 matrix; 184 distinct cached document embeddings |
 | Reproducibility | Isolated Python environment, locked dependencies and repeatable checks |
 | API | Working `/health` endpoint, Pydantic response contract and OpenAPI schema |
 | Frontend | One HTML/CSS/JavaScript page planned for B09; no browser interface yet |
 | Provider connection | Gemini SDK connection verified: one structured response and one 768-dimension embedding |
 | Source-case pilot | Three matching operation/cell selections; 0.950 s median; one observed missing-period abstention |
 | Native tool check | One validated `read_evidence` request and local execution; model request took 1.302 s |
-| Retrieval and analysis | Indexed corpus, lexical/semantic retrieval and LLM analysis planned |
+| Retrieval and analysis | Index bundle verified; retriever comparison and numerical analysis planned |
 | Tools and operations | Provider call journal and local allowances implemented; bounded agent and complete analysis records planned |
-| Delivery tracking | [Repository issues](https://github.com/FekherJ/FigureTrail/issues): B01–B03 completed; B04 is next |
+| Delivery tracking | [Repository issues](https://github.com/FekherJ/FigureTrail/issues): B01–B04 completed; B05 retrieval measurement is next |
 
 Existing checks validate the reference data, HTTP foundation and one controlled LLM source-selection pilot. Broader task quality and RAG performance remain unmeasured; no benchmark accuracy score is published.
 
@@ -111,30 +113,54 @@ If the raw file already exists, keep it and run the export command. Its hash is 
 
 Source exports contain only `filename`, `pre_text`, `post_text`, `table` and `table_ori`. Questions, answers, programs and annotated evidence remain in evaluation references. All ten cases are development cases. The original report PDFs have not been inspected.
 
+## Prepare the corpus
+
+The [pinned source selection](data/finqa-corpus-selection.json) includes the ten reviewed contexts and ten additional contexts. Build the source-only artifact and verify it without model requests:
+
+```powershell
+uv run --locked python -B -X utf8 -m scripts.prepare_corpus
+uv run --locked python -B -X utf8 -m scripts.prepare_corpus --check
+```
+
+Verified output: 20 report contexts, 186 chunks and 243 cells. Original tables are authoritative; normalized dash-to-2014 conflicts are recorded separately and retain missing values. Chunks preserve headers and adjacent context, with links to full parent sources. Generated artifacts are ignored by Git. The completed SQLite/vector bundle is built in the next section; the service has not loaded it yet. See the [verification report](docs/verification/B04_CORPUS_PREPARATION.md).
+
+## Build and verify the search bundle
+
+After corpus preparation, configure `GEMINI_API_KEY` for the first live build:
+
+```powershell
+uv run --locked python -B -X utf8 -m scripts.build_index --live
+uv run --locked python -B -X utf8 -m scripts.build_index --check
+```
+
+The builder embeds each distinct chunk input once, caches completed vectors and publishes SQLite/FTS5, a float32 matrix and a versioned manifest only after validation. The first build is paced and may take several minutes. Missing vectors require `--live`; `uv run --locked python -m scripts.build_index` rebuilds from cache without a key or hosted requests. Repeating `--live` also reuses existing vectors.
+
+Verified: 186 aligned rows, 768 dimensions, 184 distinct inputs and a cached rebuild at 0.394 s internally with zero requests. A Windows progress-file interruption was fixed and resumed; its extra request is retained in the [build evidence](docs/verification/B04_INDEX_BUILD.md). Usage/charges remain unknown where unreported. Generated bundles, caches and journals are ignored by Git. Run one builder at a time and preserve `data/local/runs.sqlite`.
+
 ## Run checks
 
 After preparing the data:
 
 ```powershell
 uv run --locked ruff check .
-uv run --locked ruff format --check app scripts/check_environment.py scripts/check_provider.py scripts/run_source_case.py scripts/check_tool_call.py tests/test_provider_connection.py tests/test_source_case.py tests/test_tool_call.py
+uv run --locked ruff format --check app scripts/check_environment.py scripts/check_provider.py scripts/run_source_case.py scripts/check_tool_call.py scripts/prepare_corpus.py scripts/build_index.py tests/test_provider_connection.py tests/test_source_case.py tests/test_tool_call.py tests/test_corpus.py tests/test_index.py
 uv run --locked python -B -X utf8 scripts/inspect_finqa.py --case all --check
 uv run --locked python -B -X utf8 -m unittest discover -s tests -v
 ```
 
 Verified results: **10 valid cases and 3 passing negative tests**. The tests reject the wrong year, confusion between ratios and percentages, and answers leaked into source exports. The verifier rejects Python's `-O` mode because it disables assertions.
 
-All **nine offline tests** pass. Native-tool tests also cover eleven response/execution cases and a simulated quota failure. The provider tests additionally simulate quota errors on both SDK endpoints and verify credential exclusion, retained unknown usage, source/plan boundaries, invented cells and a budget block before network access. Ruff checks lint across the codebase and formatting in the API and B03 files. FinQA verification also runs with the Python standard library alone. These checks are separate from future retrieval and answer evaluations.
+All **twenty offline tests** pass. Index checks cover cached rebuild/resume, file-lock recovery, pacing/restart history, cache corruption and mismatched SQLite/FTS/vector rows and configuration. Corpus checks cover source isolation, deduplication, original values/context, repeatable artifacts and rejection of inconsistent input/output. Native-tool tests also cover eleven response/execution cases and a simulated quota failure. The provider tests additionally simulate quota errors on both SDK endpoints and verify credential exclusion, retained unknown usage, source/plan boundaries, invented cells and a budget block before network access. Ruff checks lint across the codebase and formatting in the application, current preparation/provider/index commands and their tests. FinQA verification also runs with the Python standard library alone. These checks are separate from future retrieval and answer evaluations.
 
 ## Repository layout
 
 ```text
-app/                    HTTP entry point, contracts and shared Gemini integration
+app/                    HTTP, contracts, corpus/index storage, embeddings and Gemini integration
 prompts/                Versioned model instructions
 scripts/                Data preparation, environment, source-case and tool checks
 tests/                  Automated tests
 evals/cases/            References for evaluation only
-data/                   Local sources, provenance and license notice
+data/                   Pinned source selection, local sources, provenance and license notice
 docs/architecture/      Design, contracts and technical decisions
 docs/Backlog/           B01–B13 roadmap and reference cases
 docs/verification/      Verification reports, results and limitations
@@ -155,7 +181,7 @@ The B03 pilot uses Google's Gemini Developer API: `gemini-3.5-flash-lite` for ge
 
 ## Next milestone
 
-B03's provider, contract, trace, quota and native-tool checks are complete. Next, prepare the annotation-free corpus and indexes in B04, preserving original cell values, context and source identifiers. The [backlog](docs/Backlog/BACKLOG.md) contains the acceptance criteria and dependencies.
+B01–B04 are complete. Next, implement and measure lexical and semantic retrieval in B05, using the same corpus and questions. The analysis API, deterministic calculator, browser interface and bounded agent follow in later milestones. The [backlog](docs/Backlog/BACKLOG.md) contains the acceptance criteria and dependencies.
 
 ## Documentation
 

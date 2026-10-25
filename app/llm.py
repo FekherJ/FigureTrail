@@ -298,7 +298,7 @@ class GeminiProvider:
             {**(metadata or {}), **tags},
         )
 
-    def embed_text(self, text: str, *, run_id: str):
+    def embed_text(self, text: str, *, run_id: str, metadata: dict | None = None):
         if not text or len(text) > 20_000:
             raise ValueError("Embedding input is empty or exceeds its size limit.")
 
@@ -325,7 +325,9 @@ class GeminiProvider:
             ),
             parse,
             {
-                "input_sha256": sha256(text.encode()).hexdigest(),
                 "format_version": "search-prefix-v1",
+                **(metadata or {}),
+                "input_sha256": sha256(text.encode()).hexdigest(),
+                "input_token_allowance": len(text.encode()) + 64,
             },
         )

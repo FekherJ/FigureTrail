@@ -1,8 +1,8 @@
 # AI Project Blueprint — FigureTrail
 
-**Reviewed 24 October 2026. Proposed target; build incrementally.**
+**Standards reviewed 24 October; implementation status updated 25 October 2026. Build incrementally.**
 
-Purpose: answer numerical questions from public reports with traceable evidence. Scope: one local Python service, a bounded report corpus, deterministic calculations and measured retrieval/model variants. Data references, the HTTP health contract, provider access and a bounded native tool call are verified; retrieval and full analysis capabilities follow the implementation roadmap.
+Purpose: answer numerical questions from public reports with traceable evidence. Scope: one local Python service, a bounded report corpus, deterministic calculations and measured retrieval/model variants. Data references, the HTTP health contract, provider access, a bounded native tool call and the SQLite/vector index bundle are verified; retrieval measurement and full analysis capabilities follow the implementation roadmap.
 
 ## 1. Repository responsibilities
 
@@ -12,11 +12,13 @@ figuretrail/
 │   ├── __init__.py
 │   ├── main.py                  # FastAPI routes; serves UI
 │   ├── schemas.py               # request, plan, tool, result contracts
+│   ├── corpus.py                # implemented source preparation and artifact validation
 │   ├── service.py               # fixed workflow; shared validation/limits
 │   ├── retrieval.py             # search, scope, evidence/cell lookup
 │   ├── calculator.py            # permitted Decimal operations
 │   ├── llm.py                   # one provider SDK; bounded calls
-│   ├── storage.py               # corpus reads; execution records
+│   ├── embeddings.py            # content-addressed vector cache and paced preparation
+│   ├── storage.py               # SQLite/vector publication and validated reads
 │   ├── agent.py                 # P1 bounded tool-selection loop
 │   └── static/                  # minimal HTML/CSS/JavaScript
 ├── prompts/                     # versioned task prompts

@@ -1,0 +1,26 @@
+{
+  "selection_version": "finqa-corpus-v1",
+  "raw_sha256": "a847fb7e0d61a3125a1e2909852df6b89f1ee64d2c5ff1bf689e332214deee51",
+  "source_filenames": [
+    "AON/2009/page_48.pdf",
+    "AON/2011/page_134.pdf",
+    "APD/2014/page_39.pdf",
+    "APD/2019/page_31.pdf",
+    "DVN/2007/page_58.pdf",
+    "ETR/2004/page_213.pdf",
+    "ETR/2017/page_26.pdf",
+    "FBHS/2017/page_23.pdf",
+    "HII/2017/page_124.pdf",
+    "INTC/2013/page_29.pdf",
+    "IP/2012/page_93.pdf",
+    "JPM/2014/page_65.pdf",
+    "LMT/2012/page_47.pdf",
+    "LMT/2015/page_56.pdf",
+    "MAS/2018/page_35.pdf",
+    "MS/2014/page_292.pdf",
+    "PKG/2009/page_65.pdf",
+    "UNP/2007/page_65.pdf",
+    "UNP/2008/page_77.pdf",
+    "ZBH/2017/page_53.pdf"
+  ]
+}

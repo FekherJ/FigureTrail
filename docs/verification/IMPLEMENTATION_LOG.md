@@ -412,3 +412,136 @@ gh project item-list 2 --owner FekherJ --format json
 The prepared payload filename represents a temporary task-local file, not a setup input. `$statusField` and `$doneOption` were resolved from the current field listing. Readback confirmed the exact reviewed issue body, seven checked tasks, closed/completed and Done. All thirteen item identities and the other twelve board items were preserved. B04–B06 remain Ready; B04 has not started. The issue body identifies evidence paths awaiting publication; no unavailable main-branch links were presented as live. This is a one-time update, not recurring Markdown synchronization.
 
 No dependency changes, commit or push were made. Next: B04, preparing a versioned annotation-free corpus with original cell IDs, table context, normalization-conflict handling and paced embedding preparation.
+
+## 17. B04 offline corpus preparation - 25 October 2026
+
+Purpose: prepare source-only data for RAG before indexing or embeddings. The starting Git checkpoint was `062b3e08bfc51f721faae4cd4db27c71b46015f2` with a clean working tree. This step made no model requests and did not alter the provider journal.
+
+Added `app/corpus.py`, `scripts/prepare_corpus.py`, `tests/test_corpus.py` and `data/finqa-corpus-selection.json`. The source selection pins twenty filenames and the existing raw-file SHA-256. Preparation reads the raw dataset and that source-only selection; it does not load evals, verification reports or gold evidence. A separate post-build check uses references only to verify preservation of twenty B01 operands.
+
+Selection includes the ten reviewed contexts, two prior distractors and eight additional contexts from distinct report groups. Additional candidates were ordered by a filename hash and checked against the existing shape contract. AES/2017/page_157 was excluded after its ragged multi-row original header failed validation; RE/2017/page_159 was excluded for an unsupported shape. Both exclusions are recorded. No padding, flattening or guessed coordinates were introduced. An early diagnostic invocation also clipped stdout and caused a broken-pipe exit; rerunning the audit with a bounded summary succeeded. These audits sent no network/model requests.
+
+Transformation uses the original table in both prepared table fields. QA/retrieval annotations are dropped before source validation. Sources/cells/chunks have stable original identifiers; full parent context is retained, and row chunks include headers plus adjacent pre/post text. Numeric parsing retains original strings and recognizes conservative decimal/comma formats and an explicit leading dollar sign. Unknown forms remain null; missing dashes never become zero. No currency, unit or period metadata is guessed.
+
+Initial preparation was reproducible, but post-build operand checking found dollar-prefixed original cells that the first numeric parser left unknown. Explicit leading-dollar parsing and focused format cases were added, then all tests and preparation were rerun. The final artifact preserves all twenty reviewed operands. Historical B01 source/reference files were not changed to fit the transformation. The first development artifact remains an ignored intermediate; the final version below is the verified preparation result.
+
+Actual offline commands:
+
+```powershell
+uv run --locked --offline ruff format app/corpus.py scripts/prepare_corpus.py tests/test_corpus.py
+uv run --locked --offline ruff check .
+uv run --locked --offline python -B -X utf8 -m unittest discover -s tests -v
+uv run --locked --offline python -B -X utf8 -m scripts.prepare_corpus
+uv run --locked --offline python -B -X utf8 -m scripts.prepare_corpus --check
+uv run --locked --offline ruff format --check app scripts/check_environment.py scripts/check_provider.py scripts/run_source_case.py scripts/check_tool_call.py scripts/prepare_corpus.py tests/test_provider_connection.py tests/test_source_case.py tests/test_tool_call.py tests/test_corpus.py
+git diff --check
+```
+
+Final result: twenty source contexts/report groups, 243 original cells and 186 chunks. Sixty-four selected raw entries collapse to twenty sources, removing 44 repeated question copies. The 179 recorded original/normalized differences include 104 formatting, 33 text, 34 label and eight numeric conflicts. All eight numeric conflicts are normalized 2014 values replacing original dashes; preparation retains those dashes and null numeric values. The longest chunk is 2,048 characters, below the 6,000-character ceiling. The Canada row retains the 2008/MMBoe context despite its 2007 report path.
+
+Corpus version: `32a94d8310f88e3987e833044c6131c808e4ac7da7391270aec098e59f062887`. The generated JSON is ignored under `data/corpus/prepared/`; the detailed transformation audit is separate under `data/local/corpus-preparation/`. Source contracts, fingerprints, regenerated cell/chunk records and counts are validated on load. Atomic same-directory writes reuse valid outputs and reject inconsistent existing artifacts. Check mode reproduces the expected artifact without writing. This is an intermediate preparation artifact; it is not a complete SQLite/vector bundle and is not loaded by the server.
+
+All fourteen offline tests pass. New corpus checks cover field isolation, question/context deduplication, original values/IDs, period/unit context, supported/unknown numeric formats, reproducibility, tampering, wrong raw hashes, missing/ambiguous sources, ragged tables, oversized content and unexpected annotation fields even after fingerprint recomputation. Ruff lint and fourteen selected-file format checks pass. Post-build validation preserved all twenty B01 operands, verified 139 local links and their case, and confirmed 45 protected artifacts unchanged, including existing Python code, prompts, raw data, source exports, evaluation fixtures, historical results, dependencies, license and `runs.sqlite`.
+
+Evidence: `B04_CORPUS_PREPARATION.md` and `B04_CORPUS_PREPARATION_RESULTS.json`. README, contributor instructions, architecture/blueprint, provenance and local backlog reflect the prepared state. The B04 checklist has two completed tasks and two remaining; SQLite/FTS5, embeddings, vector/chunk mappings and final corpus/index/vector alignment remain pending.
+
+Updated the existing GitHub issue #4 body, kept it open, and moved its existing card to In progress. Commands used the authenticated CLI:
+
+```powershell
+gh issue view 4 --repo FekherJ/FigureTrail --json number,title,state,body,url
+gh project item-list 2 --owner FekherJ --format json
+gh project field-list 2 --owner FekherJ --format json
+gh api --method PATCH repos/FekherJ/FigureTrail/issues/4 --input prepared-b04-progress.json
+gh project item-edit --id PVTI_lAHOBWzpAs4BolTFzhDR8J8 --project-id PVT_kwHOBWzpAs4BolTF --field-id $statusField.id --single-select-option-id $inProgressOption.id
+gh api repos/FekherJ/FigureTrail/issues/4
+gh project item-list 2 --owner FekherJ --format json
+```
+
+The payload was a temporary reviewed body; status-field/option IDs were resolved from the current field listing. Readback confirmed the exact body and two checked/two pending tasks, thirteen preserved identities and twelve unchanged other board items. New evidence paths are identified as awaiting publication. This is a one-time update; pushes do not synchronize issue bodies automatically.
+
+No dependency changes, live model calls, billing changes, commit or push were made. Next: continue B04 with SQLite/FTS5 and paced, cached document embeddings, then verify the complete index bundle before B05 retrieval measurements.
+
+## 18. B04 SQLite and document embeddings - 25 October 2026
+
+The user authorized the next B04 step, followed by documentation updates, and explicitly kept the Git commit for themselves. No assistant commit or push is authorized for this step.
+
+Implemented a content-addressed SQLite embedding cache in `app/embeddings.py`, conservative single-builder pacing, and `app/storage.py` for a source-only SQLite/FTS5 database, float32 vector matrix and hashed index manifest. Added `scripts/build_index.py` and offline checks in `tests/test_index.py`. Prepared-corpus writes now maintain a validated current-version pointer; the corpus data/version remain unchanged. The provider embedding method accepts caller format metadata and records a byte-based input allowance, while preserving actual unknown usage and the existing budget journal.
+
+Document formatting follows the current Google guidance: `title: none | text: ...`; expected query formatting is recorded separately as `task: search result | query: ...`. Each provider request contains one input. Identical formatted inputs share a cached vector. The SDK validates 768 finite, unit-length values before caching; loading checks the cache fingerprint and provenance. The index records row IDs, input keys, vector hashes and provider call/run IDs, and rejects mismatched files, shapes, row mappings, FTS records, schemas and corpus/model configuration. SQLite is opened read-only for validation; NumPy loading disables pickle.
+
+All eighteen offline tests passed before the live campaign. Simulated checks include cached rebuilds without a provider, partial-failure resume, cache corruption, vector row swaps, wrong dimensions, NaN, mismatched FTS data, unexpected tables/model configuration and pacing/restart history. Pacing uses monotonic time, seeds recent embedding attempts from the journal and waits in at most one-second increments. It limits this builder to 80 requests and 24,000 byte-based input allowances per rolling minute. UTF-8 bytes plus 64 is a conservative pacing proxy, not measured tokens or a provider quota guarantee. Run one builder at a time; untracked account use can still affect provider quotas.
+
+The campaign plan has 186 chunks and 184 unique formatted inputs, reserving at most EUR 1.84 for missing vectors against a starting local allowance of EUR 0.0797150. Input pacing allowances sum to 221,641; the maximum individual allowance is 2,132. The observed project limits remain 100 embedding RPM, 30,000 input TPM and 1,000 RPD. Actual usage/billing are not inferred from these planning values. Current published text-embedding prices were checked on 25 October: free tier available, paid Standard USD 0.20 per million input tokens; no billing settings changed.
+
+Commands used before and to start the live campaign:
+
+```powershell
+uv run --locked --offline ruff format app/corpus.py app/llm.py app/embeddings.py app/storage.py scripts/prepare_corpus.py scripts/build_index.py tests/test_index.py
+uv run --locked --offline ruff check .
+uv run --locked --offline python -B -X utf8 -m unittest discover -s tests -v
+uv run --locked --offline python -B -X utf8 -m scripts.prepare_corpus
+uv run --locked --offline python -B -X utf8 -m scripts.prepare_corpus --check
+uv run --locked --offline python -B -X utf8 -m scripts.build_index
+$env:GEMINI_API_KEY = [Environment]::GetEnvironmentVariable('GEMINI_API_KEY', 'User')
+uv run --locked --offline python -B -X utf8 -m scripts.build_index --live
+```
+
+The no-live command intentionally returned exit code 1 with 184 missing inputs and sent no requests. The live build uses run ID `052d922e-3717-4cd2-b8ef-0bee10d730ca`; its current authoritative progress/result is in `data/local/index-builds/052d922e-3717-4cd2-b8ef-0bee10d730ca.json`. Successful vectors are committed to `data/local/embeddings.sqlite` after each request; the existing provider journal is never reset. A provider failure stops the build and preserves completed vectors and all failed-call records. The completed result and final verification are recorded below after this campaign finishes. B04 remains open while the build is running.
+
+### Completed build, recovery and handoff
+
+The initial run stopped after 79 successful embedding responses because a Windows sharing violation prevented replacement of the progress JSON. Reading that file during the running build exposed the conflict. Seventy-eight vectors were already cached; one returned vector had not been saved because progress was written first. The provider journal retained all 79 requests. There were no provider errors.
+
+The repair caches a returned vector before progress I/O and retries only local `PermissionError` replacements, five attempts with at most 0.5 seconds of explicit backoff. Network/SDK retries remain disabled. Two regression tests cover transient sharing violations and preservation of a vector when progress saving permanently fails. The full offline suite then passed all twenty tests; Ruff lint passed. No protected fixture or earlier measured result was rewritten.
+
+The resumed live run `02469126-9545-4bd6-887d-16e5883e7889` reused 80 chunk rows and requested the remaining 106 inputs. It passed in 305.485 seconds, including 256.708 seconds of deliberate pacing. Across both live runs there were 185 provider requests for 184 distinct cached inputs, retaining the one response lost before the fix. Two duplicated inputs reuse vectors, so the final matrix has 186 rows at 768 dimensions. This is preparation evidence, not interactive retrieval latency or answer accuracy.
+
+The cache-only run `fa5acab5-3ae3-40ea-9ad3-30c8dfae80e2`, with an empty process API-key variable, passed with 186 cache-hit rows and zero model requests in 0.394 seconds internally. It reproduced index `c0a8c69496f03a95e2049096228afaaec2f410547d14a384bc34b6e78f1225fb`. Its code fingerprint and the resumed run match the final implementation. Complete index checking and prepared-corpus checking passed without requests. The intermediate preparation check's `indexes_ready: false` describes that JSON artifact; the separate index command validates the complete bundle.
+
+Project commands for reproducing the verified repair/build checks are below. An activated project environment or the README's locked `uv run` prefix resolves the same Python/dependencies; the process-only empty key does not remove the saved user variable.
+
+```powershell
+uv run --locked --offline ruff check .
+uv run --locked --offline python -B -X utf8 -m unittest discover -s tests -v
+$env:GEMINI_API_KEY = [Environment]::GetEnvironmentVariable('GEMINI_API_KEY', 'User')
+uv run --locked --offline python -B -X utf8 -m scripts.build_index --live
+$env:GEMINI_API_KEY = ''
+uv run --locked --offline python -B -X utf8 -m scripts.build_index
+uv run --locked --offline python -B -X utf8 -m scripts.build_index --check
+uv run --locked --offline python -B -X utf8 -m scripts.prepare_corpus --check
+```
+
+All 185 new embedding usage counters are unknown and retain EUR 0.01 reservations. The journal now has 191 rows; all six earlier records are unchanged. Its cumulative local allowance is EUR 1.9297150, not an invoice. Actual charges remain unknown; no billing settings changed. The 36 protected source/configuration/reference/result artifacts are unchanged. All twenty B01 operand values remain present in the validated index. Exact file/code/mapping hashes, timing denominators and run IDs are in [the build evidence](B04_INDEX_BUILD.md) and its JSON result.
+
+README, AGENTS, architecture, blueprint and the local backlog now distinguish the verified index from planned retrieval and analysis. The earlier corpus-preparation report is explicitly historical and its original JSON remains unchanged. The API still exposes only the HTTP foundation and has not loaded the bundle; `/health` retains `corpus_version: null`.
+
+Updated the existing B04 issue and card using the authenticated CLI, with readback:
+
+```powershell
+gh project field-list 2 --owner FekherJ --format json
+gh api repos/FekherJ/FigureTrail/issues/4
+gh project item-list 2 --owner FekherJ --format json
+gh api --method PATCH repos/FekherJ/FigureTrail/issues/4 --input prepared-b04-completion.json
+gh project item-edit --id PVTI_lAHOBWzpAs4BolTFzhDR8J8 --project-id PVT_kwHOBWzpAs4BolTF --field-id $statusField.id --single-select-option-id $doneOption.id
+gh api repos/FekherJ/FigureTrail/issues/4
+gh project item-list 2 --owner FekherJ --format json
+```
+
+The payload name represents the reviewed temporary JSON, not a repository setup input; the Status/Done IDs came from the field listing. Readback confirmed the exact body, four completed tasks, closed/completed and Done. All thirteen identities and the other twelve board items are unchanged. B05–B06 remain Ready, B07–B13 Backlog. The issue explicitly says code/evidence await the user's commit/push. This is a one-time update; pushing Markdown does not synchronize GitHub issue bodies.
+
+No dependency changes, commit, staging or push were made. B04 is complete. Next: B05, measured lexical and semantic retrieval under explicit user scope, without gold-derived filters.
+
+Final documentation validation: 147 local Markdown links and their exact case passed.
+
+Final handoff commands also passed:
+
+```powershell
+uv run --locked --offline ruff format --check app scripts/check_environment.py scripts/check_provider.py scripts/run_source_case.py scripts/check_tool_call.py scripts/prepare_corpus.py scripts/build_index.py tests/test_provider_connection.py tests/test_source_case.py tests/test_tool_call.py tests/test_corpus.py tests/test_index.py
+git diff --check
+git diff --cached --name-only
+git rev-parse --short HEAD
+git check-ignore data/local/runs.sqlite data/local/embeddings.sqlite data/corpus/current.json data/corpus/indexes/current.json data/raw/finqa-dev.json .venv .env
+rg -l 'AIza[0-9A-Za-z_-]{30,}' app scripts tests docs README.md AGENTS.md
+```
+
+Ruff confirmed eighteen files already formatted. The diff has no whitespace errors, the staged-file list is empty and HEAD remains `062b3e0`. All seven generated/configuration paths above are ignored. The credential-pattern scan returned no matching files (ripgrep exit 1 means no matches); this is a narrow pattern check rather than proof that arbitrary secrets cannot exist. No further model requests were made during documentation/handoff checks.

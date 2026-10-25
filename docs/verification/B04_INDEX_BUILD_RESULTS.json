@@ -1,0 +1,101 @@
+{
+  "status": "verified",
+  "corpus_version": "32a94d8310f88e3987e833044c6131c808e4ac7da7391270aec098e59f062887",
+  "index_version": "c0a8c69496f03a95e2049096228afaaec2f410547d14a384bc34b6e78f1225fb",
+  "index_path": "data/corpus/indexes/c0a8c69496f03a95e2049096228afaaec2f410547d14a384bc34b6e78f1225fb",
+  "counts": {
+    "cells": 243,
+    "chunks": 186,
+    "report_groups": 20,
+    "sources": 20
+  },
+  "embedding_configuration": {
+    "dimensions": 768,
+    "document_format": "title: none | text: {content}",
+    "dtype": "<f4",
+    "format_version": "retrieval-prefix-v1",
+    "model": "gemini-embedding-2",
+    "query_format": "task: search result | query: {query}"
+  },
+  "matrix_shape": [
+    186,
+    768
+  ],
+  "matrix_dtype": "float32",
+  "vectors_finite": true,
+  "vector_norm_min": 0.9999994241505058,
+  "vector_norm_max": 1.0000005763510396,
+  "unique_embedding_inputs": 184,
+  "cache_entries": 184,
+  "duplicate_input_rows_reused": 2,
+  "model_requests": 185,
+  "provider_failures": 0,
+  "unknown_usage_calls": 185,
+  "local_build_failures": 1,
+  "provider_responses_not_in_final_cache": 1,
+  "request_median_seconds": 0.412,
+  "request_p95_seconds": 0.5084,
+  "request_duration_total_seconds": 77.349,
+  "local_allowance_total_eur": "1.9297150",
+  "actual_charge_eur": null,
+  "journal_row_count": 191,
+  "earlier_journal_records_preserved": 6,
+  "files": {
+    "corpus.sqlite": {
+      "sha256": "9ce711ee2f36fac32efd75e9a3880b1b790abd2793be09d8e9b3b91040da796c",
+      "bytes": 974848
+    },
+    "vectors.npy": {
+      "sha256": "f9a95a195316d27a2a7cde37adb1243d2be6a7d19a8b32deaa01577645440b34",
+      "bytes": 571520
+    },
+    "manifest.json": {
+      "sha256": "bb8716fe80ad4cf882071d34eaea67140bd066caf1d6917a7657740b074a5f8f",
+      "bytes": 62268
+    }
+  },
+  "row_mapping_sha256": "2d0e1c6012af5582f269c01ded4aa80232c7fcd2877b393644f07788f3fb4db8",
+  "builder_code_sha256": "68b9a3f98db02ed6486ac21a005a08452a28a91d698113db502c38e640ca3959",
+  "build_runs": [
+    {
+      "run_id": "052d922e-3717-4cd2-b8ef-0bee10d730ca",
+      "status": "failed",
+      "cache_hits": 1,
+      "completed_rows": 79,
+      "pacing_wait_seconds": 209.4473350000335,
+      "error_type": "PermissionError",
+      "error_code": "index_build_failed",
+      "model_requests": 79
+    },
+    {
+      "run_id": "02469126-9545-4bd6-887d-16e5883e7889",
+      "status": "passed",
+      "cache_hits": 80,
+      "completed_rows": 186,
+      "pacing_wait_seconds": 256.7082344999071,
+      "duration_seconds": 305.485,
+      "model_requests": 106
+    },
+    {
+      "run_id": "fa5acab5-3ae3-40ea-9ad3-30c8dfae80e2",
+      "status": "passed",
+      "cache_hits": 186,
+      "completed_rows": 186,
+      "pacing_wait_seconds": 0.0,
+      "duration_seconds": 0.394,
+      "model_requests": 0
+    }
+  ],
+  "cached_rebuild_same_index": true,
+  "cached_rebuild_without_api_key": true,
+  "fts_row_count": 186,
+  "fts_smoke_query": {
+    "query": "canada",
+    "matching_rows": 2,
+    "retrieval_quality_measurement": false
+  },
+  "reviewed_operand_cells_preserved": 20,
+  "protected_artifacts_unchanged": 36,
+  "offline_tests_passed": 20,
+  "service_loads_index": false
+}

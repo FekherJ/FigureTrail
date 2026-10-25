@@ -20,7 +20,9 @@
 
 - B01: ten development cases verified against supplied FinQA text/tables. See [data verification](docs/verification/B01_DATA_VERIFICATION.md). These checks do not establish model or retrieval performance.
 - B02: environment, `/health`, published foundation and GitHub setup verified; final review completed on 25 October. Issue #2 is closed/completed and its board item is Done. See [runtime verification](docs/verification/B02_ENVIRONMENT.md) and the current status table in the backlog.
-- B03 is complete: it uses Gemini Developer API, `gemini-3.5-flash-lite` and `gemini-embedding-2`, starting free. SDK 2.33.0, the connection check and [source-case pilot](docs/verification/B03_SOURCE_CASE.md) are verified: three matching selections at a 0.950 s median and one missing-period abstention. Shared SDK calls and local allowances live in `app/llm.py`; no application calculator or retrieval exists yet. [Free-tier account quotas](docs/verification/B03_ACCOUNT_LIMITS.md) were recorded from the supplied AI Studio screenshot on 25 October; the [native tool check](docs/verification/B03_TOOL_CALL.md) passed with one request, one validated local read and a 1.302 s model duration. B04 is next. Do not make paid calls before dated prices, cost limits and credentials are configured for that issue.
+- B03 is complete: it uses Gemini Developer API, `gemini-3.5-flash-lite` and `gemini-embedding-2`, starting free. SDK 2.33.0, the connection check and [source-case pilot](docs/verification/B03_SOURCE_CASE.md) are verified: three matching selections at a 0.950 s median and one missing-period abstention. Shared SDK calls and local allowances live in `app/llm.py`; no application calculator or retrieval exists yet. [Free-tier account quotas](docs/verification/B03_ACCOUNT_LIMITS.md) were recorded from the supplied AI Studio screenshot on 25 October; the [native tool check](docs/verification/B03_TOOL_CALL.md) passed with one request, one validated local read and a 1.302 s model duration. B04 is complete. Do not make paid calls before dated prices, cost limits and credentials are configured for that issue.
+
+- B04 is complete: [index verification](docs/verification/B04_INDEX_BUILD.md) confirms 20 contexts, 186 chunks, 243 original cells, SQLite/FTS5 and an aligned 186 × 768 matrix. There are 184 distinct cached inputs. B05 retrieval measurement is next; the API has not loaded the index. The earlier preparation report is a historical intermediate snapshot.
 
 ## Development and verification
 
@@ -28,7 +30,7 @@
 - Prefer standard-library functionality and small readable functions. Keep one local Python application; introduce abstractions only for a demonstrated requirement.
 - Use comments sparingly to explain non-obvious decisions, constraints and trust boundaries. Do not narrate self-explanatory code or comment every line.
 - Run checks proportionate to the change. Preserve executable checks for data separation, numeric conventions and trust boundaries. Do not rewrite numerical fixtures or measured results to make a check pass.
-- Ruff lint covers the codebase; formatting covers `app/`, environment/provider/source-case checks and B03 tests. Avoid unrelated reformatting of verified reference tooling.
+- Ruff lint covers the codebase; formatting covers `app/`, environment/provider/source-case/tool/corpus/index commands and their tests. Avoid unrelated reformatting of verified reference tooling.
 - The offline FinQA verifier uses assertions and rejects `-O`. Runtime API/provider/domain validation must use explicit validation and exceptions.
 - Record actual commands, results, limitations and relevant versions. Keep failures in evaluation denominators and distinguish simulated from live model calls.
 - Maintain [IMPLEMENTATION_LOG.md](docs/verification/IMPLEMENTATION_LOG.md) after each meaningful step: purpose, changed files, actual commands, observed results, failures/fixes and next work. Keep secrets and private career information out of the log. Identify reconstructed history rather than inventing an exact transcript.
@@ -42,6 +44,7 @@
 - The evaluator forwards only the question and explicit user scope to the shared analysis service. Never derive retrieval filters or supplied evidence from gold annotations.
 - Validate stable cell/source IDs and resolve operands from source data. Calculate approved operations using `Decimal`; never execute generated Python, SQL or `eval`.
 - B03 cell IDs use `filename#table[row][column]` with zero-based coordinates against `table_ori`. The source-case pilot uses the original table explicitly; preserve this meaning when preparing the corpus.
+- Prepared inference tables use original values in both `table` and `table_ori`; keep normalization audits outside inference artifacts. Load prepared JSON through its fingerprint/schema/cell/chunk checks and build indexes only from that source-only artifact.
 - Preserve source attribution, license notices and provenance. Record and resolve table-normalization conflicts before indexing; retain report groups when splitting evaluation cases.
 
 ## Operational limits
@@ -49,5 +52,7 @@
 - Bind the service to localhost for the current release scope. No unrestricted URL/file ingestion, shell tools, arbitrary PDF/OCR pipeline or distributed deployment is required.
 - Use `app/llm.py` for every SDK request; all provider, source-case and native-tool commands share it. It records calls in `data/local/runs.sqlite`, reserves allowances against a €25 local limit and retains unknown usage. Do not bypass or reset that journal. Keep actual billing unknown unless verified. Apply deadlines, output-token bounds, retry limits and usage accounting to every request; strict wall-clock cancellation still needs validation.
 - Keep cumulative hosted-AI spending strictly below €30. Preparation, evaluations, errors and retries count toward this limit. Local estimates are not a guaranteed provider billing cap.
+- Build indexes from the validated prepared artifact. Use the current-version pointers and `app/storage.py` loader; reject corpus/model/file/row mismatches. Reuse the content-addressed embedding cache; missing vectors require `--live`, and cache-only builds/checks must make no model requests. Run one builder at a time.
+- Pacing uses 80 RPM and a 24,000/minute byte-based allowance proxy; actual embedding usage remains unknown. Local file-write retries are bounded and separate from disabled SDK/network retries. Preserve returned vectors before progress-record updates.
 - Introduce the agent only after the fixed baseline is measured. Initial ceiling: four generation calls and six tool calls, including at most two searches; enforce limits in code.
 - Minimize provider payloads, redact secrets from traces and escape displayed source content. Guardrails supplement explicit permissions and boundary validation.

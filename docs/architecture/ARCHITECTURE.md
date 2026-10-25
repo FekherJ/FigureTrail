@@ -63,7 +63,7 @@ flowchart TD
 
 ## 2. Technical choices
 
-Python, FastAPI, Pydantic, Uvicorn, NumPy and SQLite FTS5 were verified in B02. Google GenAI SDK 2.33.0, a generation/embedding connection check and the [B03 source-case pilot](../verification/B03_SOURCE_CASE.md) are verified. `app/llm.py` centralizes SDK requests and SQLite call allowances. The corpus, corpus embeddings, retrieval/calculation tools and complete analysis service remain to be built. One source-bound `read_evidence` native call is verified in the [B03 tool check](../verification/B03_TOOL_CALL.md). See [B02 verification](../verification/B02_ENVIRONMENT.md).
+Python, FastAPI, Pydantic, Uvicorn, NumPy and SQLite FTS5 were verified in B02. Google GenAI SDK 2.33.0, a generation/embedding connection check and the [B03 source-case pilot](../verification/B03_SOURCE_CASE.md) are verified. `app/llm.py` centralizes SDK requests and SQLite call allowances. The [prepared source corpus](../verification/B04_CORPUS_PREPARATION.md) is verified: 20 contexts, 186 chunks and 243 cells. The [SQLite/vector bundle](../verification/B04_INDEX_BUILD.md) is also verified: 186 rows at 768 dimensions. Retrieval/calculation tools and complete analysis remain to be built. One source-bound `read_evidence` native call is verified in the [B03 tool check](../verification/B03_TOOL_CALL.md). See [B02 verification](../verification/B02_ENVIRONMENT.md).
 
 | Need | Initial choice | Reason and limitation |
 |---|---|---|
@@ -86,7 +86,7 @@ The [B03 provider decision](PROVIDER_SELECTION.md) selects Google's Gemini Devel
 
 ## 3. Data scope and preparation
 
-Start from a public [FinQA](https://github.com/czyssrs/FinQA) subset. The first ten cases were verified on 24 October 2026; see [B01 verification](../verification/B01_DATA_VERIFICATION.md). The source-selection pilot measures one controlled example. There is no indexed corpus or end-to-end answer evaluation yet.
+Start from a public [FinQA](https://github.com/czyssrs/FinQA) subset. The first ten cases were verified on 24 October 2026; see [B01 verification](../verification/B01_DATA_VERIFICATION.md). The source-selection pilot measures one controlled example. The B04 corpus/index bundle is verified; end-to-end answer evaluation remains planned.
 
 ### Initial scope
 
@@ -95,6 +95,8 @@ Start from a public [FinQA](https://github.com/czyssrs/FinQA) subset. The first 
 - Support **percentage change** and **percentage ratio**, each using two table cells with explicit, compatible units and scales.
 - Keep text for context and retrieval. Arbitrary numerical extraction from paragraphs is outside the initial scope.
 - Display company, period and title only when present or verified. Otherwise retain an opaque document ID.
+
+B04's offline implementation uses `app/corpus.py` and `python -m scripts.prepare_corpus`. A pinned twenty-filename source selection drives preparation independently of evaluation references. Generated JSON is a validated intermediate artifact. `app/embeddings.py` caches/paces document vectors, `app/storage.py` publishes and validates SQLite/FTS5 plus vectors, and `python -m scripts.build_index` rebuilds from cache; only `--live` allows missing embedding requests. The complete bundle below is verified and remains separate from the service until analysis integration.
 
 ### Separate corpus and references
 
@@ -294,10 +296,13 @@ app/
   retrieval.py      # search, evidence reads and scope
   calculator.py     # cells, units and permitted operations
   llm.py            # selected SDK, limits, usage and errors
-  storage.py        # corpus reads and execution records
+  corpus.py         # source-only preparation and artifact validation
+  embeddings.py     # content-addressed cache and paced document preparation
+  storage.py        # SQLite/vector publication and validated reads
   static/           # simple page, styles and JavaScript
 scripts/
-  prepare_data.py   # corpus/reference separation and indexing
+  prepare_corpus.py # source/chunk preparation and current-version pointer
+  build_index.py    # cached/paced embedding build and bundle validation
 evals/
   run.py            # call service, then read references
   cases/            # development, reserved and robustness cases
@@ -339,4 +344,4 @@ Release gates:
 3. **P1 demonstrated:** real tool choices, limit checks, inspectable traces and a measured comparison.
 4. **Release ready:** documented setup, real results, failures, trade-offs and a short demonstration.
 
-The initial ten-case data gate, provider connection and one-case source-selection latency gate are verified. Account quotas are recorded from the [AI Studio observation](../verification/B03_ACCOUNT_LIMITS.md). One bounded native call is verified; the indexed corpus, multi-step agent behavior and broader task-performance thresholds remain unverified. Reliability depends on implementation and these checks, rather than the diagram alone. Add cloud deployment, agent frameworks or remote vector storage only for demonstrated requirements.
+The initial ten-case data gate, provider connection and one-case source-selection latency gate are verified. Account quotas are recorded from the [AI Studio observation](../verification/B03_ACCOUNT_LIMITS.md). One bounded native call is verified; the indexed corpus is now verified in B04. Retrieval quality, multi-step agent behavior and broader task-performance thresholds remain unverified. Reliability depends on implementation and these checks, rather than the diagram alone. Add cloud deployment, agent frameworks or remote vector storage only for demonstrated requirements.
