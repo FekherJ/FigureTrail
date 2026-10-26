@@ -1,0 +1,171 @@
+"""One retrieval, at most one generation, validated source calculation and a saved result."""
+
+from contextlib import closing
+from datetime import datetime, timezone
+from hashlib import sha256
+import json
+from pathlib import Path
+import sqlite3
+from time import monotonic, perf_counter
+from uuid import uuid4
+
+from app.calculator import EvidenceError, VERSION, calculate
+from app.corpus import digest
+from app.llm import JOURNAL, ProviderError
+from app.schemas import CellSelection
+
+ROOT = Path(__file__).resolve().parents[1]
+CONFIGURATION = {
+    "version": "fixed-analysis-v2",
+    "payload": "source-local-exact-line-dedup-v1",
+    "k": 5,
+    "generation_calls": 1,
+    "max_context_characters": 20000,
+    "deadline_seconds": 60,
+    "calculator_version": VERSION,
+}
+
+
+def save_analysis(journal, record):
+    journal.parent.mkdir(parents=True, exist_ok=True)
+    with closing(sqlite3.connect(journal)) as database, database:
+        database.execute(
+            "CREATE TABLE IF NOT EXISTS analyses (run_id TEXT PRIMARY KEY, record_json TEXT NOT NULL)"
+        )
+        database.execute(
+            "INSERT INTO analyses VALUES (?, ?) ON CONFLICT(run_id) DO UPDATE SET record_json=excluded.record_json",
+            (record["run_id"], json.dumps(record)),
+        )
+
+
+def model_input(question, hits, cells):
+    by_id = {cell["cell_id"]: cell for cell in cells}
+    chunks, seen_by_source = [], {}
+    for hit in hits:
+        seen = seen_by_source.setdefault(hit["source_id"], set())
+        lines = []
+        # Repeated table context stays available once per source, with every candidate cell.
+        for line in hit["text"].splitlines():
+            if line not in seen:
+                lines.append(line)
+                seen.add(line)
+        chunks.append(
+            {
+                **{key: hit[key] for key in ("chunk_id", "source_id", "report_id")},
+                "text": "\n".join(lines),
+                "cells": [
+                    {
+                        key: by_id[cell_id][key]
+                        for key in ("cell_id", "source_value", "row_label", "column_header")
+                    }
+                    for cell_id in hit["cell_ids"]
+                ],
+            }
+        )
+    text = json.dumps({"question": question, "chunks": chunks}, ensure_ascii=False)
+    if len(text) > CONFIGURATION["max_context_characters"]:
+        raise EvidenceError("context_too_large")
+    return text
+
+
+def analyze(
+    question,
+    retriever,
+    provider,
+    *,
+    method="semantic",
+    report_ids=None,
+    journal=JOURNAL,
+    clock=monotonic,
+):
+    scope = retriever.validate_request(question, method, CONFIGURATION["k"], report_ids)
+    started, deadline = perf_counter(), clock() + CONFIGURATION["deadline_seconds"]
+    instruction = (ROOT / "prompts/analysis_selection.md").read_text(encoding="utf-8")
+    record = {
+        "run_id": str(uuid4()),
+        "status": "started",
+        "created_at_utc": datetime.now(timezone.utc).isoformat(),
+        "mode": "fixed",
+        "question": question,
+        "report_ids": scope,
+        "retrieval_method": method,
+        "corpus_version": retriever.manifest["corpus_version"],
+        "index_version": retriever.manifest["index_version"],
+        "configuration": CONFIGURATION,
+        "configuration_sha256": digest(CONFIGURATION),
+        "prompt_version": "analysis-selection-v1",
+        "prompt_sha256": sha256(instruction.encode()).hexdigest(),
+        "code_sha256": sha256(
+            b"".join(
+                (ROOT / name).read_bytes()
+                for name in (
+                    "app/service.py",
+                    "app/calculator.py",
+                    "app/retrieval.py",
+                    "app/schemas.py",
+                    "app/llm.py",
+                )
+            )
+        ).hexdigest(),
+        "retrieval": None,
+        "selection": None,
+        "call": None,
+        "calculation": None,
+        "error_code": None,
+    }
+    # Persist before any paid work; journal failures stop further requests.
+    save_analysis(journal, record)
+    try:
+        record["retrieval"] = retriever.search(
+            question, method=method, k=CONFIGURATION["k"], report_ids=scope, run_id=record["run_id"]
+        )
+        save_analysis(journal, record)
+        if clock() >= deadline:
+            raise EvidenceError("deadline_reached", "blocked")
+        hits = record["retrieval"]["hits"]
+        if not any(hit["cell_ids"] for hit in hits):
+            raise EvidenceError("no_numeric_candidates")
+        payload = model_input(question, hits, retriever.corpus["cells"])
+        if provider is None:
+            raise EvidenceError("live_generation_not_enabled", "blocked")
+        plan, call = provider.generate_json(
+            payload,
+            CellSelection,
+            run_id=record["run_id"],
+            instruction=instruction,
+            deadline=deadline,
+            metadata={
+                "purpose": "fixed_analysis",
+                "prompt_version": record["prompt_version"],
+                "configuration_sha256": record["configuration_sha256"],
+                "code_sha256": record["code_sha256"],
+                "corpus_version": record["corpus_version"],
+                "index_version": record["index_version"],
+            },
+        )
+        record.update(selection=plan.model_dump(), call=call)
+        save_analysis(journal, record)
+        if clock() >= deadline:
+            raise EvidenceError("deadline_reached", "blocked")
+        if plan.status != "ready":
+            record.update(status=plan.status, error_code="model_abstention")
+        else:
+            record["calculation"] = calculate(plan, question, retriever.corpus["cells"], hits)
+            record["status"] = "success"
+    except EvidenceError as error:
+        record.update(status=error.status, error_code=error.code)
+    except ProviderError as error:
+        record.update(
+            status="blocked" if error.record["status"] == "blocked" else "failed",
+            error_code=str(error),
+            call=error.record,
+        )
+    except OSError, sqlite3.Error:
+        # Recording errors must remain visible to the caller, never look like a saved result.
+        raise
+    except ValueError:
+        record.update(status="failed", error_code="invalid_analysis_input_or_output")
+    record["duration_seconds"] = round(perf_counter() - started, 6)
+    record["finished_at_utc"] = datetime.now(timezone.utc).isoformat()
+    save_analysis(journal, record)
+    return record

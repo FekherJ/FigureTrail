@@ -2,7 +2,7 @@
 
 **Standards reviewed 24 October; implementation status updated 26 October 2026. Build incrementally.**
 
-Purpose: answer numerical questions from public reports with traceable evidence. Scope: one local Python service, a bounded report corpus, deterministic calculations and measured retrieval/model variants. Data references, the HTTP health contract, provider access, a bounded native tool call and the SQLite/vector index bundle are verified. B05 retrieval is measured on ten development cases; full analysis follows the implementation roadmap.
+Purpose: answer numerical questions from public reports with traceable evidence. Scope: one local Python service, a bounded report corpus, deterministic calculations and measured retrieval/model variants. Data references, the HTTP health contract, provider access, a bounded native tool call and the SQLite/vector index bundle are verified. B05 retrieval and B06 fixed CLI analysis have initial development measurements; API integration and wider reliability verification follow the roadmap.
 
 ## 1. Repository responsibilities
 
@@ -27,6 +27,7 @@ figuretrail/
 ├── evals/
 │   ├── queries/                 # question-only development inputs
 │   ├── retrieval.py             # implemented retrieval comparison
+│   ├── analysis.py              # initial shared-service workflow evaluation
 │   ├── cases/                   # references; evaluator only
 │   ├── run.py                   # invokes the application service
 │   └── results/local/           # ignored local evaluation runs
@@ -87,6 +88,8 @@ Separate development, reserved and adversarial cases; include absent evidence, a
 Compare **fixed lexical → fixed semantic → bounded agent**, changing one dimension at a time. Measure evidence recall@k, complete-proof retrieval, correct cells/units/periods, numerical accuracy, justified/unjustified abstention, errors, latency and cost. Keep failures in denominators; publish sample counts and variability.
 
 Current retrieval evidence: [B05 comparison](../verification/B05_RETRIEVAL.md), ten development cases over all 186 chunks, explicit k=5 and separate scoring references. Semantic complete proof is 10/10 versus lexical 9/10; this does not measure answer accuracy.
+
+[B06 fixed analysis](../verification/B06_FIXED_WORKFLOW.md) now reuses the shared service for source validation, Decimal arithmetic and initial answer scoring. Keep its provider timeouts and domain abstention in reported denominators; two follow-up successes are not a replacement full-campaign score.
 
 Use deterministic reference checks first. Judge-based faithfulness scores are supplementary estimates, calibrated against reviewed examples; they do not prevent hallucinations. [Evaluation guidance](https://developers.openai.com/api/docs/guides/evaluation-best-practices), [Ragas](https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/faithfulness/)
 

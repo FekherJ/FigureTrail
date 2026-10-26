@@ -4,7 +4,7 @@
 
 FigureTrail answers simple numerical questions about public reports. It finds evidence, calculates a result and shows a verifiable analysis: values, periods, units, sources and formula. Example: “What was the percentage change in this measure between these two years?”
 
-The design uses a measurable fixed workflow, followed by a bounded agent variant. P0 covers LLM/RAG, API contracts and evaluations. P1 adds tools, security and observability. Reference data, the health API, provider connection, controlled source selection and one bounded native tool call are verified. Retrieval and the complete analysis workflow remain planned.
+The design uses a measurable fixed workflow, followed by a bounded agent variant. P0 covers LLM/RAG, API contracts and evaluations. P1 adds tools, security and observability. Reference data, the health API, provider connection, controlled source selection and one bounded native tool call are verified. Retrieval and the fixed CLI analysis workflow are now implemented and measured on development cases; analysis API integration remains planned.
 
 Diagrams use Markdown and Mermaid so they can be reviewed and versioned with code. [GitHub diagram support](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/creating-diagrams).
 
@@ -63,7 +63,7 @@ flowchart TD
 
 ## 2. Technical choices
 
-Python, FastAPI, Pydantic, Uvicorn, NumPy and SQLite FTS5 were verified in B02. Google GenAI SDK 2.33.0, a generation/embedding connection check and the [B03 source-case pilot](../verification/B03_SOURCE_CASE.md) are verified. `app/llm.py` centralizes SDK requests and SQLite call allowances. The [prepared source corpus](../verification/B04_CORPUS_PREPARATION.md) is verified: 20 contexts, 186 chunks and 243 cells. The [SQLite/vector bundle](../verification/B04_INDEX_BUILD.md) is also verified: 186 rows at 768 dimensions. B05 lexical/semantic retrieval is verified; calculation and complete analysis remain to be built. One source-bound `read_evidence` native call is verified in the [B03 tool check](../verification/B03_TOOL_CALL.md). See [B02 verification](../verification/B02_ENVIRONMENT.md).
+Python, FastAPI, Pydantic, Uvicorn, NumPy and SQLite FTS5 were verified in B02. Google GenAI SDK 2.33.0, a generation/embedding connection check and the [B03 source-case pilot](../verification/B03_SOURCE_CASE.md) are verified. `app/llm.py` centralizes SDK requests and SQLite call allowances. The [prepared source corpus](../verification/B04_CORPUS_PREPARATION.md) is verified: 20 contexts, 186 chunks and 243 cells. The [SQLite/vector bundle](../verification/B04_INDEX_BUILD.md) is also verified: 186 rows at 768 dimensions. B05 retrieval and B06 fixed CLI analysis/calculation are verified within bounded source-format rules; analysis API integration remains planned. One source-bound `read_evidence` native call is verified in the [B03 tool check](../verification/B03_TOOL_CALL.md). See [B02 verification](../verification/B02_ENVIRONMENT.md).
 
 | Need | Initial choice | Reason and limitation |
 |---|---|---|
@@ -162,7 +162,7 @@ Search across multiple contexts, including distractors. Never supply the correct
 
 B05 fixes five candidate chunks, retains ranks/scores/cell IDs and compares prefixes at k=1/3/5. Scope is applied before top-k; ties use corpus order. The provisional B06 choice is semantic k=5 (10/10 complete development proofs), with lexical retained as a local comparison (9/10). Lexical performs better at k=3. See [measured comparison and limitations](../verification/B05_RETRIEVAL.md). No hits or low similarity alone do not prove that information is absent.
 
-The implemented retrieval comparison uses the same corpus and questions without a calculator; B06/B08 will compare full workflows with shared calculation. `app/retrieval.py` performs literal FTS5/BM25 or exact NumPy cosine search; `evals/retrieval.py` loads references only after retrieval. Separate query embeddings reuse the shared provider and journal. Missing vectors require `--live`. A remote vector database is unnecessary for the initial workload.
+The implemented retrieval comparison uses the same corpus and questions without a calculator; B06 implements shared calculation and an initial workflow campaign; B08 will broaden comparisons. `app/retrieval.py` performs literal FTS5/BM25 or exact NumPy cosine search; `evals/retrieval.py` loads references only after retrieval. Separate query embeddings reuse the shared provider and journal. Missing vectors require `--live`. A remote vector database is unnecessary for the initial workload.
 
 ### Cell selection and calculation
 
@@ -177,6 +177,8 @@ The LLM proposes a state, operation and two cell IDs. Freely generated numbers a
 Require strictly positive bases/denominators to avoid ambiguous negative-base conventions. Do not implicitly convert currency, scale or period. Never execute `eval`, generated Python or generated SQL.
 
 Valid cells can still be the wrong cells for a question. Reference integrity and correct arithmetic do not establish semantic relevance; evaluations must assess it separately.
+
+Current implementation: `app/service.py` runs one retrieval and at most one structured generation using `prompts/analysis_selection.md`; `app/calculator.py` validates listed source cells and calculates with an explicit Decimal context. `scripts/analyze.py` and `evals/analysis.py` share that service. Exact repeated payload lines are retained once per source, with all candidate cells preserved. Initial supported unit/period shapes and the conservative abstentions are specified in [B06 verification](../verification/B06_FIXED_WORKFLOW.md). The service records each execution in the shared journal's `analyses` table; provider calls remain in `calls`. Initial 504 failures and 15–19 s follow-up latency remain limitations.
 
 ## 5. API and result contracts
 
@@ -244,7 +246,7 @@ RAG and prompt delimiters do not guarantee injection resistance. Code restrictio
 - Disable hidden SDK retries. Initially, do not automatically retry timeouts or invalid responses. Additional attempts must be explicit, bounded and recorded.
 - Reuse embeddings for an unchanged corpus. Reading a stored result makes no model call; rerunning creates a new execution.
 
-The source-case pilot records three generation timings and dated conservative cost estimates. Broader report-analysis latency and actual charges remain unmeasured. The current provider module atomically reserves €1/generation or €0.01/embedding against a €25 local allowance cap in `data/local/runs.sqlite`; unknown usage retains its reservation. See the [pilot report](../verification/B03_SOURCE_CASE.md) for accounting assumptions and limits. Reject an unsuitable model during B03 before building around it.
+The source-case pilot records three generation timings and dated conservative cost estimates. Initial report-analysis latency and provider failures are now measured in B06; broader capacity and actual charges remain unverified. The current provider module atomically reserves €1/generation or €0.01/embedding against a €25 local allowance cap in `data/local/runs.sqlite`; unknown usage retains its reservation. See the [pilot report](../verification/B03_SOURCE_CASE.md) for accounting assumptions and limits. Reject an unsuitable model during B03 before building around it.
 
 ### Execution records
 
@@ -344,4 +346,4 @@ Release gates:
 3. **P1 demonstrated:** real tool choices, limit checks, inspectable traces and a measured comparison.
 4. **Release ready:** documented setup, real results, failures, trade-offs and a short demonstration.
 
-The initial ten-case data gate, provider connection and one-case source-selection latency gate are verified. Account quotas are recorded from the [AI Studio observation](../verification/B03_ACCOUNT_LIMITS.md). One bounded native call is verified; the indexed corpus is now verified in B04. Retrieval coverage is measured on ten development cases in B05; reserved-case quality, end-to-end accuracy, multi-step agent behavior and broader task-performance thresholds remain unverified. Reliability depends on implementation and these checks, rather than the diagram alone. Add cloud deployment, agent frameworks or remote vector storage only for demonstrated requirements.
+The initial ten-case data gate, provider connection and one-case source-selection latency gate are verified. Account quotas are recorded from the [AI Studio observation](../verification/B03_ACCOUNT_LIMITS.md). One bounded native call is verified; the indexed corpus is now verified in B04. Retrieval coverage is measured in B05 and an initial fixed-workflow campaign is recorded in B06, including four 504 failures. Reserved-case accuracy, multi-step agent behavior, consistent low latency and broader task-performance thresholds remain unverified. Reliability depends on implementation and these checks, rather than the diagram alone. Add cloud deployment, agent frameworks or remote vector storage only for demonstrated requirements.

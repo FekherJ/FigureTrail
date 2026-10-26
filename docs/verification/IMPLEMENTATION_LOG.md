@@ -618,3 +618,64 @@ git status --short
 ```
 
 The payload contained the four completed tasks, actual measurements/limits and closed/completed state. Field/option/item IDs came from the current project listing. Readback confirms the exact issue body and Done status, all thirteen item identities and twelve unchanged other cards. B06 remains Ready. The issue explicitly distinguishes verified local work from files awaiting the user's commit/push. No comments, duplicate issues, staging, commit or push were created.
+
+## 21. B06 — Fixed evidence-to-calculation workflow — 26 October 2026
+
+Read the current backlog and confirmed B06 follows completed B03/B05. Added `app/service.py`, `app/calculator.py`, `prompts/analysis_selection.md`, `scripts/analyze.py`, `evals/analysis.py`, and two targeted test files. The CLI and evaluator reuse one shared function: one search, at most one generation, validated accessible source cells, compatible unit/scale/period checks and deterministic Decimal calculation. There is no analysis HTTP route, UI, agent, new dependency or parent-source expansion. Explicit periods and supported source-format limits are documented rather than inferred from gold references.
+
+The shared journal gains an `analyses` table; prior provider `calls` rows remain intact. Accepted runs are saved before paid work, after retrieval/selection and at completion. Source evidence, errors, code/prompt/corpus/index/configuration versions and durations are retained. The provider keeps its budget reservations, disabled SDK retries and at-most-20-second generation transport timeout. Deadline and recording failures stop further requests; strict end-to-end cancellation during a new query embedding/pacing step is still unverified.
+
+Commands used from the project with the locked environment:
+
+```powershell
+uv run --locked --offline ruff format app/calculator.py app/service.py scripts/analyze.py evals/analysis.py tests/test_analysis.py tests/test_analysis_evaluation.py
+uv run --locked --offline ruff check .
+uv run --locked --offline python -B -X utf8 -m unittest discover -s tests -v
+$env:GEMINI_API_KEY = [Environment]::GetEnvironmentVariable('GEMINI_API_KEY','User')
+uv run --locked --offline python -B -X utf8 -m evals.analysis --live
+```
+
+The first 33-test run found a new test-owned SQLite connection left open during Windows temporary-directory cleanup and a scale fixture missing the period needed to reach its intended check. Corrected the test connection with `closing` and restored period text. Runtime checks were not weakened. Later added one scoring test to preserve failures/abstentions in denominators; all 34 tests pass. Tests also check that changing ambient Decimal precision/rounding cannot alter results.
+
+Before the live campaign, confirmed all ten B05 queries cached, full-corpus scope, dated model prices and a conservative maximum of twelve €1 generation reservations below the €25 local cap. No embedding requests were needed. Initial run `e3649473-c2ea-42f2-a965-a04a18cf0cf9` produced five correct answers, one code-enforced ambiguous-unit abstention and four HTTP 504s on the ten development cases. Median duration across all ten was 18.175062 s. The missing-2035-period and unsupported-CAGR checks returned expected non-answer states. No automatic retries were made. References were read only after service executions.
+
+Inspected repeated table context in retrieved row chunks. Updated payload configuration from `fixed-analysis-v1` to `fixed-analysis-v2`: retain exact repeated text lines once per source while preserving all unique text/candidate cells. Original retrieved chunks remain unchanged for calculation checks/traces. Set calculator v2 to a fresh explicit Decimal context, 28 digits and internal ROUND_HALF_EVEN, with separate ROUND_HALF_UP display rounding. New offline checks verify preservation and deterministic arithmetic.
+
+Two explicitly bounded follow-up calls were run through the same service, reusing cached C01 and C10 queries. Equivalent CLI reproduction commands are:
+
+```powershell
+uv run --locked python -B -X utf8 -m scripts.analyze "In Devon's estimated 2008 production table, what percentage of total production in MMBoe comes from Canada?" --live
+uv run --locked python -B -X utf8 -m scripts.analyze "For Entergy Wholesale Commodities, what was the signed percentage change in net revenue from 2015 to 2016?" --live
+```
+
+The task-local bounded runner also recorded payload-size comparisons and saved the results in ignored `evals/results/local/analysis/b06-follow-up.json`; these CLI commands are equivalent reproductions, not an exact transcript of that runner. C01 returned 24.69% in 15.122317 s (6,965→4,313 payload characters); C10 returned −7.44% in 19.213437 s (10,064→3,640). Both match source cells/numeric references. These two successes do not replace the original four failures or establish a full v2 campaign score. Latency remains too high to claim a fast, consistently reliable demonstration; provider variability prevents a causal performance claim for compaction.
+
+Audited 14 new generation requests, ten passed provider responses and four 504s with unknown usage. No embeddings or document/cache changes occurred. All 201 previous journal records remain exact; 215 call rows and fourteen saved analysis rows are present. Saved analyses contain no evaluator answer fields and match the recorded provider calls. Cumulative allowance is €6.1633250, not confirmed spending; unknown calls retain reservations. Actual charges remain unknown and billing was not changed. All 95 protected baseline files were unchanged before documentation edits, including historical results, fixtures, caches, source/index artifacts, lockfile and the private PDF.
+
+Added `B06_FIXED_WORKFLOW.md` and its results JSON; updated README, AGENTS, architecture, blueprint and backlog. B06 functionality is verified with explicit domain/provider limits. B07 will expose the shared service through the API; B08 will broaden task and latency measurements. No staging, commit or push was performed; those remain with the user.
+
+### B06 final handoff
+
+Final lint passed and Ruff confirmed 28 files formatted. Verified 169 local Markdown links with exact filename case, six intentional current-document updates and nine new implementation/evidence files. The other 89 protected baseline files remain byte-for-byte unchanged. All 201 prior provider records and both embedding caches are unchanged. Fourteen saved analyses match their provider call records and contain no evaluation-answer fields. Three CLI guards (analysis without --live, unknown scope, evaluator without --live) were exercised without creating requests or analyses. The credential-pattern scan returned no current-text matches; it is not an exhaustive secret-history audit. HEAD remains `c4b918f`, and staging is empty.
+
+Updated the existing B06 issue with four completed tasks, initial failures, bounded follow-ups and remaining latency/domain limits; closed it as completed. Marked B06 Done and the existing B07 card Ready. Readback verified the exact issue body, all thirteen item identities and eleven other cards unchanged. The B07 issue remains open with its implementation tasks pending. New code and evidence remain local pending the user's commit/push.
+
+```powershell
+gh api repos/FekherJ/FigureTrail/issues/6
+gh project item-list 2 --owner FekherJ --format json
+gh project field-list 2 --owner FekherJ --format json
+gh api --method PATCH repos/FekherJ/FigureTrail/issues/6 --input <reviewed-payload.json>
+gh project item-edit --id <existing-B06-item> --project-id <existing-project> --field-id <Status-field> --single-select-option-id <Done-option>
+gh project item-edit --id <existing-B07-item> --project-id <existing-project> --field-id <Status-field> --single-select-option-id <Ready-option>
+git diff --check
+git diff --cached --name-only
+git status --short
+```
+
+Payload/field/item names above describe the reviewed temporary JSON and existing project IDs, not new setup inputs. No duplicate issues, comments, commits, staging or push were created. The personal B01-B04 explanatory PDF remains unchanged and ignored. B07 has not been implemented during this step.
+
+### B06 handoff resumed after usage-limit interruption
+
+The earlier final-handoff command did not execute: automatic approval review could not complete after the Codex usage limit was reached. On the user's explicit resumption, completed that same log/private-reference handoff and rechecked preservation. No application source changed during the resumption. The current code and prompt hashes match both measured v2 follow-up executions.
+
+Reran Ruff lint/format (28 formatted files) and all 34 offline tests; all passed. Rechecked 169 local Markdown links, prior journal records, source/cache/index/PDF preservation, empty staging and unchanged HEAD. Read back the existing closed/completed B06 issue and board statuses; B07 remains Ready and the board matches the prior verified snapshot. The shared journal remains at 215 calls and fourteen analyses, allowance EUR 6.1633250: zero additional model requests. No staging, commit or push was performed. The initial four 504s and unresolved 15-19-second follow-up latency remain in the public evidence.

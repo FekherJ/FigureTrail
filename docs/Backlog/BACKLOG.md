@@ -12,11 +12,11 @@ Track work in the existing board and keep one issue in progress. Each Bxx sectio
 
 | Work items | Issue state | Board status |
 |---|---|---|
-| B01–B05 | Closed | Done |
-| B06 | Open | Ready |
-| B07–B13 | Open | Backlog |
+| B01–B06 | Closed | Done |
+| B07 | Open | Ready |
+| B08–B13 | Open | Backlog |
 
-B03's seven checklist items are verified, including the account-limit observation and one native tool call with validated arguments and original source values. B01–B05 are complete; B04's source, SQLite/FTS5, embedding and alignment checks are verified. The B03 issue body and Done status are aligned with this completion review. B04 has four completed tasks and its issue/card are closed/Done. B05 retrieval is complete with measured comparison and difficult-case evidence; its issue/card are closed/Done. B06 retains Ready and is next. All thirteen issues and board-item identities were preserved. This was a one-time alignment; pushing Markdown does not automatically synchronize issue bodies or board fields.
+B03's seven checklist items are verified, including the account-limit observation and one native tool call with validated arguments and original source values. B01–B06 functionality is complete; B04's source, SQLite/FTS5, embedding and alignment checks are verified. The B03 issue body and Done status are aligned with this completion review. B04 has four completed tasks and its issue/card are closed/Done. B05 retrieval is complete with measured comparison and difficult-case evidence; its issue/card are closed/Done. B06 functionality is complete with initial workflow evidence and explicit latency/domain limits; its issue/card are closed/Done. B07 is next and its card is Ready. All thirteen issues and board-item identities were preserved. This was a one-time alignment; pushing Markdown does not automatically synchronize issue bodies or board fields.
 
 Record priority (`P0`/`P1`), milestone and estimated hours. Optional labels are `data`, `llm`, `rag`, `api`, `evals`, `agents`, `security`, `observability` and `docs`. These values are currently documented in issue descriptions; importing them did not create labels or GitHub milestones.
 
@@ -72,7 +72,7 @@ The [engineering blueprint](../architecture/AI_PROJECT_BLUEPRINT.md) adds standa
 | B09–B12 | Safe evidence display, bounded tools, negative cases and complete traces. |
 | B13 | Checks without secrets, reproducible demo and measured results/limits. |
 
-B01 and the B02 foundation are verified, including the final B02 review on 25 October. GitHub import is complete. B03–B05 are complete, including source selection, a native tool check and measured retrieval; the complete analysis workflow remains planned.
+B01 and the B02 foundation are verified, including the final B02 review on 25 October. GitHub import is complete. B03–B06 functionality is complete, including source selection, a native tool check, measured retrieval and fixed CLI calculation. The analysis API remains planned; provider latency/reliability limits are documented.
 
 ## 3. Work items
 
@@ -114,7 +114,7 @@ Objective: create a reproducible environment and a verifiable HTTP foundation.
 
 **Design note:** configuration, inference sources and evaluation references have separate responsibilities.
 
-**Verified status:** final review completed on 25 October: published foundation commit `d5c26ca`, current dependency/FTS5/NumPy checks and in-process `/health`/OpenAPI contracts confirmed. The original live HTTP results remain in the [B02 report](../verification/B02_ENVIRONMENT.md). [Issue #2](https://github.com/FekherJ/FigureTrail/issues/2) is closed as completed and its board item is Done; both were read back. B03's source-case pilot and native tool check are complete. B04 indexing is also complete; B05 retrieval is complete, and B06 fixed analysis is next.
+**Verified status:** final review completed on 25 October: published foundation commit `d5c26ca`, current dependency/FTS5/NumPy checks and in-process `/health`/OpenAPI contracts confirmed. The original live HTTP results remain in the [B02 report](../verification/B02_ENVIRONMENT.md). [Issue #2](https://github.com/FekherJ/FigureTrail/issues/2) is closed as completed and its board item is Done; both were read back. B03's source-case pilot and native tool check are complete. B04 indexing is also complete; B05 retrieval and B06 fixed CLI analysis are now verified; B07 analysis API is next.
 
 ### B03 — Verify a hosted LLM, its output contract and cost
 
@@ -174,7 +174,7 @@ Objective: retrieve useful evidence from multiple contexts rather than preselect
 
 **Design note:** similarity ranks candidates; reference-based evaluation measures relevance.
 
-**Verified status:** completed locally on 26 October 2026. [Comparison and case review](../verification/B05_RETRIEVAL.md): ten questions, all 186 chunks eligible, lexical complete proof@5 9/10 (95% cell recall), semantic 10/10 (100% cell recall), zero technical failures. Cached semantic replay reproduces rankings/scores with zero requests. Two difficult cases, six new tests and provisional semantic k=5 choice are documented. Twenty-six offline tests pass. B06 fixed analysis is next; end-to-end answer accuracy remains unmeasured.
+**Verified status:** completed locally on 26 October 2026. [Comparison and case review](../verification/B05_RETRIEVAL.md): ten questions, all 186 chunks eligible, lexical complete proof@5 9/10 (95% cell recall), semantic 10/10 (100% cell recall), zero technical failures. Cached semantic replay reproduces rankings/scores with zero requests. Two difficult cases, six new tests and provisional semantic k=5 choice are documented. Twenty-six offline tests passed at the B05 snapshot. B06 now records initial answer results, including provider failures; B07 is next and reserved-case accuracy remains unmeasured.
 
 ### B06 — Assemble the fixed workflow and verifiable calculation
 
@@ -182,16 +182,18 @@ Objective: retrieve useful evidence from multiple contexts rather than preselect
 
 Objective: question → retrieval → structured LLM selection → calculation in code → evidence.
 
-- [ ] Build the fixed service with one search and at most one generation call, using retrieved chunks only.
-- [ ] Validate the operation and accessible cell references; read source numbers and calculate with `Decimal`.
-- [ ] Enforce formulas, units, periods, scales and denominator checks. Build displayed evidence from source data.
-- [ ] Handle success, insufficient evidence, unsupported requests, blocked work and failures; record initial evaluated results.
+- [x] Build the fixed service with one search and at most one generation call, using retrieved chunks only.
+- [x] Validate the operation and accessible cell references; read source numbers and calculate with `Decimal`.
+- [x] Enforce formulas, units, periods, scales and denominator checks. Build displayed evidence from source data.
+- [x] Handle success, insufficient evidence, unsupported requests, blocked work and failures; record initial evaluated results.
 
 **Acceptance criteria:** controlled cases calculate correctly without executing `eval`, generated code or generated SQL. Unknown IDs, ambiguous units, zero denominators and invalid outputs cannot become successes. Test formulas, invalid references and incomplete evidence. These checks alone do not establish an overall model score.
 
 **Evidence:** a real complete execution and repeatable checks; include a result with formula/two source cells and a result without a numerical answer.
 
 **Design note:** the model selects operation/cells; code validates the data and calculates.
+
+**Verified status:** completed locally on 26 October 2026 within the [documented source-format and operational limits](../verification/B06_FIXED_WORKFLOW.md). One search, at most one generation, source-only operands, Decimal calculation, explicit outcomes and saved analyses are implemented. All 34 offline tests pass. The initial campaign retains 5/10 correct answers, one conservative abstention and four HTTP 504s; both negative checks passed. Two bounded v2 follow-ups returned 24.69% and −7.44% at 15.1/19.2 s. They do not replace the initial denominator or establish a full v2 score. Provider responsiveness/reliability remains open for further measurement. B07 analysis API is next.
 
 ### B07 — Expose a documented API with explicit contracts and errors
 
