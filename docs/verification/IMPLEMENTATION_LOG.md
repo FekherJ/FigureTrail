@@ -545,3 +545,76 @@ rg -l 'AIza[0-9A-Za-z_-]{30,}' app scripts tests docs README.md AGENTS.md
 ```
 
 Ruff confirmed eighteen files already formatted. The diff has no whitespace errors, the staged-file list is empty and HEAD remains `062b3e0`. All seven generated/configuration paths above are ignored. The credential-pattern scan returned no matching files (ripgrep exit 1 means no matches); this is a narrow pattern check rather than proof that arbitrary secrets cannot exist. No further model requests were made during documentation/handoff checks.
+
+## 19. Repository publishing and ignore review - 25 October 2026
+
+Reviewed the existing ignore rules and all 67 tracked text files. The starting tree was clean at `9d4ff94`. Architecture, backlog, curated verification results and AGENTS.md remain shared engineering material. The personal explanatory PDF was created outside this repository and is not tracked. No tracked file required removal, and AGENTS.md itself was not changed.
+
+Added narrow rules for root `private/`, `output/`, `outputs/`, `tmp/` and `work/` directories, `*.local.md` notes and the personal PDF's exact filename at any depth. Existing rules for environment files, credentials, Python caches, downloaded/generated data, database files, raw traces and editor files remain intact. No blanket `docs/`, Markdown or PDF exclusion was introduced; intentionally published technical PDF assets can still be tracked elsewhere. README documents the sharing convention.
+
+Verified 26 excluded examples and 21 retained examples using Git's own matching engine with `--no-index -z --stdin`; the examples were path strings, not new files. The initial task-local matching check used newline-delimited stdin, which Windows translated into CRLF and Git treated as different filenames. Switching the check to NUL delimiters corrected that verification issue without changing the ignore policy. Confirmed that no already-tracked file matches the new exclusions. Environment examples, source code, prompts, tests, provenance/license, reference fixtures, engineering documents and a potential CI workflow remain eligible for sharing. Checked credential signatures and personal career/client identifiers across current tracked text; no matches were found in that narrow scan. This is a current-tree review, not an exhaustive secret scanner or a rewrite of repository history.
+
+Commands used for inspection and verification:
+
+```powershell
+git status --short
+git ls-files
+git log -1 --format='%h %s'
+git check-ignore --no-index -z --stdin
+git ls-files --cached --ignored --exclude-standard
+git diff --check
+git diff --cached --name-only
+```
+
+The matching command received the reviewed included/excluded paths on stdin. Adding a path to .gitignore does not remove an already-tracked file or erase previously published versions. No index removal or history rewrite was needed. No application code, data, fixtures, dependency or historical result changed; no model requests, staging, commit or push were performed. B05 remains the next technical item. A software test-suite rerun was unnecessary for this ignore/documentation-only change; the relevant checks exercise actual Git behavior.
+
+## 20. B05 — Measured evidence retrieval — 26 October 2026
+
+Implemented shared lexical/semantic retrieval in `app/retrieval.py`, inspection in `scripts/search.py`, the question-only `evals/queries/finqa-b05.json` fixture and `evals/retrieval.py`. Reused SQLite FTS5/BM25, the validated B04 index, NumPy cosine search, embedding cache/pacer and shared Gemini provider journal. No dependency, prompt, HTTP route, calculator or agent was added. The query cache is separate from document embeddings.
+
+Fixed primary k=5 and secondary k=1/3/5 before measurement. All ten questions have null scope and search all twenty contexts/186 chunks. The evaluator retrieves and saves candidates before reading references. Only explicit report scope filters search; scope precedes top-k. Literal quoted FTS terms and parameterized read-only SQL prevent questions supplying query operators/SQL. Semantic search uses Google's documented retrieval query prefix and the existing 768-dimension model configuration.
+
+Actual project commands, using the existing locked environment (the tool runner resolved executable paths; ordinary executable names are shown):
+
+```powershell
+uv run --locked --offline ruff format app/retrieval.py scripts/search.py evals/retrieval.py tests/test_retrieval.py
+uv run --locked --offline ruff check .
+uv run --locked --offline python -B -X utf8 -m unittest discover -s tests -v
+uv run --locked --offline python -B -X utf8 -m evals.retrieval
+uv run --locked --offline python -B -X utf8 -m scripts.search "In Devon's estimated 2008 production table, what percentage of total production in MMBoe comes from Canada?" --k 3
+$env:GEMINI_API_KEY = [Environment]::GetEnvironmentVariable('GEMINI_API_KEY','User')
+uv run --locked --offline python -B -X utf8 -m evals.retrieval --mode compare --live
+$env:GEMINI_API_KEY = ''
+uv run --locked --offline python -B -X utf8 -m evals.retrieval --mode compare
+```
+
+`--offline` controls uv dependency resolution; `--live` independently permits application API requests. The API key was loaded without printing its value. Ruff formatted four new files; lint passed. All 26 tests passed on the first B05 test run, including six new retrieval tests with simulated vectors. These test boundaries and ranking/scoring mechanics, not hosted-model accuracy.
+
+The lexical-only run recovered 19/20 cells and complete proofs for 9/10 questions at k=5. The live comparison made exactly ten successful query-embedding calls and no generation/document-embedding calls. Semantic recovered 20/20 cells and complete proofs for 10/10. Lexical did better at k=3: 8/10 complete proofs versus 7/10. Median totals in the live comparison were 0.003737 s lexical and 0.423049 s semantic. The no-key replay reproduced every hit, score and evidence metric with ten query-cache hits and zero new journal records; cached semantic median was 0.001247 s. This is one small development campaign, not end-to-end answer accuracy or a reserved benchmark.
+
+Reviewed C03 (after 2014 versus Thereafter: lexical required row at rank seven) and C08 (semantic favors related margins/adjusted profit before reported profit at rank four). Additional k=20 inspection reused the same cached vectors after primary measurement; it did not change metrics or tune ranking. Selected semantic k=5 provisionally for B06 while keeping the local lexical baseline and explicit CLI method switch.
+
+The journal grew from 191 to 201 rows; all previous JSON records remain unchanged. Ten €0.01 reservations increased cumulative local allowance to €2.0297150. Usage/actual charges remain unknown where unreported. No retries, generation requests, document re-embedding or billing change occurred. All 86 baseline files were unchanged before documentation edits, including raw data, source/reference fixtures, document cache, immutable bundles and lockfile. A task-local audit initially lacked permission to read a protected generated manifest; rerunning that read with sandbox escalation succeeded. This was an inspection issue, not a model/data failure.
+
+Added `B05_RETRIEVAL.md` and `B05_RETRIEVAL_RESULTS.json`; updated README, AGENTS, architecture, blueprint and backlog. Historical verification JSON and reference values are preserved. The prior .gitignore/README/log changes are retained. The personal PDF remains under ignored `private/`. B06 is next: one retrieval, one structured generation, validated source cells and Decimal calculation. The API still exposes only health with no loaded corpus. No staging, commit or push was performed; the user retains those actions.
+
+### B05 final handoff
+
+Final lint passed and Ruff confirmed 22 files already formatted. One verification invocation was initially launched from the conversation workspace rather than the repository, so uv could not locate the project Ruff executable; rerunning from FigureTrail passed. This changed no application code or dependency. Git inspection also required sandbox escalation to access the installed executable; the escalated check succeeded.
+
+Verified 159 local Markdown links, exact filename case, ignored query cache/traces/private PDF, and the PDF's unchanged hash. Exactly six baseline engineering documents changed for B05; the other 80 protected baseline files, including .gitignore's preexisting update, remain byte-for-byte unchanged. Seven new implementation/fixture/evidence files are present. The credential-pattern check found no matches in current tracked/new text; this is not an exhaustive secret-history scan. HEAD remains `9d4ff94` and the staging area is empty.
+
+Updated the existing B05 issue and board item only, then read both back:
+
+```powershell
+gh api repos/FekherJ/FigureTrail/issues/5
+gh project item-list 2 --owner FekherJ --format json
+gh project field-list 2 --owner FekherJ --format json
+gh api --method PATCH repos/FekherJ/FigureTrail/issues/5 --input <reviewed-payload.json>
+gh project item-edit --id <existing-B05-item> --project-id <existing-project> --field-id <Status-field> --single-select-option-id <Done-option>
+git diff --check
+git diff --cached --name-only
+git status --short
+```
+
+The payload contained the four completed tasks, actual measurements/limits and closed/completed state. Field/option/item IDs came from the current project listing. Readback confirms the exact issue body and Done status, all thirteen item identities and twelve unchanged other cards. B06 remains Ready. The issue explicitly distinguishes verified local work from files awaiting the user's commit/push. No comments, duplicate issues, staging, commit or push were created.

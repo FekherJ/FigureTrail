@@ -1,6 +1,6 @@
 # FigureTrail architecture
 
-**Version 1.1 — target design dated 24 October 2026; English edition, 25 October 2026 — Fekher Jarrar.**
+**Version 1.1 — target design dated 24 October 2026; implementation status updated 26 October 2026 — Fekher Jarrar.**
 
 FigureTrail answers simple numerical questions about public reports. It finds evidence, calculates a result and shows a verifiable analysis: values, periods, units, sources and formula. Example: “What was the percentage change in this measure between these two years?”
 
@@ -63,7 +63,7 @@ flowchart TD
 
 ## 2. Technical choices
 
-Python, FastAPI, Pydantic, Uvicorn, NumPy and SQLite FTS5 were verified in B02. Google GenAI SDK 2.33.0, a generation/embedding connection check and the [B03 source-case pilot](../verification/B03_SOURCE_CASE.md) are verified. `app/llm.py` centralizes SDK requests and SQLite call allowances. The [prepared source corpus](../verification/B04_CORPUS_PREPARATION.md) is verified: 20 contexts, 186 chunks and 243 cells. The [SQLite/vector bundle](../verification/B04_INDEX_BUILD.md) is also verified: 186 rows at 768 dimensions. Retrieval/calculation tools and complete analysis remain to be built. One source-bound `read_evidence` native call is verified in the [B03 tool check](../verification/B03_TOOL_CALL.md). See [B02 verification](../verification/B02_ENVIRONMENT.md).
+Python, FastAPI, Pydantic, Uvicorn, NumPy and SQLite FTS5 were verified in B02. Google GenAI SDK 2.33.0, a generation/embedding connection check and the [B03 source-case pilot](../verification/B03_SOURCE_CASE.md) are verified. `app/llm.py` centralizes SDK requests and SQLite call allowances. The [prepared source corpus](../verification/B04_CORPUS_PREPARATION.md) is verified: 20 contexts, 186 chunks and 243 cells. The [SQLite/vector bundle](../verification/B04_INDEX_BUILD.md) is also verified: 186 rows at 768 dimensions. B05 lexical/semantic retrieval is verified; calculation and complete analysis remain to be built. One source-bound `read_evidence` native call is verified in the [B03 tool check](../verification/B03_TOOL_CALL.md). See [B02 verification](../verification/B02_ENVIRONMENT.md).
 
 | Need | Initial choice | Reason and limitation |
 |---|---|---|
@@ -160,9 +160,9 @@ Use one search, at most one generation call and a deterministic calculation. Sem
 
 Search across multiple contexts, including distractors. Never supply the correct document through gold annotations. Default scope is the full corpus; filters must come from explicit user input.
 
-Start with six candidate chunks, retain ranks/scores and deduplicate results. Tune `k` on development cases. No hits or low similarity alone do not prove that information is absent.
+B05 fixes five candidate chunks, retains ranks/scores/cell IDs and compares prefixes at k=1/3/5. Scope is applied before top-k; ties use corpus order. The provisional B06 choice is semantic k=5 (10/10 complete development proofs), with lexical retained as a local comparison (9/10). Lexical performs better at k=3. See [measured comparison and limitations](../verification/B05_RETRIEVAL.md). No hits or low similarity alone do not prove that information is absent.
 
-Compare lexical and semantic retrieval with the same corpus, questions and calculator. Choose the default using measurements. A remote vector database is unnecessary for the initial workload.
+The implemented retrieval comparison uses the same corpus and questions without a calculator; B06/B08 will compare full workflows with shared calculation. `app/retrieval.py` performs literal FTS5/BM25 or exact NumPy cosine search; `evals/retrieval.py` loads references only after retrieval. Separate query embeddings reuse the shared provider and journal. Missing vectors require `--live`. A remote vector database is unnecessary for the initial workload.
 
 ### Cell selection and calculation
 
@@ -226,7 +226,7 @@ Measure these initial settings. Keep the fixed workflow as the default if the ag
 ### Trust boundaries
 
 - Treat user input, sources and tool output as untrusted. Separate system instructions and test indirect prompt injection.
-- Initially limit questions to 2,000 characters, candidates to six chunks and context to 20,000 characters. Preserve headers and units when reducing content; otherwise report unusable evidence.
+- Initially limit questions to 2,000 characters, candidates to five chunks and context to 20,000 characters. Preserve headers and units when reducing content; otherwise report unusable evidence.
 - Expose only the three permitted tools. No autonomous browser, shell, generated-code execution, file writing or arbitrary SQL.
 - Escape displayed source text so embedded HTML and scripts remain inactive.
 - Keep secrets in the local environment. Example configuration contains variable names only. Exclude keys from Git, UI, traces, screenshots and published errors.
@@ -344,4 +344,4 @@ Release gates:
 3. **P1 demonstrated:** real tool choices, limit checks, inspectable traces and a measured comparison.
 4. **Release ready:** documented setup, real results, failures, trade-offs and a short demonstration.
 
-The initial ten-case data gate, provider connection and one-case source-selection latency gate are verified. Account quotas are recorded from the [AI Studio observation](../verification/B03_ACCOUNT_LIMITS.md). One bounded native call is verified; the indexed corpus is now verified in B04. Retrieval quality, multi-step agent behavior and broader task-performance thresholds remain unverified. Reliability depends on implementation and these checks, rather than the diagram alone. Add cloud deployment, agent frameworks or remote vector storage only for demonstrated requirements.
+The initial ten-case data gate, provider connection and one-case source-selection latency gate are verified. Account quotas are recorded from the [AI Studio observation](../verification/B03_ACCOUNT_LIMITS.md). One bounded native call is verified; the indexed corpus is now verified in B04. Retrieval coverage is measured on ten development cases in B05; reserved-case quality, end-to-end accuracy, multi-step agent behavior and broader task-performance thresholds remain unverified. Reliability depends on implementation and these checks, rather than the diagram alone. Add cloud deployment, agent frameworks or remote vector storage only for demonstrated requirements.

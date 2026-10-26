@@ -1,6 +1,6 @@
 # FigureTrail backlog
 
-**Version 1.1 — implementation roadmap dated 24 October 2026; English edition, 25 October 2026 — Fekher Jarrar.**
+**Version 1.1 — implementation roadmap dated 24 October 2026; implementation status updated 26 October 2026 — Fekher Jarrar.**
 
 This backlog implements the [architecture](../architecture/ARCHITECTURE.md). B01–B13 are stable work-item IDs. They are now linked to [repository issues](https://github.com/FekherJ/FigureTrail/issues) and [Project 2](https://github.com/users/FekherJ/projects/2), verified on 25 October 2026. Their current GitHub issue numbers are 1–13; the Bxx IDs remain the roadmap identifiers.
 
@@ -8,15 +8,15 @@ The target is a local application that retrieves cells from public reports, calc
 
 ## 1. GitHub tracking
 
-Track work in the existing board and keep one issue in progress. Each Bxx section defines an issue; retain its checklist and dependencies in the issue body. The following issue/board states were read back and verified on 25 October 2026:
+Track work in the existing board and keep one issue in progress. Each Bxx section defines an issue; retain its checklist and dependencies in the issue body. The following issue/board states were read back and verified on 26 October 2026:
 
 | Work items | Issue state | Board status |
 |---|---|---|
-| B01–B04 | Closed | Done |
-| B05–B06 | Open | Ready |
+| B01–B05 | Closed | Done |
+| B06 | Open | Ready |
 | B07–B13 | Open | Backlog |
 
-B03's seven checklist items are verified, including the account-limit observation and one native tool call with validated arguments and original source values. B01–B04 are complete; B04's source, SQLite/FTS5, embedding and alignment checks are verified. The B03 issue body and Done status are aligned with this completion review. B04 has four completed tasks and its issue/card are closed/Done. B05–B06 retain Ready; B05 retrieval measurement is next and completion follows the dependencies below. All thirteen issues and board-item identities were preserved. This was a one-time alignment; pushing Markdown does not automatically synchronize issue bodies or board fields.
+B03's seven checklist items are verified, including the account-limit observation and one native tool call with validated arguments and original source values. B01–B05 are complete; B04's source, SQLite/FTS5, embedding and alignment checks are verified. The B03 issue body and Done status are aligned with this completion review. B04 has four completed tasks and its issue/card are closed/Done. B05 retrieval is complete with measured comparison and difficult-case evidence; its issue/card are closed/Done. B06 retains Ready and is next. All thirteen issues and board-item identities were preserved. This was a one-time alignment; pushing Markdown does not automatically synchronize issue bodies or board fields.
 
 Record priority (`P0`/`P1`), milestone and estimated hours. Optional labels are `data`, `llm`, `rag`, `api`, `evals`, `agents`, `security`, `observability` and `docs`. These values are currently documented in issue descriptions; importing them did not create labels or GitHub milestones.
 
@@ -72,7 +72,7 @@ The [engineering blueprint](../architecture/AI_PROJECT_BLUEPRINT.md) adds standa
 | B09–B12 | Safe evidence display, bounded tools, negative cases and complete traces. |
 | B13 | Checks without secrets, reproducible demo and measured results/limits. |
 
-B01 and the B02 foundation are verified, including the final B02 review on 25 October. GitHub import is complete. B03 is complete, including source selection and a native tool check; retrieval and the complete analysis workflow remain planned.
+B01 and the B02 foundation are verified, including the final B02 review on 25 October. GitHub import is complete. B03–B05 are complete, including source selection, a native tool check and measured retrieval; the complete analysis workflow remains planned.
 
 ## 3. Work items
 
@@ -114,7 +114,7 @@ Objective: create a reproducible environment and a verifiable HTTP foundation.
 
 **Design note:** configuration, inference sources and evaluation references have separate responsibilities.
 
-**Verified status:** final review completed on 25 October: published foundation commit `d5c26ca`, current dependency/FTS5/NumPy checks and in-process `/health`/OpenAPI contracts confirmed. The original live HTTP results remain in the [B02 report](../verification/B02_ENVIRONMENT.md). [Issue #2](https://github.com/FekherJ/FigureTrail/issues/2) is closed as completed and its board item is Done; both were read back. B03's source-case pilot and native tool check are complete. B04 indexing is also complete; B05 retrieval measurement is next, and the complete analysis workflow remains planned.
+**Verified status:** final review completed on 25 October: published foundation commit `d5c26ca`, current dependency/FTS5/NumPy checks and in-process `/health`/OpenAPI contracts confirmed. The original live HTTP results remain in the [B02 report](../verification/B02_ENVIRONMENT.md). [Issue #2](https://github.com/FekherJ/FigureTrail/issues/2) is closed as completed and its board item is Done; both were read back. B03's source-case pilot and native tool check are complete. B04 indexing is also complete; B05 retrieval is complete, and B06 fixed analysis is next.
 
 ### B03 — Verify a hosted LLM, its output contract and cost
 
@@ -163,16 +163,18 @@ Objective: transform public text/tables into retrievable evidence.
 
 Objective: retrieve useful evidence from multiple contexts rather than preselecting the answer document.
 
-- [ ] Implement FTS5/BM25 and inspect top chunks, scores and cells.
-- [ ] Add question embeddings, normalized vectors and NumPy cosine search; apply explicit scope before final candidate selection.
-- [ ] Measure evidence recall and complete-proof retrieval on the ten development cases; inspect at least two failures or difficult cases.
-- [ ] Compare lexical/semantic retrieval with the same corpus and questions; document the provisional choice.
+- [x] Implement FTS5/BM25 and inspect top chunks, scores and cells.
+- [x] Add question embeddings, normalized vectors and NumPy cosine search; apply explicit scope before final candidate selection.
+- [x] Measure evidence recall and complete-proof retrieval on the ten development cases; inspect at least two failures or difficult cases.
+- [x] Compare lexical/semantic retrieval with the same corpus and questions; document the provisional choice.
 
 **Acceptance criteria:** search includes distractors. Gold document IDs never become hidden filters. Only explicit user scope constrains retrieval. References are used only for scoring. Retain inspectable scores and sources.
 
 **Evidence:** comparison table and retrieved/missed evidence examples, with corpus version and `k`.
 
 **Design note:** similarity ranks candidates; reference-based evaluation measures relevance.
+
+**Verified status:** completed locally on 26 October 2026. [Comparison and case review](../verification/B05_RETRIEVAL.md): ten questions, all 186 chunks eligible, lexical complete proof@5 9/10 (95% cell recall), semantic 10/10 (100% cell recall), zero technical failures. Cached semantic replay reproduces rankings/scores with zero requests. Two difficult cases, six new tests and provisional semantic k=5 choice are documented. Twenty-six offline tests pass. B06 fixed analysis is next; end-to-end answer accuracy remains unmeasured.
 
 ### B06 — Assemble the fixed workflow and verifiable calculation
 

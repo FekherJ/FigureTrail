@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "partition": "development",
+  "cases": [
+    {
+      "id": "C01",
+      "question": "In Devon's estimated 2008 production table, what percentage of total production in MMBoe comes from Canada?",
+      "report_ids": null
+    },
+    {
+      "id": "C02",
+      "question": "For FBHS, what was the percentage growth in annual Cabinets segment net sales from 2016 to 2017?",
+      "report_ids": null
+    },
+    {
+      "id": "C03",
+      "question": "In PKG's 2009 purchase commitments schedule, what percentage of the total is due after 2014?",
+      "report_ids": null
+    },
+    {
+      "id": "C04",
+      "question": "For Union Pacific at December 31, 2008, what percentage of total accounts payable and other current liabilities was accrued wages and vacation?",
+      "report_ids": null
+    },
+    {
+      "id": "C05",
+      "question": "For Intel at December 28, 2013, what percentage of the total square footage of owned facilities was in other countries?",
+      "report_ids": null
+    },
+    {
+      "id": "C06",
+      "question": "Using Zimmer Biomet's unaudited pro forma figures for the year ended December 31, 2015, what were net earnings as a percentage of net sales?",
+      "report_ids": null
+    },
+    {
+      "id": "C07",
+      "question": "For Lockheed Martin Space Systems, what was the percentage change in operating profit from 2010 to 2011?",
+      "report_ids": null
+    },
+    {
+      "id": "C08",
+      "question": "For Masco, what was the percentage growth in operating profit as reported from 2017 to 2018?",
+      "report_ids": null
+    },
+    {
+      "id": "C09",
+      "question": "For Entergy Louisiana, what was the percentage change in the reported net revenue measure from 2002 to 2003?",
+      "report_ids": null
+    },
+    {
+      "id": "C10",
+      "question": "For Entergy Wholesale Commodities, what was the signed percentage change in net revenue from 2015 to 2016?",
+      "report_ids": null
+    }
+  ]
+}

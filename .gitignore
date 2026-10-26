@@ -52,3 +52,14 @@ Thumbs.db
 
 # Temporary files left by interrupted B01 checks
 /tests/.b01-*/
+
+# Personal notes and non-public documents; keep shared engineering docs tracked
+/private/
+*.local.md
+FIGURETRAIL_EXPLAINED_FROM_ZERO.pdf
+
+# Generated document exports and temporary work
+/output/
+/outputs/
+/tmp/
+/work/

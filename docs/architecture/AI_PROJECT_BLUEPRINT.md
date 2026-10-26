@@ -1,8 +1,8 @@
 # AI Project Blueprint — FigureTrail
 
-**Standards reviewed 24 October; implementation status updated 25 October 2026. Build incrementally.**
+**Standards reviewed 24 October; implementation status updated 26 October 2026. Build incrementally.**
 
-Purpose: answer numerical questions from public reports with traceable evidence. Scope: one local Python service, a bounded report corpus, deterministic calculations and measured retrieval/model variants. Data references, the HTTP health contract, provider access, a bounded native tool call and the SQLite/vector index bundle are verified; retrieval measurement and full analysis capabilities follow the implementation roadmap.
+Purpose: answer numerical questions from public reports with traceable evidence. Scope: one local Python service, a bounded report corpus, deterministic calculations and measured retrieval/model variants. Data references, the HTTP health contract, provider access, a bounded native tool call and the SQLite/vector index bundle are verified. B05 retrieval is measured on ten development cases; full analysis follows the implementation roadmap.
 
 ## 1. Repository responsibilities
 
@@ -25,9 +25,11 @@ figuretrail/
 ├── scripts/                     # preparation and B01 checks
 ├── tests/                       # deterministic and component tests
 ├── evals/
+│   ├── queries/                 # question-only development inputs
+│   ├── retrieval.py             # implemented retrieval comparison
 │   ├── cases/                   # references; evaluator only
 │   ├── run.py                   # invokes the application service
-│   └── results/                 # selected, sanitized experiment artifacts
+│   └── results/local/           # ignored local evaluation runs
 ├── data/                        # ignore generated/private subdirectories
 │   ├── raw/                     # original download, including annotations
 │   ├── samples/                 # source-only development exports
@@ -36,7 +38,7 @@ figuretrail/
 ├── docs/
 │   ├── architecture/
 │   ├── Backlog/
-│   └── verification/
+│   └── verification/            # curated reports and measured JSON
 ├── .github/workflows/ci.yml     # credential-free checks
 ├── pyproject.toml               # dependencies and tool configuration
 ├── uv.lock                     # resolved dependencies
@@ -83,6 +85,8 @@ Validate API/model boundaries with Pydantic, plus explicit domain checks. Keep s
 Separate development, reserved and adversarial cases; include absent evidence, ambiguity and injection. Define tolerances and acceptance thresholds before final measurement. Public examples may have appeared in model training.
 
 Compare **fixed lexical → fixed semantic → bounded agent**, changing one dimension at a time. Measure evidence recall@k, complete-proof retrieval, correct cells/units/periods, numerical accuracy, justified/unjustified abstention, errors, latency and cost. Keep failures in denominators; publish sample counts and variability.
+
+Current retrieval evidence: [B05 comparison](../verification/B05_RETRIEVAL.md), ten development cases over all 186 chunks, explicit k=5 and separate scoring references. Semantic complete proof is 10/10 versus lexical 9/10; this does not measure answer accuracy.
 
 Use deterministic reference checks first. Judge-based faithfulness scores are supplementary estimates, calibrated against reviewed examples; they do not prevent hallucinations. [Evaluation guidance](https://developers.openai.com/api/docs/guides/evaluation-best-practices), [Ragas](https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/faithfulness/)
 

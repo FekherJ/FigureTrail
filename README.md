@@ -6,7 +6,7 @@ The design combines retrieval, structured LLM selection and deterministic calcul
 
 ## Project status
 
-**Active development — status reviewed on 25 October 2026.**
+**Active development — status reviewed on 26 October 2026.**
 
 | Component | Status |
 |---|---|
@@ -19,19 +19,20 @@ The design combines retrieval, structured LLM selection and deterministic calcul
 | Provider connection | Gemini SDK connection verified: one structured response and one 768-dimension embedding |
 | Source-case pilot | Three matching operation/cell selections; 0.950 s median; one observed missing-period abstention |
 | Native tool check | One validated `read_evidence` request and local execution; model request took 1.302 s |
-| Retrieval and analysis | Index bundle verified; retriever comparison and numerical analysis planned |
+| Retrieval | Lexical/semantic comparison measured on ten development questions; complete proof@5: 9/10 and 10/10 |
+| Numerical analysis | Structured cell selection and Decimal calculation from retrieved candidates planned for B06 |
 | Tools and operations | Provider call journal and local allowances implemented; bounded agent and complete analysis records planned |
-| Delivery tracking | [Repository issues](https://github.com/FekherJ/FigureTrail/issues): B01–B04 completed; B05 retrieval measurement is next |
+| Delivery tracking | [Repository issues](https://github.com/FekherJ/FigureTrail/issues): B01–B05 completed; B06 fixed analysis is next |
 
-Existing checks validate the reference data, HTTP foundation and one controlled LLM source-selection pilot. Broader task quality and RAG performance remain unmeasured; no benchmark accuracy score is published.
+Existing checks validate reference data, the HTTP foundation, a controlled LLM source-selection pilot and retrieval evidence coverage. The ten retrieval questions are curated development cases; end-to-end answer accuracy and reserved-case performance remain unmeasured.
 
 ## How the application fits together
 
 The target workflow is **question → retrieve report evidence → LLM selects cells and an operation → Python validates and calculates → result with sources**.
 
-The backend lives in `app/` and runs as one local Python service. FastAPI handlers receive HTTP requests; analysis orchestration, retrieval and data access will be added as separate modules when their features are implemented. A browser page served by the same backend is planned for B09. Gemini runs remotely and is called by Python; its API key stays out of the browser.
+The backend lives in `app/` and runs as one local Python service. FastAPI handlers receive HTTP requests; corpus/index storage and retrieval already have shared modules. Analysis orchestration will connect them to generation and calculation in B06. A browser page served by the same backend is planned for B09. Gemini runs remotely and is called by Python; its API key stays out of the browser.
 
-Currently, the backend exposes only `/health`. The provider and source-selection checks run through command-line scripts using shared application modules. They are not yet connected to an analysis endpoint. Retrieval, the runtime calculator and the browser interface remain planned. See the [architecture](docs/architecture/ARCHITECTURE.md) for the target design.
+Currently, the backend exposes only `/health`. The provider and source-selection checks run through command-line scripts using shared application modules. They are not yet connected to an analysis endpoint. Retrieval is available through the CLI; the runtime calculator, analysis endpoint and browser interface remain planned. See the [architecture](docs/architecture/ARCHITECTURE.md) for the target design.
 
 ## Setup and run
 
@@ -137,29 +138,51 @@ The builder embeds each distinct chunk input once, caches completed vectors and 
 
 Verified: 186 aligned rows, 768 dimensions, 184 distinct inputs and a cached rebuild at 0.394 s internally with zero requests. A Windows progress-file interruption was fixed and resumed; its extra request is retained in the [build evidence](docs/verification/B04_INDEX_BUILD.md). Usage/charges remain unknown where unreported. Generated bundles, caches and journals are ignored by Git. Run one builder at a time and preserve `data/local/runs.sqlite`.
 
+## Search and compare retrieval
+
+After building the index, lexical search runs locally without a provider key:
+
+```powershell
+uv run --locked python -B -X utf8 -m scripts.search "What percentage of Devon production comes from Canada?" --k 5
+uv run --locked python -B -X utf8 -m evals.retrieval
+```
+
+The CLI returns source excerpts, scores and cell IDs. Lexical search matches words using SQLite FTS5/BM25; semantic search compares a question embedding with the document vectors. Lower BM25 scores and higher cosine scores rank first. Repeated `--report-id` options apply explicit known report groups before top-k; otherwise the full corpus is searched.
+
+For the ten-question semantic comparison, configure `GEMINI_API_KEY` and explicitly allow missing query embeddings once, then replay from cache:
+
+```powershell
+uv run --locked python -B -X utf8 -m evals.retrieval --mode compare --live
+uv run --locked python -B -X utf8 -m evals.retrieval --mode compare
+```
+
+The first command plans at most ten missing query embeddings; document embeddings are reused. The second requires all query inputs cached and sends zero model requests. Add `--method semantic --live` to the search command for a new question; subsequent identical questions can omit `--live` and the key. Query vectors are cached separately in ignored `data/local/query-embeddings.sqlite`; all live calls retain the shared provider journal and allowance controls.
+
+Measured on ten development questions over all 186 chunks: lexical recall@5 **95%**, complete proof **9/10**; semantic recall@5 **100%**, complete proof **10/10**, with a **0.423 s** median including live query embedding. Semantic at k=5 is the provisional B06 choice; lexical does better at k=3. Cached replay reproduced every ranking and score without requests. Complete proof means both operand cells are present, not that an answer is correct. See [comparison, difficult cases and limits](docs/verification/B05_RETRIEVAL.md) and [machine-readable evidence](docs/verification/B05_RETRIEVAL_RESULTS.json).
+
 ## Run checks
 
 After preparing the data:
 
 ```powershell
 uv run --locked ruff check .
-uv run --locked ruff format --check app scripts/check_environment.py scripts/check_provider.py scripts/run_source_case.py scripts/check_tool_call.py scripts/prepare_corpus.py scripts/build_index.py tests/test_provider_connection.py tests/test_source_case.py tests/test_tool_call.py tests/test_corpus.py tests/test_index.py
+uv run --locked ruff format --check app scripts/check_environment.py scripts/check_provider.py scripts/run_source_case.py scripts/check_tool_call.py scripts/prepare_corpus.py scripts/build_index.py tests/test_provider_connection.py tests/test_source_case.py tests/test_tool_call.py tests/test_corpus.py tests/test_index.py scripts/search.py evals/retrieval.py tests/test_retrieval.py
 uv run --locked python -B -X utf8 scripts/inspect_finqa.py --case all --check
 uv run --locked python -B -X utf8 -m unittest discover -s tests -v
 ```
 
 Verified results: **10 valid cases and 3 passing negative tests**. The tests reject the wrong year, confusion between ratios and percentages, and answers leaked into source exports. The verifier rejects Python's `-O` mode because it disables assertions.
 
-All **twenty offline tests** pass. Index checks cover cached rebuild/resume, file-lock recovery, pacing/restart history, cache corruption and mismatched SQLite/FTS/vector rows and configuration. Corpus checks cover source isolation, deduplication, original values/context, repeatable artifacts and rejection of inconsistent input/output. Native-tool tests also cover eleven response/execution cases and a simulated quota failure. The provider tests additionally simulate quota errors on both SDK endpoints and verify credential exclusion, retained unknown usage, source/plan boundaries, invented cells and a budget block before network access. Ruff checks lint across the codebase and formatting in the application, current preparation/provider/index commands and their tests. FinQA verification also runs with the Python standard library alone. These checks are separate from future retrieval and answer evaluations.
+All **26 offline tests** pass. Retrieval tests cover literal query handling, scope before top-k, cosine/cache behavior, invalid requests, evaluator separation and failure-aware metrics. Index checks cover cached rebuild/resume, file-lock recovery, pacing/restart history, cache corruption and mismatched SQLite/FTS/vector rows and configuration. Corpus checks cover source isolation, deduplication, original values/context, repeatable artifacts and rejection of inconsistent input/output. Native-tool tests also cover eleven response/execution cases and a simulated quota failure. The provider tests additionally simulate quota errors on both SDK endpoints and verify credential exclusion, retained unknown usage, source/plan boundaries, invented cells and a budget block before network access. Ruff checks lint across the codebase and formatting in the application, current preparation/provider/index/search/evaluation commands and their tests. FinQA verification also runs with the Python standard library alone. These checks are separate from the measured development retrieval comparison and future answer evaluations.
 
 ## Repository layout
 
 ```text
-app/                    HTTP, contracts, corpus/index storage, embeddings and Gemini integration
+app/                    HTTP, contracts, corpus/index storage, retrieval, embeddings and Gemini
 prompts/                Versioned model instructions
-scripts/                Data preparation, environment, source-case and tool checks
+scripts/                Data preparation, search inspection, environment and provider checks
 tests/                  Automated tests
-evals/cases/            References for evaluation only
+evals/                  Question fixtures, separate scoring references and retrieval evaluator
 data/                   Pinned source selection, local sources, provenance and license notice
 docs/architecture/      Design, contracts and technical decisions
 docs/Backlog/           B01–B13 roadmap and reference cases
@@ -167,6 +190,8 @@ docs/verification/      Verification reports, results and limitations
 ```
 
 Downloads, generated exports, execution records and `.venv/` are excluded from Git. Application modules are added with their first working feature.
+
+Architecture, backlog, curated verification evidence and `AGENTS.md` are shared engineering documents. Keep personal notes and non-public documents in the ignored `private/` directory or `*.local.md` files. Generated document exports belong in ignored `output/` or `outputs/` directories; temporary work belongs in `tmp/` or `work/`. Ignore rules do not remove files already tracked by Git.
 
 ## Design principles
 
@@ -177,14 +202,15 @@ Downloads, generated exports, execution records and `.venv/` are excluded from G
 
 Use clear, concise English for project documentation, diagrams, comments, diagnostics and GitHub issues. Preserve original source quotations and technical identifiers. Do not rewrite source evidence to improve its wording.
 
-The B03 pilot uses Google's Gemini Developer API: `gemini-3.5-flash-lite` for generation and `gemini-embedding-2` for embeddings, starting on the free tier. See the [provider decision](docs/architecture/PROVIDER_SELECTION.md). Model access, SDK compatibility, the source-selection contract, one-case latency and the provider allowance journal are verified. [Free-tier project quotas](docs/verification/B03_ACCOUNT_LIMITS.md) are recorded from AI Studio. The [bounded native tool check](docs/verification/B03_TOOL_CALL.md) also passed. B03 is complete; retrieval and the full analysis workflow remain planned.
+The B03 pilot uses Google's Gemini Developer API: `gemini-3.5-flash-lite` for generation and `gemini-embedding-2` for embeddings, starting on the free tier. See the [provider decision](docs/architecture/PROVIDER_SELECTION.md). Model access, SDK compatibility, the source-selection contract, one-case latency and the provider allowance journal are verified. [Free-tier project quotas](docs/verification/B03_ACCOUNT_LIMITS.md) are recorded from AI Studio. The [bounded native tool check](docs/verification/B03_TOOL_CALL.md) also passed. B03–B05 are complete; the full analysis workflow remains planned.
 
 ## Next milestone
 
-B01–B04 are complete. Next, implement and measure lexical and semantic retrieval in B05, using the same corpus and questions. The analysis API, deterministic calculator, browser interface and bounded agent follow in later milestones. The [backlog](docs/Backlog/BACKLOG.md) contains the acceptance criteria and dependencies.
+B01–B05 are complete. Next, assemble B06: retrieve candidates, request a structured LLM cell-selection plan, validate source values and calculate with Decimal. The analysis API, deterministic calculator, browser interface and bounded agent follow in later milestones. The [backlog](docs/Backlog/BACKLOG.md) contains the acceptance criteria and dependencies.
 
 ## Documentation
 
+- [Retrieval comparison and difficult cases](docs/verification/B05_RETRIEVAL.md)
 - [Architecture and contracts](docs/architecture/ARCHITECTURE.md)
 - [Hosted provider and model selection](docs/architecture/PROVIDER_SELECTION.md)
 - [Provider connection verification](docs/verification/B03_PROVIDER_CONNECTION.md)
