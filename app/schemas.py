@@ -106,3 +106,124 @@ class SourceDocument(BaseModel):
                 }
             )
         return evidence
+
+
+class AnalysisRequest(BaseModel):
+    """Public input; model, prompts, paths and retrieval settings are server-controlled."""
+
+    model_config = ConfigDict(extra="forbid", strict=True)
+    question: str = Field(min_length=1, max_length=2000)
+    report_ids: list[str] | None = Field(default=None, min_length=1, max_length=40)
+    mode: Literal["fixed"] = "fixed"
+
+    @model_validator(mode="after")
+    def check_question(self):
+        if not self.question.strip():
+            raise ValueError("Question must contain non-whitespace text.")
+        return self
+
+
+class APIError(BaseModel):
+    status: Literal["failed", "blocked"]
+    error_code: str
+    message: str
+    run_id: str | None = None
+
+
+class HealthResponse(BaseModel):
+    status: Literal["ok"] = "ok"
+    corpus_version: str | None = None
+
+
+class ReportSummary(BaseModel):
+    report_id: str
+    source_ids: list[str]
+    chunk_count: int
+
+
+class ReportsResponse(BaseModel):
+    corpus_version: str
+    index_version: str
+    reports: list[ReportSummary]
+
+
+class RetrievedEvidence(BaseModel):
+    rank: int
+    score: float
+    chunk_id: str
+    source_id: str
+    report_id: str
+    kind: str
+    text: str
+    cell_ids: list[str]
+
+
+class OperandContext(BaseModel):
+    unit: str
+    scale: int
+    year: int
+    date: str | None
+    nature: str
+    period_basis: str
+    unit_basis: str
+
+
+class Operand(BaseModel):
+    cell_id: str
+    source_id: str
+    row: int
+    column: int
+    source_value: str
+    row_label: str
+    column_header: str
+    value: str
+    context: OperandContext
+
+
+class Calculation(BaseModel):
+    operation: Literal["ratio_percent", "percent_change"]
+    formula: str
+    value: str
+    display: str
+    unit: Literal["%"]
+    operands: list[Operand] = Field(min_length=2, max_length=2)
+    calculator_version: str
+    decimal_precision: int
+    display_rounding: str
+
+
+class CallSummary(BaseModel):
+    call_id: str
+    kind: str
+    status: str
+    requested_model: str
+    returned_model: str | None = None
+    usage: dict[str, int | None] | None = None
+    duration_seconds: float | None = None
+    allowance_eur: str
+    actual_charge_eur: str | None = None
+
+
+class AnalysisResponse(BaseModel):
+    run_id: str
+    status: Literal[
+        "started", "success", "insufficient_evidence", "unsupported_request", "blocked", "failed"
+    ]
+    mode: Literal["fixed"]
+    question: str
+    report_ids: list[str] | None
+    retrieval_method: Literal["lexical", "semantic"]
+    corpus_version: str
+    index_version: str
+    prompt_version: str
+    prompt_sha256: str
+    configuration_sha256: str
+    code_sha256: str
+    created_at_utc: str
+    finished_at_utc: str | None = None
+    duration_seconds: float | None = None
+    evidence: list[RetrievedEvidence]
+    selection: CellSelection | None
+    calculation: Calculation | None
+    calls: list[CallSummary]
+    error_code: str | None

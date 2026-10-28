@@ -1,8 +1,8 @@
 # AI Project Blueprint — FigureTrail
 
-**Standards reviewed 24 October; implementation status updated 26 October 2026. Build incrementally.**
+**Standards reviewed 24 October; implementation status updated 28 October 2026. Build incrementally.**
 
-Purpose: answer numerical questions from public reports with traceable evidence. Scope: one local Python service, a bounded report corpus, deterministic calculations and measured retrieval/model variants. Data references, the HTTP health contract, provider access, a bounded native tool call and the SQLite/vector index bundle are verified. B05 retrieval and B06 fixed CLI analysis have initial development measurements; API integration and wider reliability verification follow the roadmap.
+Purpose: answer numerical questions from public reports with traceable evidence. Scope: one local Python service, a bounded report corpus, deterministic calculations and measured retrieval/model variants. Data references, the HTTP health contract, provider access, a bounded native tool call and the SQLite/vector index bundle are verified. B05 retrieval and B06 fixed CLI analysis have initial development measurements; B07 exposes that shared service through typed HTTP contracts; wider reliability verification follows the roadmap.
 
 ## 1. Repository responsibilities
 
@@ -10,7 +10,7 @@ Purpose: answer numerical questions from public reports with traceable evidence.
 figuretrail/
 ├── app/                         # single Python application
 │   ├── __init__.py
-│   ├── main.py                  # FastAPI routes; serves UI
+│   ├── main.py                  # implemented JSON routes; UI follows in B09
 │   ├── schemas.py               # request, plan, tool, result contracts
 │   ├── corpus.py                # implemented source preparation and artifact validation
 │   ├── service.py               # fixed workflow; shared validation/limits
@@ -61,7 +61,9 @@ Use FastAPI/Pydantic, SQLite FTS5/BM25, then compare hosted embeddings with loca
 
 The LLM selects an allowed operation and cell IDs. Code resolves source values, checks scope/units/periods and positive denominators, then calculates. Schema conformity does not establish factual correctness. [Structured outputs](https://developers.openai.com/api/docs/guides/structured-outputs)
 
-API, UI and evaluator share the analysis service. Expose `/health`, `/reports`, `POST /analyses`, and execution lookup. Return explicit `success`, `insufficient_evidence`, `unsupported_request`, `blocked` or `failed` states.
+The API and evaluator share the analysis service; the planned UI will call that API. Expose `/health`, `/reports`, `POST /analyses`, and execution lookup. Return explicit `success`, `insufficient_evidence`, `unsupported_request`, `blocked` or `failed` states.
+
+B07 verification covers strict JSON/known-scope input, typed results, read-only lookup, local Host/origin checks, one active worker and a bounded HTTP wait. Keep the slot while a timed-out worker exits; do not equate an HTTP deadline with forced remote cancellation. See [API evidence](../verification/B07_API.md).
 
 Add P1 tool calling through `search_evidence`, `read_evidence`, `calculate`, reusing the fixed workflow's functions. Compare outcomes before choosing a default. [Anthropic](https://www.anthropic.com/research/building-effective-agents)
 

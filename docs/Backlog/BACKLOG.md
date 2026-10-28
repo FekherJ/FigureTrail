@@ -1,6 +1,6 @@
 # FigureTrail backlog
 
-**Version 1.1 — implementation roadmap dated 24 October 2026; implementation status updated 26 October 2026 — Fekher Jarrar.**
+**Version 1.1 — implementation roadmap dated 24 October 2026; implementation status updated 28 October 2026 — Fekher Jarrar.**
 
 This backlog implements the [architecture](../architecture/ARCHITECTURE.md). B01–B13 are stable work-item IDs. They are now linked to [repository issues](https://github.com/FekherJ/FigureTrail/issues) and [Project 2](https://github.com/users/FekherJ/projects/2), verified on 25 October 2026. Their current GitHub issue numbers are 1–13; the Bxx IDs remain the roadmap identifiers.
 
@@ -8,15 +8,15 @@ The target is a local application that retrieves cells from public reports, calc
 
 ## 1. GitHub tracking
 
-Track work in the existing board and keep one issue in progress. Each Bxx section defines an issue; retain its checklist and dependencies in the issue body. The following issue/board states were read back and verified on 26 October 2026:
+Track work in the existing board and keep one issue in progress. Each Bxx section defines an issue; retain its checklist and dependencies in the issue body. The following issue/board states were read back and verified on 28 October 2026:
 
 | Work items | Issue state | Board status |
 |---|---|---|
-| B01–B06 | Closed | Done |
-| B07 | Open | Ready |
-| B08–B13 | Open | Backlog |
+| B01–B07 | Closed | Done |
+| B08 | Open | Ready |
+| B09–B13 | Open | Backlog |
 
-B03's seven checklist items are verified, including the account-limit observation and one native tool call with validated arguments and original source values. B01–B06 functionality is complete; B04's source, SQLite/FTS5, embedding and alignment checks are verified. The B03 issue body and Done status are aligned with this completion review. B04 has four completed tasks and its issue/card are closed/Done. B05 retrieval is complete with measured comparison and difficult-case evidence; its issue/card are closed/Done. B06 functionality is complete with initial workflow evidence and explicit latency/domain limits; its issue/card are closed/Done. B07 is next and its card is Ready. All thirteen issues and board-item identities were preserved. This was a one-time alignment; pushing Markdown does not automatically synchronize issue bodies or board fields.
+B03's seven checklist items are verified, including the account-limit observation and one native tool call with validated arguments and original source values. B01–B07 functionality is complete; B04's source, SQLite/FTS5, embedding and alignment checks are verified. The B03 issue body and Done status are aligned with this completion review. B04 has four completed tasks and its issue/card are closed/Done. B05 retrieval is complete with measured comparison and difficult-case evidence; its issue/card are closed/Done. B06 functionality is complete with initial workflow evidence and explicit latency/domain limits; its issue/card are closed/Done. B07 API functionality is complete with 51 passing offline tests and documented worker/deadline limits; its issue/card are closed/Done. B08 is next and its existing card is Ready. All thirteen issues and board-item identities were preserved. This was a one-time alignment; pushing Markdown does not automatically synchronize issue bodies or board fields.
 
 Record priority (`P0`/`P1`), milestone and estimated hours. Optional labels are `data`, `llm`, `rag`, `api`, `evals`, `agents`, `security`, `observability` and `docs`. These values are currently documented in issue descriptions; importing them did not create labels or GitHub milestones.
 
@@ -72,7 +72,7 @@ The [engineering blueprint](../architecture/AI_PROJECT_BLUEPRINT.md) adds standa
 | B09–B12 | Safe evidence display, bounded tools, negative cases and complete traces. |
 | B13 | Checks without secrets, reproducible demo and measured results/limits. |
 
-B01 and the B02 foundation are verified, including the final B02 review on 25 October. GitHub import is complete. B03–B06 functionality is complete, including source selection, a native tool check, measured retrieval and fixed CLI calculation. The analysis API remains planned; provider latency/reliability limits are documented.
+B01 and the B02 foundation are verified, including the final B02 review on 25 October. GitHub import is complete. B03–B06 functionality is complete, including source selection, a native tool check, measured retrieval and fixed CLI calculation. The B07 analysis API is implemented; provider latency/reliability limits are documented.
 
 ## 3. Work items
 
@@ -201,16 +201,18 @@ Objective: question → retrieval → structured LLM selection → calculation i
 
 Objective: make the service usable and testable independently of the UI.
 
-- [ ] Expose `/reports`, `POST /analyses` and `GET /analyses/{run_id}`; retain `/health` and OpenAPI.
-- [ ] Define request/result schemas and error codes; preserve `run_id` after execution creation, including failures.
-- [ ] Validate question size, scope and mode; allow one active analysis and enforce a deadline.
-- [ ] Check local binding, origin and JSON requirements. Verify success, invalid input, unknown execution and simulated provider failure.
+- [x] Expose `/reports`, `POST /analyses` and `GET /analyses/{run_id}`; retain `/health` and OpenAPI.
+- [x] Define request/result schemas and error codes; preserve `run_id` after execution creation, including failures.
+- [x] Validate question size, scope and mode; allow one active analysis and enforce a deadline.
+- [x] Check local binding, origin and JSON requirements. Verify success, invalid input, unknown execution and simulated provider failure.
 
 **Acceptance criteria:** consistent `/docs` contract, stored-result lookup without AI calls, and technical errors distinct from domain outcomes. No exposed keys, permissive CORS or unrestricted paths. Invalid input must not trigger paid calls.
 
 **Evidence:** request/response examples and targeted HTTP contract checks.
 
 **Design note:** insufficient evidence is a domain outcome, distinct from a technical failure.
+
+**Verified status:** completed locally on 28 October 2026. [API verification](../verification/B07_API.md) and [checks](../verification/B07_API_RESULTS.json): report listing, fixed semantic analysis, read-only lookup and typed OpenAPI contracts. All 51 offline tests pass, including 17 API tests and actual local HTTP with simulated SDK responses. Explicit validation, concurrency, budgets, provider/storage failures and deadlines are covered. Timeout responses preserve run IDs; workers retain the slot until exit, with no claim of forced remote cancellation. All 14 old analyses read correctly; 215 call records, 14 analyses, source/index/cache data and prior evidence remain unchanged. No live AI calls or dependency changes. B08 is next; B06 latency/reliability limits remain open.
 
 ### B08 — Formalize evaluations and measure an improvement
 

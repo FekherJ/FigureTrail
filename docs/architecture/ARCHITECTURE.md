@@ -1,10 +1,10 @@
 # FigureTrail architecture
 
-**Version 1.1 — target design dated 24 October 2026; implementation status updated 26 October 2026 — Fekher Jarrar.**
+**Version 1.1 — target design dated 24 October 2026; implementation status updated 28 October 2026 — Fekher Jarrar.**
 
 FigureTrail answers simple numerical questions about public reports. It finds evidence, calculates a result and shows a verifiable analysis: values, periods, units, sources and formula. Example: “What was the percentage change in this measure between these two years?”
 
-The design uses a measurable fixed workflow, followed by a bounded agent variant. P0 covers LLM/RAG, API contracts and evaluations. P1 adds tools, security and observability. Reference data, the health API, provider connection, controlled source selection and one bounded native tool call are verified. Retrieval and the fixed CLI analysis workflow are now implemented and measured on development cases; analysis API integration remains planned.
+The design uses a measurable fixed workflow, followed by a bounded agent variant. P0 covers LLM/RAG, API contracts and evaluations. P1 adds tools, security and observability. Reference data, the health API, provider connection, controlled source selection and one bounded native tool call are verified. Retrieval and the fixed CLI analysis workflow are now implemented and measured on development cases; the B07 analysis API is implemented.
 
 Diagrams use Markdown and Mermaid so they can be reviewed and versioned with code. [GitHub diagram support](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/creating-diagrams).
 
@@ -63,7 +63,7 @@ flowchart TD
 
 ## 2. Technical choices
 
-Python, FastAPI, Pydantic, Uvicorn, NumPy and SQLite FTS5 were verified in B02. Google GenAI SDK 2.33.0, a generation/embedding connection check and the [B03 source-case pilot](../verification/B03_SOURCE_CASE.md) are verified. `app/llm.py` centralizes SDK requests and SQLite call allowances. The [prepared source corpus](../verification/B04_CORPUS_PREPARATION.md) is verified: 20 contexts, 186 chunks and 243 cells. The [SQLite/vector bundle](../verification/B04_INDEX_BUILD.md) is also verified: 186 rows at 768 dimensions. B05 retrieval and B06 fixed CLI analysis/calculation are verified within bounded source-format rules; analysis API integration remains planned. One source-bound `read_evidence` native call is verified in the [B03 tool check](../verification/B03_TOOL_CALL.md). See [B02 verification](../verification/B02_ENVIRONMENT.md).
+Python, FastAPI, Pydantic, Uvicorn, NumPy and SQLite FTS5 were verified in B02. Google GenAI SDK 2.33.0, a generation/embedding connection check and the [B03 source-case pilot](../verification/B03_SOURCE_CASE.md) are verified. `app/llm.py` centralizes SDK requests and SQLite call allowances. The [prepared source corpus](../verification/B04_CORPUS_PREPARATION.md) is verified: 20 contexts, 186 chunks and 243 cells. The [SQLite/vector bundle](../verification/B04_INDEX_BUILD.md) is also verified: 186 rows at 768 dimensions. B05 retrieval and B06 fixed CLI analysis/calculation are verified within bounded source-format rules; the B07 analysis API is implemented. One source-bound `read_evidence` native call is verified in the [B03 tool check](../verification/B03_TOOL_CALL.md). See [B02 verification](../verification/B02_ENVIRONMENT.md).
 
 | Need | Initial choice | Reason and limitation |
 |---|---|---|
@@ -184,28 +184,37 @@ Current implementation: `app/service.py` runs one retrieval and at most one stru
 
 | Route | Responsibility |
 |---|---|
-| `GET /` | Serve the demonstration UI. |
+| `GET /` | Planned B09 demonstration UI; not implemented. |
 | `GET /health` | Report process availability and loaded corpus version without provider calls. Implemented. |
-| `GET /reports` | List selectable document scopes without evaluation annotations. |
-| `POST /analyses` | Accept a question, optional `report_ids` and `fixed` or `agent` mode. |
-| `GET /analyses/{run_id}` | Read a stored result and evidence without another AI call. |
+| `GET /reports` | Implemented: list report/source IDs and chunk counts without annotations. |
+| `POST /analyses` | Implemented: question, optional known `report_ids`, and `fixed` mode only. |
+| `GET /analyses/{run_id}` | Implemented: read a stored public result without journal writes or AI calls. |
 | `GET /docs` | Interactive API documentation generated from OpenAPI. Available for current routes. |
 
-Except for the current health endpoint and documentation, these routes are planned. Retrieval mode is versioned experiment configuration, not an unrestricted API option. Agent mode remains unavailable until implemented.
+B07 implements the four JSON routes and OpenAPI using `app/main.py` and typed contracts in `app/schemas.py`; the root UI route remains planned. Retrieval mode is versioned experiment configuration, not an unrestricted API option. Agent mode remains unavailable until implemented.
 
 The result includes `run_id`, state, mode, scope, evidence, available operation/operands/result, versions and an optional error code. Execution details expose durations and usage. Unknown values remain absent or `null`, rather than becoming zero.
 
 | State | Meaning |
 |---|---|
+| `started` | Execution persisted and not yet finalized; a process crash can leave it in this state. |
 | `success` | References and calculation passed validation; semantic accuracy is measured separately. |
 | `insufficient_evidence` | Available evidence cannot establish the operands and their context. |
 | `unsupported_request` | The calculation or context is outside the supported scope. |
 | `blocked` | Budget, step count, deadline or permissions prevent further work. |
 | `failed` | Technical error, provider refusal, truncation or invalid schema; retain a specific error code. |
 
-A completed analysis may return HTTP 200 with a non-success outcome. Use 422 for invalid input, 404 for unknown executions, 502/504 for provider failures and 409 for rejected concurrent work. Errors after execution creation retain a retrievable `run_id`. Do not expose sensitive exception details to the browser.
+A completed analysis may return HTTP 200 with a non-success outcome. Use 422 for invalid input, 404 for unknown executions, 502/504 for provider failures and 409 for rejected concurrent work. Errors after execution creation retain `run_id`; storage failures explicitly state that durability cannot be guaranteed. Do not expose sensitive exception details to the browser.
 
 Keep processing synchronous and bounded, with a waiting indicator and one active analysis at a time. A distributed queue is outside the current scope.
+
+### Implemented B07 lifecycle and limits
+
+Startup loads/validates the current corpus/index once. A fresh checkout with neither pointer retains key-free health/docs and returns 503 for reports/analysis; a partial or invalid bundle fails startup. Restart after a corpus/index update. The API does not build artifacts or load evaluator references.
+
+POST is an explicit hosted inference operation and shares B06's service, cached semantic k=5 retrieval, calculator and budget journal. GET routes create no provider client. Question/mode/scope validation, a 32,768-byte JSON body cap and local Host/same-origin checks precede execution. Unknown usage remains null; Decimal values are strings. Responses project typed public fields and omit internal SDK metadata/raw errors.
+
+One worker admits one analysis; concurrent submissions return 409. A 60-second HTTP analysis deadline propagates to pacing and <=20-second SDK transport limits. After HTTP timeout, cooperative stage checks discard late numerical output and the active slot remains held until its worker exits. Lookup can temporarily show `started`; thread/remote execution cannot be forcibly killed. Storage failures preserve the assigned ID but cannot guarantee a durable result. Process-crash recovery is outside B07. Run one Uvicorn worker, bind 127.0.0.1 and disable reload. See [verified API contracts/errors](../verification/B07_API.md).
 
 ## 6. P1 bounded agent
 

@@ -81,7 +81,7 @@ class Retriever:
             report_ids = sorted(set(report_ids))
         return report_ids
 
-    def _query_vector(self, question: str, run_id: str):
+    def _query_vector(self, question: str, run_id: str, *, deadline=None, cancelled=None):
         if self.query_cache is None:
             raise ValueError("Semantic retrieval requires a query embedding cache.")
         text = query_input(question)
@@ -91,10 +91,12 @@ class Retriever:
         if item is None:
             if self.provider is None or self.pacer is None:
                 raise ValueError("Query embedding is missing; explicitly allow a live request.")
-            wait = self.pacer.wait(len(text.encode()) + 64)
+            limits = {"deadline": deadline, "cancelled": cancelled} if deadline is not None else {}
+            wait = self.pacer.wait(len(text.encode()) + 64, **limits)
             vector, call = self.provider.embed_text(
                 text,
                 run_id=run_id,
+                **limits,
                 metadata={
                     "purpose": "retrieval_query",
                     "format_version": EMBEDDING_CONFIG["format_version"],
@@ -114,7 +116,17 @@ class Retriever:
             "call": call,
         }
 
-    def search(self, question: str, *, method="lexical", k=5, report_ids=None, run_id=None):
+    def search(
+        self,
+        question: str,
+        *,
+        method="lexical",
+        k=5,
+        report_ids=None,
+        run_id=None,
+        deadline=None,
+        cancelled=None,
+    ):
         started = perf_counter()
         scope = self.validate_request(question, method, k, report_ids)
         eligible = np.array(
@@ -150,7 +162,9 @@ class Retriever:
                     ranked = database.execute(sql, params).fetchall()
             engine_seconds = perf_counter() - started
         else:
-            vector, event = self._query_vector(question, run_id or str(uuid4()))
+            vector, event = self._query_vector(
+                question, run_id or str(uuid4()), deadline=deadline, cancelled=cancelled
+            )
             engine_started = perf_counter()
             # ponytail: exact O(n*d) scan for <=500 chunks; consider ANN only after a size/latency need.
             scores = np.clip(self.vectors[eligible] @ vector, -1.0, 1.0)

@@ -6,7 +6,7 @@ The design combines retrieval, structured LLM selection and deterministic calcul
 
 ## Project status
 
-**Active development — status reviewed on 26 October 2026.**
+**Active development — status reviewed on 28 October 2026.**
 
 | Component | Status |
 |---|---|
@@ -14,7 +14,7 @@ The design combines retrieval, structured LLM selection and deterministic calcul
 | Prepared corpus | 20 contexts, 186 chunks and 243 original cells; offline preparation verified |
 | Search bundle | SQLite/FTS5 plus an aligned 186 × 768 matrix; 184 distinct cached document embeddings |
 | Reproducibility | Isolated Python environment, locked dependencies and repeatable checks |
-| API | Working `/health` endpoint, Pydantic response contract and OpenAPI schema |
+| API | Health, report listing, analysis submission and saved-result lookup with typed OpenAPI contracts |
 | Frontend | One HTML/CSS/JavaScript page planned for B09; no browser interface yet |
 | Provider connection | Gemini SDK connection verified: one structured response and one 768-dimension embedding |
 | Source-case pilot | Three matching operation/cell selections; 0.950 s median; one observed missing-period abstention |
@@ -22,7 +22,7 @@ The design combines retrieval, structured LLM selection and deterministic calcul
 | Retrieval | Lexical/semantic comparison measured on ten development questions; complete proof@5: 9/10 and 10/10 |
 | Numerical analysis | Fixed CLI workflow with source validation, Decimal calculation and initial evaluation; provider latency/timeouts remain limitations |
 | Tools and operations | Provider/analysis journals and local allowances implemented; bounded agent events and fuller observability planned |
-| Delivery tracking | [Repository issues](https://github.com/FekherJ/FigureTrail/issues): B01–B06 completed; B07 analysis API is next |
+| Delivery tracking | [Repository issues](https://github.com/FekherJ/FigureTrail/issues): B01–B07 completed; B08 evaluation is next |
 
 Existing checks validate reference data, the HTTP foundation, a controlled LLM source-selection pilot and retrieval evidence coverage. Initial fixed-workflow evaluation is documented below, including provider failures. All ten questions are curated development cases; reserved-case performance remains unmeasured.
 
@@ -32,7 +32,7 @@ The target workflow is **question → retrieve report evidence → LLM selects c
 
 The backend lives in `app/` and runs as one local Python service. FastAPI handlers receive HTTP requests; corpus/index storage and retrieval already have shared modules. The shared analysis service now connects them to generation, validation and calculation. A browser page served by the same backend is planned for B09. Gemini runs remotely and is called by Python; its API key stays out of the browser.
 
-Currently, the backend exposes only `/health`. The provider and source-selection checks run through command-line scripts using shared application modules. They are not yet connected to an analysis endpoint. Retrieval and fixed numerical analysis are available through the CLI; the analysis endpoint and browser interface remain planned. See the [architecture](docs/architecture/ARCHITECTURE.md) for the target design.
+The backend exposes health, report listing, fixed analysis and saved-result lookup. HTTP, CLI and evaluation paths reuse the same analysis service. The browser interface remains planned for B09. See the [architecture](docs/architecture/ARCHITECTURE.md) for the target design.
 
 ## Setup and run
 
@@ -61,7 +61,7 @@ Invoke-RestMethod http://127.0.0.1:8000/health
 {"status":"ok","corpus_version":null}
 ```
 
-The health endpoint confirms that the process responds. `corpus_version: null` means no corpus is loaded. The schema is available at `/openapi.json`, with interactive documentation at `/docs`. The server listens on `127.0.0.1`; press **Ctrl+C** to stop it. This foundation requires no provider key.
+This example is a fresh checkout without an index. With a valid prepared/index bundle, startup loads it and health returns its corpus hash. Partial or invalid bundles fail startup. Health reports process availability, not provider readiness or answer quality. The schema is available at `/openapi.json`, with interactive documentation at `/docs`. The server listens on `127.0.0.1`; press **Ctrl+C** to stop it. This foundation requires no provider key.
 
 ## Check the provider connection
 
@@ -84,7 +84,7 @@ uv run --locked python -B -X utf8 -m scripts.run_source_case --live --repetition
 uv run --locked python -B -X utf8 -m scripts.run_source_case --live --scenario missing-period
 ```
 
-Gemini proposes the operation and ordered cell IDs; Python validates and resolves source values. The original-table context is supplied directly, so this is a feasibility test before retrieval. The evaluator reads expected references after the requests. There is no runtime numerical calculation yet.
+Gemini proposes the operation and ordered cell IDs; Python validates and resolves source values. The original-table context is supplied directly, so this is a feasibility test before retrieval. The evaluator reads expected references after the requests. This historical pilot checks selection only; the current B06 service also performs numerical calculation.
 
 Observed: three matching selections of Canada 60 / total 243 MMBoe, with a **0.950-second median**, and one `insufficient_evidence` response for 2035. These results cover one development example and one negative variant. See the [pilot evidence](docs/verification/B03_SOURCE_CASE.md).
 
@@ -123,7 +123,7 @@ uv run --locked python -B -X utf8 -m scripts.prepare_corpus
 uv run --locked python -B -X utf8 -m scripts.prepare_corpus --check
 ```
 
-Verified output: 20 report contexts, 186 chunks and 243 cells. Original tables are authoritative; normalized dash-to-2014 conflicts are recorded separately and retain missing values. Chunks preserve headers and adjacent context, with links to full parent sources. Generated artifacts are ignored by Git. The completed SQLite/vector bundle is built in the next section; the service has not loaded it yet. See the [verification report](docs/verification/B04_CORPUS_PREPARATION.md).
+Verified output: 20 report contexts, 186 chunks and 243 cells. Original tables are authoritative; normalized dash-to-2014 conflicts are recorded separately and retain missing values. Chunks preserve headers and adjacent context, with links to full parent sources. Generated artifacts are ignored by Git. The completed SQLite/vector bundle is built in the next section; the API loads the current validated bundle at startup. See the [verification report](docs/verification/B04_CORPUS_PREPARATION.md).
 
 ## Build and verify the search bundle
 
@@ -172,7 +172,34 @@ Each execution uses one retrieval and at most one generation; a new semantic que
 
 Current examples include **24.69%** for Canada's estimated production share and **−7.44%** for a signed revenue change. The initial ten-case campaign produced **5 correct answers, 1 conservative abstention and 4 provider HTTP 504s**; both negative checks returned the expected outcome. After removing exact duplicated source context, two bounded follow-ups succeeded in **15.1 s and 19.2 s**. These follow-ups do not replace the original failures or establish a full current-version score. Provider responsiveness and reliability remain limitations.
 
-Run the initial evaluator explicitly with `uv run --locked python -B -X utf8 -m evals.analysis --live`; it plans at most twelve generations and requires the B05 query cache. Every rerun consumes quota and is recorded. See [workflow verification and supported formats](docs/verification/B06_FIXED_WORKFLOW.md) and [full measured evidence](docs/verification/B06_FIXED_WORKFLOW_RESULTS.json). The analysis API and browser interface remain planned.
+Run the initial evaluator explicitly with `uv run --locked python -B -X utf8 -m evals.analysis --live`; it plans at most twelve generations and requires the B05 query cache. Every rerun consumes quota and is recorded. See [workflow verification and supported formats](docs/verification/B06_FIXED_WORKFLOW.md) and [full measured evidence](docs/verification/B06_FIXED_WORKFLOW_RESULTS.json). The analysis API is implemented; the browser interface remains planned.
+
+## Use the analysis API
+
+After the corpus/index build, configure `GEMINI_API_KEY` in the server environment and restart the server. Run one worker without reload:
+
+```powershell
+uv run --locked python -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --workers 1
+```
+
+`GET /reports` lists known report groups. In another terminal, submit an explicit hosted inference request:
+
+```powershell
+$body = @{
+    question = "In Devon's estimated 2008 production table, what percentage of total production in MMBoe comes from Canada?"
+    report_ids = @('DVN/2007')
+    mode = 'fixed'
+} | ConvertTo-Json
+$analysis = Invoke-RestMethod -Method Post -Uri http://127.0.0.1:8000/analyses -ContentType 'application/json' -Body $body
+$analysis.calculation
+Invoke-RestMethod "http://127.0.0.1:8000/analyses/$($analysis.run_id)"
+```
+
+Omit `report_ids`, or set it to `null`, to search the full corpus. Only fixed semantic k=5 mode is available. POST can make one missing query embedding and at most one generation through the shared provider journal. It is the explicit live operation; GET routes and startup make no AI calls. Stored-result lookup returns recorded evidence and versions without rerunning inference. `/docs` describes strict inputs, typed results and errors.
+
+Questions are limited to 2000 characters and JSON bodies to 32,768 bytes. Unknown scope/mode/fields return 422 before provider initialization. Completed non-answer states use HTTP 200; technical failures use 5xx, and concurrent/budget-blocked work uses 409. Browser Origin must match the local server origin. No public authentication or arbitrary ingestion is implemented.
+
+The API bounds its analysis wait to 60 seconds and passes remaining time to pacing and SDK calls. If a worker outlives that wait, the response carries its run ID and the only analysis slot remains occupied until it stops; lookup may briefly show `started`. Python cannot forcibly cancel an already submitted remote request. See [API contracts, verification and limits](docs/verification/B07_API.md).
 
 ## Run checks
 
@@ -180,14 +207,14 @@ After preparing the data:
 
 ```powershell
 uv run --locked ruff check .
-uv run --locked ruff format --check app scripts/check_environment.py scripts/check_provider.py scripts/run_source_case.py scripts/check_tool_call.py scripts/prepare_corpus.py scripts/build_index.py tests/test_provider_connection.py tests/test_source_case.py tests/test_tool_call.py tests/test_corpus.py tests/test_index.py scripts/search.py evals/retrieval.py tests/test_retrieval.py scripts/analyze.py evals/analysis.py tests/test_analysis.py tests/test_analysis_evaluation.py
+uv run --locked ruff format --check app scripts/check_environment.py scripts/check_provider.py scripts/run_source_case.py scripts/check_tool_call.py scripts/prepare_corpus.py scripts/build_index.py tests/test_provider_connection.py tests/test_source_case.py tests/test_tool_call.py tests/test_corpus.py tests/test_index.py scripts/search.py evals/retrieval.py tests/test_retrieval.py scripts/analyze.py evals/analysis.py tests/test_analysis.py tests/test_analysis_evaluation.py tests/test_api.py
 uv run --locked python -B -X utf8 scripts/inspect_finqa.py --case all --check
 uv run --locked python -B -X utf8 -m unittest discover -s tests -v
 ```
 
 Verified results: **10 valid cases and 3 passing negative tests**. The tests reject the wrong year, confusion between ratios and percentages, and answers leaked into source exports. The verifier rejects Python's `-O` mode because it disables assertions.
 
-All **34 offline tests** pass. Fixed-analysis tests cover source arithmetic, units/periods/scales, accessible cells, outcomes, durable records and failure-aware scoring. Retrieval tests cover literal query handling, scope before top-k, cosine/cache behavior, invalid requests, evaluator separation and failure-aware metrics. Index checks cover cached rebuild/resume, file-lock recovery, pacing/restart history, cache corruption and mismatched SQLite/FTS/vector rows and configuration. Corpus checks cover source isolation, deduplication, original values/context, repeatable artifacts and rejection of inconsistent input/output. Native-tool tests also cover eleven response/execution cases and a simulated quota failure. The provider tests additionally simulate quota errors on both SDK endpoints and verify credential exclusion, retained unknown usage, source/plan boundaries, invented cells and a budget block before network access. Ruff checks lint across the codebase and formatting in the application, current preparation/provider/index/search/evaluation commands and their tests. FinQA verification also runs with the Python standard library alone. These checks are separate from live development retrieval/workflow evaluations and future reserved-case measurements.
+All **51 offline tests** pass. Seventeen API tests cover typed results, read-only lookup, validation, local request restrictions, single-analysis concurrency, deadlines and simulated provider/storage failures. One starts a real local Uvicorn HTTP server with simulated SDK responses. Fixed-analysis tests cover source arithmetic, units/periods/scales, accessible cells, outcomes, durable records and failure-aware scoring. Retrieval tests cover literal query handling, scope before top-k, cosine/cache behavior, invalid requests, evaluator separation and failure-aware metrics. Index checks cover cached rebuild/resume, file-lock recovery, pacing/restart history, cache corruption and mismatched SQLite/FTS/vector rows and configuration. Corpus checks cover source isolation, deduplication, original values/context, repeatable artifacts and rejection of inconsistent input/output. Native-tool tests also cover eleven response/execution cases and a simulated quota failure. The provider tests additionally simulate quota errors on both SDK endpoints and verify credential exclusion, retained unknown usage, source/plan boundaries, invented cells and a budget block before network access. Ruff checks lint across the codebase and formatting in the application, current preparation/provider/index/search/evaluation commands and their tests. FinQA verification also runs with the Python standard library alone. These checks are separate from live development retrieval/workflow evaluations and future reserved-case measurements.
 
 ## Repository layout
 
@@ -216,11 +243,11 @@ Architecture, backlog, curated verification evidence and `AGENTS.md` are shared 
 
 Use clear, concise English for project documentation, diagrams, comments, diagnostics and GitHub issues. Preserve original source quotations and technical identifiers. Do not rewrite source evidence to improve its wording.
 
-The B03 pilot uses Google's Gemini Developer API: `gemini-3.5-flash-lite` for generation and `gemini-embedding-2` for embeddings, starting on the free tier. See the [provider decision](docs/architecture/PROVIDER_SELECTION.md). Model access, SDK compatibility, the source-selection contract, one-case latency and the provider allowance journal are verified. [Free-tier project quotas](docs/verification/B03_ACCOUNT_LIMITS.md) are recorded from AI Studio. The [bounded native tool check](docs/verification/B03_TOOL_CALL.md) also passed. B03–B06 functionality is complete within documented limits; API integration and broader reliability checks remain planned.
+The B03 pilot uses Google's Gemini Developer API: `gemini-3.5-flash-lite` for generation and `gemini-embedding-2` for embeddings, starting on the free tier. See the [provider decision](docs/architecture/PROVIDER_SELECTION.md). Model access, SDK compatibility, the source-selection contract, one-case latency and the provider allowance journal are verified. [Free-tier project quotas](docs/verification/B03_ACCOUNT_LIMITS.md) are recorded from AI Studio. The [bounded native tool check](docs/verification/B03_TOOL_CALL.md) also passed. B03–B07 functionality is complete within documented limits; broader reliability checks remain planned.
 
 ## Next milestone
 
-B01–B06 functionality is complete. Next, implement B07: report listing, analysis submission and saved-result lookup around the shared service. The browser interface and bounded agent follow later. Provider latency/timeouts and broader task quality still require measurement before release. The [backlog](docs/Backlog/BACKLOG.md) contains the acceptance criteria and dependencies.
+B01–B07 functionality is complete. Next, B08 formalizes the shared-service evaluations, expands cases where feasible and measures an observed weakness. The browser interface and bounded agent follow later. Provider latency/timeouts and broader task quality still require measurement before release. The [backlog](docs/Backlog/BACKLOG.md) contains the acceptance criteria and dependencies.
 
 ## Documentation
 

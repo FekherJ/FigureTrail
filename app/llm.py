@@ -94,7 +94,7 @@ class GeminiProvider:
         if record["status"] == "blocked":
             raise ProviderError("budget_limit", record)
 
-    def _call(self, kind, run_id, perform, parse, metadata):
+    def _call(self, kind, run_id, perform, parse, metadata, *, deadline=None, cancelled=None):
         allowance = Decimal("1") if kind == "generation" else Decimal("0.01")
         record = {
             "call_id": str(uuid4()),
@@ -116,8 +116,13 @@ class GeminiProvider:
         }
         self._reserve(record, allowance)  # No network if reservation/recording fails.
         started = perf_counter()
-        result = None
+        result, attempted = None, False
         try:
+            if (deadline is not None and monotonic() >= deadline) or (
+                cancelled is not None and cancelled.is_set()
+            ):
+                raise TimeoutError("Execution deadline reached before network access.")
+            attempted = True
             response = perform()
             if kind == "generation":
                 usage = response.usage_metadata
@@ -154,6 +159,16 @@ class GeminiProvider:
                 if isinstance(code, int)
                 else "provider_error"
             )
+            if not attempted:
+                record.update(status="blocked", error_code="deadline_reached")
+                allowance = Decimal(0)  # No network attempt was made.
+            elif isinstance(error, TimeoutError) or type(error).__name__ in {
+                "ReadTimeout",
+                "ConnectTimeout",
+                "WriteTimeout",
+                "PoolTimeout",
+            }:
+                record["error_code"] = "provider_timeout"
         record["duration_seconds"] = round(perf_counter() - started, 3)
         record["allowance_eur"] = str(allowance)
         # Unknown usage retains the reservation, including after a timeout or process interruption.
@@ -162,7 +177,7 @@ class GeminiProvider:
                 "UPDATE calls SET allowance_eur = ?, record_json = ? WHERE call_id = ?",
                 (str(allowance), json.dumps(record), record["call_id"]),
             )
-        if record["status"] == "failed":
+        if record["status"] in {"failed", "blocked"}:
             raise ProviderError(record["error_code"], record) from None
         return result, record
 
@@ -179,7 +194,7 @@ class GeminiProvider:
             raise ValueError("Output tokens must be between 1 and 1000.")
         remaining = 20 if deadline is None else min(20, deadline - monotonic())
         if remaining <= 0:
-            raise ValueError("The execution deadline has been reached.")
+            raise TimeoutError("The execution deadline has been reached.")
         tags = {
             "input_sha256": sha256(text.encode()).hexdigest(),
             "instruction_sha256": sha256(instruction.encode()).hexdigest(),
@@ -206,6 +221,7 @@ class GeminiProvider:
         metadata: dict | None = None,
         max_output_tokens: int = 1000,
         deadline: float | None = None,
+        cancelled=None,
     ):
         config, tags = self._generation_config(text, instruction, max_output_tokens, deadline)
         config.response_mime_type = "application/json"
@@ -222,16 +238,24 @@ class GeminiProvider:
             record["validated_output"] = result.model_dump(mode="json")
             return result
 
+        def perform():
+            if deadline is not None:
+                remaining = deadline - monotonic()
+                if remaining <= 0 or (cancelled is not None and cancelled.is_set()):
+                    raise TimeoutError("Execution deadline reached.")
+                config.http_options.timeout = max(1, int(min(20, remaining) * 1000))
+            return self.client.models.generate_content(
+                model=GENERATION_MODEL, contents=text, config=config
+            )
+
         return self._call(
             "generation",
             run_id,
-            lambda: self.client.models.generate_content(
-                model=GENERATION_MODEL,
-                contents=text,
-                config=config,
-            ),
+            perform,
             parse,
             {**(metadata or {}), **tags},
+            deadline=deadline,
+            cancelled=cancelled,
         )
 
     def request_tool(
@@ -245,6 +269,7 @@ class GeminiProvider:
         instruction: str = "",
         metadata: dict | None = None,
         deadline: float | None = None,
+        cancelled=None,
     ):
         config, tags = self._generation_config(text, instruction, 256, deadline)
         parameters = arguments_schema.model_json_schema()
@@ -288,17 +313,29 @@ class GeminiProvider:
             }
             return arguments
 
+        def perform():
+            if deadline is not None:
+                remaining = deadline - monotonic()
+                if remaining <= 0 or (cancelled is not None and cancelled.is_set()):
+                    raise TimeoutError("Execution deadline reached.")
+                config.http_options.timeout = max(1, int(min(20, remaining) * 1000))
+            return self.client.models.generate_content(
+                model=GENERATION_MODEL, contents=text, config=config
+            )
+
         return self._call(
             "generation",
             run_id,
-            lambda: self.client.models.generate_content(
-                model=GENERATION_MODEL, contents=text, config=config
-            ),
+            perform,
             parse,
             {**(metadata or {}), **tags},
+            deadline=deadline,
+            cancelled=cancelled,
         )
 
-    def embed_text(self, text: str, *, run_id: str, metadata: dict | None = None):
+    def embed_text(
+        self, text: str, *, run_id: str, metadata: dict | None = None, deadline=None, cancelled=None
+    ):
         if not text or len(text) > 20_000:
             raise ValueError("Embedding input is empty or exceeds its size limit.")
 
@@ -315,14 +352,23 @@ class GeminiProvider:
             record.update(dimensions=DIMENSIONS, norm=norm, finite_values=True)
             return values
 
+        def perform():
+            remaining = 20 if deadline is None else min(20, deadline - monotonic())
+            if remaining <= 0 or (cancelled is not None and cancelled.is_set()):
+                raise TimeoutError("Execution deadline reached.")
+            return self.client.models.embed_content(
+                model=EMBEDDING_MODEL,
+                contents=text,
+                config=types.EmbedContentConfig(
+                    output_dimensionality=DIMENSIONS,
+                    http_options=types.HttpOptions(timeout=max(1, int(remaining * 1000))),
+                ),
+            )
+
         return self._call(
             "embedding",
             run_id,
-            lambda: self.client.models.embed_content(
-                model=EMBEDDING_MODEL,
-                contents=text,
-                config=types.EmbedContentConfig(output_dimensionality=DIMENSIONS),
-            ),
+            perform,
             parse,
             {
                 "format_version": "search-prefix-v1",
@@ -330,4 +376,6 @@ class GeminiProvider:
                 "input_sha256": sha256(text.encode()).hexdigest(),
                 "input_token_allowance": len(text.encode()) + 64,
             },
+            deadline=deadline,
+            cancelled=cancelled,
         )

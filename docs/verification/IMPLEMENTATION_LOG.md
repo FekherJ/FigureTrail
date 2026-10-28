@@ -679,3 +679,55 @@ Payload/field/item names above describe the reviewed temporary JSON and existing
 The earlier final-handoff command did not execute: automatic approval review could not complete after the Codex usage limit was reached. On the user's explicit resumption, completed that same log/private-reference handoff and rechecked preservation. No application source changed during the resumption. The current code and prompt hashes match both measured v2 follow-up executions.
 
 Reran Ruff lint/format (28 formatted files) and all 34 offline tests; all passed. Rechecked 169 local Markdown links, prior journal records, source/cache/index/PDF preservation, empty staging and unchanged HEAD. Read back the existing closed/completed B06 issue and board statuses; B07 remains Ready and the board matches the prior verified snapshot. The shared journal remains at 215 calls and fourteen analyses, allowance EUR 6.1633250: zero additional model requests. No staging, commit or push was performed. The initial four 504s and unresolved 15-19-second follow-up latency remain in the public evidence.
+
+
+## 22. B07 — Documented local API — 28 October 2026
+
+Resumed after the usage-limit interruption. Inspection confirmed that the earlier attempt stopped during design/review, before B07 edits. HEAD was `9e9bc95` with a clean working tree. Saved a fresh baseline of 121 existing public/local files, all 215 provider-call rows and fourteen analysis rows, plus the existing B07 issue/board state. No prior work was reset.
+
+Implemented report listing, fixed analysis submission, read-only result lookup, loaded-corpus health and typed OpenAPI responses. HTTP, CLI and evaluation continue to share `app/service.py`; arithmetic and source fixtures were not replaced. `app/main.py` handles lifespan loading, local Host/origin/JSON/body checks, one active execution and a 60-second HTTP analysis wait. `app/schemas.py` defines strict inputs and projected public results. `service.py` accepts the API run ID, persists stage outcomes and reads saved rows through read-only SQLite. `retrieval.py`, `embeddings.py` and `llm.py` propagate remaining time into pacing and embedding/generation transport bounds. Budget reservations, no automatic retries and retained unknown usage remain in the central provider module. No dependencies or lockfile changed.
+
+Consulted the official FastAPI lifespan/response-model and Python asyncio timeout/shielding documentation. Inspected the installed Google GenAI 2.33.0 `EmbedContentConfig` schema and confirmed request-specific `http_options`. A fresh checkout with no pointers still starts health/docs; partial/corrupt bundles fail startup. The index is loaded once, so publishing a new version requires restart. No arbitrary path/URL ingestion or public-deployment authentication was added.
+
+An accepted execution ID is retained on errors. A storage failure can prevent durable lookup and is reported explicitly. Deadline responses retain the only analysis slot until the worker actually exits; stage checks prevent late numerical success. Threads and already submitted remote requests cannot be forcibly cancelled. Lookup can temporarily return `started`, and a process crash can leave that state; automatic recovery is outside B07.
+
+Added seventeen tests in `tests/test_api.py`: typed success/evidence, cache reuse, key-free/read-only GETs, invalid input and scope, malformed JSON, unknown UUID, Host/origin/JSON/body restrictions, domain abstentions, invalid model cells/output, 429/504/transport errors, budget blocks, storage failures, missing index/key, concurrency, expired pacing/reservations and late embedding/generation. One test starts Uvicorn on an ephemeral 127.0.0.1 port and exercises real HTTP with simulated SDK responses, then stops the server. All model responses in B07 verification are simulated; no live AI requests were made.
+
+The first new test run found an incorrect expectation that absent generation usage was a single null. The existing provider correctly preserves a dictionary of null token counters. Corrected the test rather than changing accounting. Tightened pacing to stop sleeping at the remaining deadline and added an executable check. A PowerShell log-capture attempt rendered the dependency warning as a shell error; final checks used subprocess capture and verified actual native exit codes, without suppressing warnings.
+
+Final commands ran from the repository root using the project executables:
+
+```powershell
+& .\.venv\Scripts\ruff.exe check .
+& .\.venv\Scripts\python.exe -B -X utf8 -m unittest discover -s tests -v
+& .\.venv\Scripts\python.exe -B -X utf8 scripts/inspect_finqa.py --case all --check
+& .\.venv\Scripts\python.exe -B -X utf8 -m scripts.prepare_corpus --check
+& .\.venv\Scripts\python.exe -B -X utf8 -m scripts.build_index --check
+```
+
+Ruff format verification covered 29 current application/command/test files; its complete argument list and all six successful exit codes are in `B07_API_RESULTS.json`. The README's `uv run --locked ...` commands reproduce the same project environment. Temporary task-local Python helpers applied the reviewed edits, captured checks, compared protected hashes/journal records, checked existing-result projection and aligned tracking; the public JSON is the sanitized summary, not their full machine-specific transcript.
+
+Observed: all 51 tests pass in 6.855 s, Ruff lint/format pass, all ten FinQA cases and three negative guards pass, prepared corpus and index checks pass. The installed Starlette emits a TestClient/httpx deprecation warning; the locked combination passes and was not upgraded as part of B07.
+
+A separate check loaded the actual twenty report groups and read all fourteen B06 analyses through the API: seven successes, four failures, two insufficient-evidence states and one unsupported request. Their states/numbers matched stored records; no SDK client was initialized. All 215 call rows and fourteen analysis rows remain exact. Sources, prepared/index bundles, both embedding caches, historical evidence, dependencies and private files remain unchanged. The local allowance stays EUR 6.1633250, not confirmed spending; billing settings were not changed. B06's initial four 504s and 15-19-second follow-ups remain documented limitations.
+
+Updated README, AGENTS, architecture, blueprint and backlog; added `B07_API.md` and `B07_API_RESULTS.json`. Updated the existing GitHub issue #7's four tasks and completion evidence, closed it as completed, and moved its existing card to Done and B08's existing card to Ready. Readback verified thirteen preserved item identities, eleven other cards unchanged and the B08 issue still open with its body unchanged. Evidence is explicitly local pending the user's commit/push. No duplicate issue, comment, staging, commit or push was created.
+
+```powershell
+gh api repos/FekherJ/FigureTrail/issues/7
+gh project item-list 2 --owner FekherJ --format json
+gh project field-list 2 --owner FekherJ --format json
+gh api --method PATCH repos/FekherJ/FigureTrail/issues/7 --input <reviewed-payload.json>
+gh project item-edit --id <existing-B07-item> --project-id <existing-project> --field-id <Status-field> --single-select-option-id <Done-option>
+gh project item-edit --id <existing-B08-item> --project-id <existing-project> --field-id <Status-field> --single-select-option-id <Ready-option>
+git diff --check
+git diff --cached --name-only
+git status --short
+```
+
+GitHub placeholders above denote the saved structured payload and existing read-back IDs, not new setup inputs. Next: B08 formalizes evaluations and measures an observed weakness. No B08 work or live campaign started here.
+
+
+### B07 final handoff
+
+Checked 184 local Markdown links with exact filename case: none missing. The final protected-file comparison permits twelve intentional existing-file changes and preserves the other 109 baseline files. Three new public files contain the API tests and verification report/JSON. All prior calls/analyses remain exact; staging is empty and HEAD is still `9e9bc95`. The limited current-public-text credential-pattern scan found no matches; it is not a complete secret/history audit. A final GitHub read matches the verified B07 Done / B08 Ready board and preserves the other cards. No B08 implementation, live AI call, commit or push followed the checks.

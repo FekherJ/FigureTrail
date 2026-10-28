@@ -1,0 +1,158 @@
+{
+  "existing_analysis_lookup": {
+    "count": 14,
+    "states": {
+      "failed": 4,
+      "success": 7,
+      "insufficient_evidence": 2,
+      "unsupported_request": 1
+    },
+    "provider_clients_created": 0
+  },
+  "loaded_corpus_version": "32a94d8310f88e3987e833044c6131c808e4ac7da7391270aec098e59f062887",
+  "report_groups": 20,
+  "preservation": {
+    "baseline_files": 121,
+    "intentional_changes": [
+      "AGENTS.md",
+      "README.md",
+      "app/embeddings.py",
+      "app/llm.py",
+      "app/main.py",
+      "app/retrieval.py",
+      "app/schemas.py",
+      "app/service.py",
+      "docs/Backlog/BACKLOG.md",
+      "docs/architecture/AI_PROJECT_BLUEPRINT.md",
+      "docs/architecture/ARCHITECTURE.md",
+      "docs/verification/IMPLEMENTATION_LOG.md"
+    ],
+    "other_baseline_files_unchanged": 109,
+    "journal_calls_unchanged": 215,
+    "journal_analyses_unchanged": 14,
+    "new_live_provider_requests": 0
+  },
+  "base_commit": "9e9bc9503e58daa839fca8f27ef64feb91af13a1",
+  "staging_empty": true,
+  "python": "3.14.5",
+  "packages": {
+    "fastapi": "0.162.0",
+    "starlette": "1.10.0",
+    "pydantic": "2.14.1",
+    "uvicorn": "0.54.0",
+    "google-genai": "2.33.0",
+    "numpy": "2.5.4",
+    "httpx": "0.28.1",
+    "ruff": "0.17.2"
+  },
+  "code_sha256": {
+    "app/embeddings.py": "b37492a8d0e8b29ba4e62d9b684783a2203db9c96204a15138368e872f864b1f",
+    "app/llm.py": "8d4cbdcae6bef6c4c3a7757f1391164dd02a3a731012a189ba09f1844a21c576",
+    "app/main.py": "fe1437bd009df3be13e84afa32281339b87f62dd62781f94900b32dc25f30d17",
+    "app/retrieval.py": "6b8c14690187541f91cff1942a29c33f7cc9e5a6f1a8aa7467423f7f67554481",
+    "app/schemas.py": "1d1a5b6c9841a862eebac773691b8959d73a6e7d45803b9e7cdc98ca222cefeb",
+    "app/service.py": "7e1cc4450a1ed2758ef05e08fe0dfde1f5642c1f3e1abf2433041aacc9ac2cec"
+  },
+  "commands": {
+    "lint": {
+      "exit_code": 0,
+      "command": [
+        "ruff.exe",
+        "check",
+        "."
+      ]
+    },
+    "format": {
+      "exit_code": 0,
+      "command": [
+        "ruff.exe",
+        "format",
+        "--check",
+        "app",
+        "scripts/check_environment.py",
+        "scripts/check_provider.py",
+        "scripts/run_source_case.py",
+        "scripts/check_tool_call.py",
+        "scripts/prepare_corpus.py",
+        "scripts/build_index.py",
+        "scripts/search.py",
+        "scripts/analyze.py",
+        "evals/retrieval.py",
+        "evals/analysis.py",
+        "tests/test_provider_connection.py",
+        "tests/test_source_case.py",
+        "tests/test_tool_call.py",
+        "tests/test_corpus.py",
+        "tests/test_index.py",
+        "tests/test_retrieval.py",
+        "tests/test_analysis.py",
+        "tests/test_analysis_evaluation.py",
+        "tests/test_api.py"
+      ]
+    },
+    "tests": {
+      "exit_code": 0,
+      "command": [
+        "python.exe",
+        "-B",
+        "-X",
+        "utf8",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-v"
+      ],
+      "passed": 51,
+      "duration_seconds": 6.855
+    },
+    "finqa": {
+      "exit_code": 0,
+      "command": [
+        "python.exe",
+        "-B",
+        "-X",
+        "utf8",
+        "scripts/inspect_finqa.py",
+        "--case",
+        "all",
+        "--check"
+      ]
+    },
+    "corpus": {
+      "exit_code": 0,
+      "command": [
+        "python.exe",
+        "-B",
+        "-X",
+        "utf8",
+        "-m",
+        "scripts.prepare_corpus",
+        "--check"
+      ]
+    },
+    "index": {
+      "exit_code": 0,
+      "command": [
+        "python.exe",
+        "-B",
+        "-X",
+        "utf8",
+        "-m",
+        "scripts.build_index",
+        "--check"
+      ]
+    }
+  },
+  "tests": {
+    "reproduce": "uv run --locked python -B -X utf8 -m unittest discover -s tests -v",
+    "passed": 51,
+    "failed": 0,
+    "duration_seconds": 6.855,
+    "api_tests": 17,
+    "includes_real_local_http_socket": true,
+    "provider_responses": "simulated SDK responses; no live AI calls"
+  },
+  "date": "2026-10-28"
+}

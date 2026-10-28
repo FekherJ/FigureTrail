@@ -38,6 +38,22 @@ def save_analysis(journal, record):
         )
 
 
+def read_analysis(journal, run_id):
+    """Read a saved execution without initializing a journal or contacting a model."""
+    if not journal.exists():
+        return None
+    uri = journal.resolve().as_uri() + "?mode=ro"
+    with closing(sqlite3.connect(uri, uri=True)) as database:
+        if not database.execute(
+            "SELECT 1 FROM sqlite_master WHERE type='table' AND name='analyses'"
+        ).fetchone():
+            return None
+        row = database.execute(
+            "SELECT record_json FROM analyses WHERE run_id=?", (run_id,)
+        ).fetchone()
+    return json.loads(row[0]) if row else None
+
+
 def model_input(question, hits, cells):
     by_id = {cell["cell_id"]: cell for cell in cells}
     chunks, seen_by_source = [], {}
@@ -77,12 +93,16 @@ def analyze(
     report_ids=None,
     journal=JOURNAL,
     clock=monotonic,
+    run_id=None,
+    deadline=None,
+    cancelled=None,
 ):
     scope = retriever.validate_request(question, method, CONFIGURATION["k"], report_ids)
-    started, deadline = perf_counter(), clock() + CONFIGURATION["deadline_seconds"]
+    started = perf_counter()
+    deadline = clock() + CONFIGURATION["deadline_seconds"] if deadline is None else deadline
     instruction = (ROOT / "prompts/analysis_selection.md").read_text(encoding="utf-8")
     record = {
-        "run_id": str(uuid4()),
+        "run_id": run_id or str(uuid4()),
         "status": "started",
         "created_at_utc": datetime.now(timezone.utc).isoformat(),
         "mode": "fixed",
@@ -116,11 +136,19 @@ def analyze(
     # Persist before any paid work; journal failures stop further requests.
     save_analysis(journal, record)
     try:
+        if cancelled is not None and cancelled.is_set():
+            raise EvidenceError("deadline_reached", "blocked")
         record["retrieval"] = retriever.search(
-            question, method=method, k=CONFIGURATION["k"], report_ids=scope, run_id=record["run_id"]
+            question,
+            method=method,
+            k=CONFIGURATION["k"],
+            report_ids=scope,
+            run_id=record["run_id"],
+            deadline=deadline,
+            cancelled=cancelled,
         )
         save_analysis(journal, record)
-        if clock() >= deadline:
+        if clock() >= deadline or (cancelled is not None and cancelled.is_set()):
             raise EvidenceError("deadline_reached", "blocked")
         hits = record["retrieval"]["hits"]
         if not any(hit["cell_ids"] for hit in hits):
@@ -134,6 +162,7 @@ def analyze(
             run_id=record["run_id"],
             instruction=instruction,
             deadline=deadline,
+            cancelled=cancelled,
             metadata={
                 "purpose": "fixed_analysis",
                 "prompt_version": record["prompt_version"],
@@ -145,13 +174,15 @@ def analyze(
         )
         record.update(selection=plan.model_dump(), call=call)
         save_analysis(journal, record)
-        if clock() >= deadline:
+        if clock() >= deadline or (cancelled is not None and cancelled.is_set()):
             raise EvidenceError("deadline_reached", "blocked")
         if plan.status != "ready":
             record.update(status=plan.status, error_code="model_abstention")
         else:
             record["calculation"] = calculate(plan, question, retriever.corpus["cells"], hits)
             record["status"] = "success"
+    except TimeoutError:
+        record.update(status="blocked", error_code="deadline_reached")
     except EvidenceError as error:
         record.update(status=error.status, error_code=error.code)
     except ProviderError as error:
@@ -165,6 +196,12 @@ def analyze(
         raise
     except ValueError:
         record.update(status="failed", error_code="invalid_analysis_input_or_output")
+    except Exception:
+        record.update(status="failed", error_code="internal_analysis_error")
+    if record["status"] == "success" and (
+        clock() >= deadline or (cancelled is not None and cancelled.is_set())
+    ):
+        record.update(status="blocked", error_code="deadline_reached", calculation=None)
     record["duration_seconds"] = round(perf_counter() - started, 6)
     record["finished_at_utc"] = datetime.now(timezone.utc).isoformat()
     save_analysis(journal, record)

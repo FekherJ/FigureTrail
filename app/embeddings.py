@@ -130,13 +130,17 @@ class EmbeddingPacer:
                     )
             self.events.extend(sorted(recent))
 
-    def wait(self, allowance: int) -> float:
+    def wait(self, allowance: int, *, deadline=None, cancelled=None) -> float:
         if not 1 <= allowance <= 8192:
             raise ValueError("Embedding input exceeds the conservative per-request allowance.")
         started = self.clock()
         # ponytail: one builder process; coordinate rate reservations if concurrent builds are needed.
         while True:
             now = self.clock()
+            if (deadline is not None and now >= deadline) or (
+                cancelled is not None and cancelled.is_set()
+            ):
+                raise TimeoutError("Embedding pacing deadline reached.")
             while self.events and now - self.events[0][0] >= 60:
                 self.events.popleft()
             if (
@@ -145,4 +149,7 @@ class EmbeddingPacer:
             ):
                 self.events.append((now, allowance))
                 return self.clock() - started
-            self.sleep(min(1, max(0.01, 60 - (now - self.events[0][0]) + 0.01)))
+            delay = min(1, max(0.01, 60 - (now - self.events[0][0]) + 0.01))
+            if deadline is not None:
+                delay = min(delay, max(0, deadline - now))
+            self.sleep(delay)
