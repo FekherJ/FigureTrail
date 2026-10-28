@@ -731,3 +731,47 @@ GitHub placeholders above denote the saved structured payload and existing read-
 ### B07 final handoff
 
 Checked 184 local Markdown links with exact filename case: none missing. The final protected-file comparison permits twelve intentional existing-file changes and preserves the other 109 baseline files. Three new public files contain the API tests and verification report/JSON. All prior calls/analyses remain exact; staging is empty and HEAD is still `9e9bc95`. The limited current-public-text credential-pattern scan found no matches; it is not a complete secret/history audit. A final GitHub read matches the verified B07 Done / B08 Ready board and preserves the other cards. No B08 implementation, live AI call, commit or push followed the checks.
+
+
+## 23. Selective code explanations — 28 October 2026
+
+Added concise English comments at the main boundaries in nine application modules: RAG context and the shared workflow; corpus/chunks/cells and version pointers; embeddings, cache reuse and pacing; FTS5/BM25 versus cosine search; SQLite/vector row alignment; Pydantic contracts and Decimal results; SDK accounting/call IDs; and API middleware/thread/timeout handling. Clarified several existing comments, including the already implemented cosine search. Avoided line-by-line narration and new runtime/docstring/schema changes. Features, prompts and dependencies are unchanged, so README/backlog acceptance criteria and the dated B07 evidence were not rewritten.
+
+Started from clean local commit `dc7ed5b`. Compared the complete Python syntax trees before/after for all nine modules, including literals and docstrings: identical. Code fingerprints naturally change because they hash file bytes, including comments; previous saved runs and their fingerprints remain historical records. Ruff lint passed across the repository, all ten application files passed formatting, and all 51 offline tests passed in 7.979 s. The existing TestClient/httpx deprecation warning remains visible. No live AI requests were made; source/index/cache/journal/private files and historical results retain their baseline hashes.
+
+The task-local checker invoked the installed project Ruff and Python executables and captured native exit codes. Equivalent locked-environment commands are:
+
+```powershell
+uv run --locked ruff check .
+uv run --locked ruff format --check app
+uv run --locked python -B -X utf8 -m unittest discover -s tests -v
+git diff --check
+git diff --cached --name-only
+```
+
+No new behavior-specific tests, dependencies or roadmap items were introduced for this comment-only change. The final diff is limited to the nine source modules and this log; staging remains empty. No commit/push or GitHub issue update was performed. B08 remains the next implementation item.
+
+
+## 24. Code reading map — 28 October 2026
+
+Created a private Markdown reading guide and a locally rendered sequence image. It distinguishes reading order from HTTP runtime order, follows the shared fixed workflow through search/cache, prompt construction, structured generation, source validation/calculation and saved lookup, and points to the relevant function names and existing tests/evaluator. Preparation and operational controls are summarized separately. Current capabilities, simulated tests and measured limitations remain distinct. The editable Mermaid source is included with the rendered image so Markdown preview does not require a Mermaid extension.
+
+Verified named functions against Python syntax trees and all local links against exact filename case. Parsed/rendered the Mermaid with an existing local library using headless Edge and inspected the image. No packages were installed or document contents sent to an external service. Rendering setup needed a Windows file URL for its JavaScript import and the installed Edge channel instead of an unavailable Playwright browser. Checked the two illustrative cells against the current source-only corpus. The guide/image are ignored by Git. Application files, data, caches, historical results and existing edits are unchanged; no model requests or new application tests were needed for this documentation-only task. Existing regression results remain those recorded in section 23. No staging, commit, push or issue changes were performed.
+
+
+## 25. Essential-sequence parameter documentation — 28 October 2026
+
+Added focused docstrings to the twelve functions named in the reading map's essential sequence, plus their cache, budget, configuration, saved-lookup and SDK callback helpers: 24 functions and 79 explicit parameters across six application modules. Each function explains its role, inputs and return value; relevant failure/side-effect boundaries are stated. Documented object inputs, original cell versus retrieved-chunk data, report scope, run/call records, output schemas, absolute deadlines and cooperative-stop flags. Updated the private reading map with hover/navigation and signature conventions. Kept routine lines and unrelated functions unchanged and removed a few now-duplicate comments.
+
+Verified documentation for every explicit parameter on the targeted functions. Python syntax trees match the baseline after excluding documentation strings, so signatures and executable logic are unchanged. FastAPI request/response contracts also match; only the two documented handlers' OpenAPI descriptions changed. Pydantic model classes/schema definitions were not altered. Code fingerprints naturally change with documentation bytes; historical records retain their measured versions.
+
+Ruff lint passes and all ten application files pass formatting. All 51 offline tests passed in 7.143 s; provider responses were simulated. After the final prose/docstring-layout polish, repeated syntax/parameter, lint and formatting checks. Sources, corpus/index bundles, caches, journal, prior evidence, existing edits and the guide image are preserved. No live model requests, new dependencies or tests were needed. The existing TestClient/httpx warning remains visible. No staging, commit, push or GitHub issue update was performed; B08 remains next.
+
+Reproduce the project checks with:
+
+```powershell
+uv run --locked ruff check .
+uv run --locked ruff format --check app
+uv run --locked python -B -X utf8 -m unittest discover -s tests -v
+git diff --check
+```

@@ -82,6 +82,19 @@ class Retriever:
         return report_ids
 
     def _query_vector(self, question: str, run_id: str, *, deadline=None, cancelled=None):
+        """Reuse or create the vector representing this question for semantic search.
+
+        Args:
+            question: Raw user question, formatted here for the embedding model.
+            run_id: Execution ID attached to any new provider call.
+            deadline: Optional absolute monotonic stop time.
+            cancelled: Optional stop Event forwarded to pacing/provider with a deadline.
+
+        Returns:
+            A pair: normalized NumPy vector and cache/call event dictionary.
+            Uses this Retriever's query_cache, provider and pacer; stores a newly
+            returned vector before continuing. A corrupt cache entry raises an error.
+        """
         if self.query_cache is None:
             raise ValueError("Semantic retrieval requires a query embedding cache.")
         text = query_input(question)
@@ -127,8 +140,25 @@ class Retriever:
         deadline=None,
         cancelled=None,
     ):
+        """Rank candidate excerpts inside the user's chosen report scope.
+
+        Args:
+            question: Text used for word search or question embedding.
+            method: "lexical" uses FTS5/BM25; "semantic" uses cosine similarity.
+            k: Maximum number of ranked chunks to return; the API chooses five.
+            report_ids: Known report IDs to search; None allows the full corpus.
+            run_id: Parent execution ID for a missing query's embedding request;
+                None generates an ID when needed.
+            deadline: Optional absolute monotonic stop time for embedding work.
+            cancelled: Optional stop Event used by deadline-bounded embedding requests.
+
+        Returns:
+            A dictionary of ranked hits with text/cell IDs, scope, scores, versions and
+            timings. Semantic search may call Gemini only when its query vector is absent.
+        """
         started = perf_counter()
         scope = self.validate_request(question, method, k, report_ids)
+        # Filter reports before ranking, so top-k means the best k within the chosen scope.
         eligible = np.array(
             [
                 i
@@ -140,6 +170,7 @@ class Retriever:
         event, fts_query = None, None
         terms = lexical_terms(question) if method == "lexical" else None
         if method == "lexical":
+            # FTS5 is SQLite's word-search index; BM25 ranks matches, with lower scores first.
             # User text never becomes FTS syntax or executable SQL.
             fts_query = " OR ".join('"' + term + '"' for term in terms)
             ranked = []
@@ -167,6 +198,8 @@ class Retriever:
             )
             engine_started = perf_counter()
             # ponytail: exact O(n*d) scan for <=500 chunks; consider ANN only after a size/latency need.
+            # @ compares the question with each chunk. For unit-length vectors this is cosine
+            # similarity: higher scores rank first, but do not prove factual relevance.
             scores = np.clip(self.vectors[eligible] @ vector, -1.0, 1.0)
             order = np.lexsort((eligible, -scores))[:k]
             ranked = [(int(eligible[i]), float(scores[i])) for i in order]

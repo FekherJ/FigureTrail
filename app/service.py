@@ -27,6 +27,15 @@ CONFIGURATION = {
 
 
 def save_analysis(journal, record):
+    """Save the current state of an execution, updating the same row at each stage.
+
+    Args:
+        journal: Path to runs.sqlite, not an open database connection.
+        record: Execution dictionary containing run_id, progress, result and errors.
+
+    Returns:
+        None. Storage failures propagate so the caller cannot claim a saved result.
+    """
     journal.parent.mkdir(parents=True, exist_ok=True)
     with closing(sqlite3.connect(journal)) as database, database:
         database.execute(
@@ -39,7 +48,16 @@ def save_analysis(journal, record):
 
 
 def read_analysis(journal, run_id):
-    """Read a saved execution without initializing a journal or contacting a model."""
+    """Read a saved execution without creating files or calling Gemini.
+
+    Args:
+        journal: Path to the existing runs.sqlite database.
+        run_id: String ID of the execution to look up.
+
+    Returns:
+        The saved dictionary, or None if the database/table/run is absent.
+        Unreadable or corrupt storage raises an error rather than looking absent.
+    """
     if not journal.exists():
         return None
     uri = journal.resolve().as_uri() + "?mode=ro"
@@ -55,6 +73,19 @@ def read_analysis(journal, run_id):
 
 
 def model_input(question, hits, cells):
+    # RAG (retrieval-augmented generation) adds retrieved source excerpts to the prompt.
+    # The model uses this context for the request; it is not retrained on these documents.
+    """Build the JSON context supplied to the model for evidence selection.
+
+    Args:
+        question: The user's numerical question.
+        hits: Ranked search results, including excerpt text and candidate cell IDs.
+        cells: Original corpus cell records used to look up values and labels.
+
+    Returns:
+        A JSON string containing the question, excerpts and referenced source cells.
+        Repeated lines are reduced; oversized context raises EvidenceError.
+    """
     by_id = {cell["cell_id"]: cell for cell in cells}
     chunks, seen_by_source = [], {}
     for hit in hits:
@@ -97,6 +128,26 @@ def analyze(
     deadline=None,
     cancelled=None,
 ):
+    # Shared workflow for HTTP, CLI and evaluations: retrieve -> select -> check -> calculate.
+    """Run one fixed workflow and return its saved outcome, including non-answers.
+
+    Args:
+        question: User question, including the measure and periods to compare.
+        retriever: Loaded Retriever object holding the validated corpus and search index.
+        provider: Shared Gemini wrapper for generation; None blocks generation.
+        method: "semantic" for vector similarity or "lexical" for word matching.
+        report_ids: Explicit report scope; None searches the full corpus.
+        journal: Path to the shared SQLite execution/provider journal.
+        clock: Time-reading function (monotonic by default); tests can supply a fake clock.
+        run_id: Caller-supplied execution ID, or None to generate a new one.
+        deadline: Stop timestamp such as clock() + 60, not a duration; None sets 60s.
+        cancelled: Optional thread-safe Event; setting it asks running stages to stop.
+
+    Returns:
+        A dictionary with run_id, status, retrieved evidence, plan, calculation and
+        error_code. Domain/provider failures become recorded outcomes; invalid
+        preflight input and storage failures can raise before a final result exists.
+    """
     scope = retriever.validate_request(question, method, CONFIGURATION["k"], report_ids)
     started = perf_counter()
     deadline = clock() + CONFIGURATION["deadline_seconds"] if deadline is None else deadline
@@ -115,6 +166,7 @@ def analyze(
         "configuration_sha256": digest(CONFIGURATION),
         "prompt_version": "analysis-selection-v1",
         "prompt_sha256": sha256(instruction.encode()).hexdigest(),
+        # Hash file bytes to identify the code used; even comment edits change this fingerprint.
         "code_sha256": sha256(
             b"".join(
                 (ROOT / name).read_bytes()
@@ -156,6 +208,8 @@ def analyze(
         payload = model_input(question, hits, retriever.corpus["cells"])
         if provider is None:
             raise EvidenceError("live_generation_not_enabled", "blocked")
+        # Gemini proposes an operation and cell IDs. calculate() reads the source values
+        # and does the arithmetic; model-generated numbers are never used as operands.
         plan, call = provider.generate_json(
             payload,
             CellSelection,

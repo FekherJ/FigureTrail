@@ -86,6 +86,7 @@ class LocalRequestGuard:
                 if not message.get("more_body", False):
                     break
 
+            # This guard consumed the HTTP body; replay it once so FastAPI can parse its JSON.
             replayed = False
 
             async def replay():
@@ -100,6 +101,15 @@ class LocalRequestGuard:
 
 
 def public_result(record):
+    """Select and validate the execution fields that the HTTP client may receive.
+
+    Args:
+        record: Internal analysis dictionary, including retrieval and call records.
+
+    Returns:
+        An AnalysisResponse containing evidence, result and safe call summaries;
+        internal provider metadata and raw exceptions are not public fields.
+    """
     retrieval = record.get("retrieval") or {}
     embedding = retrieval.get("query_embedding") or {}
     calls = [call for call in (embedding.get("call"), record.get("call")) if call]
@@ -142,6 +152,7 @@ def create_app(root: Path = ROOT, *, provider_factory=None):
                 await asyncio.gather(*list(tasks), return_exceptions=True)
 
     app = FastAPI(title="FigureTrail", version="0.1.0", lifespan=lifespan)
+    # Middleware checks a request before its route can start analysis or contact Gemini.
     app.add_middleware(LocalRequestGuard)
 
     @app.exception_handler(RequestValidationError)
@@ -197,6 +208,18 @@ def create_app(root: Path = ROOT, *, provider_factory=None):
         )
 
     def execute(body, run_id, deadline, cancelled):
+        """Run an accepted analysis in the worker and release its active slot.
+
+        Args:
+            body: Validated AnalysisRequest with question, report_ids and fixed mode.
+            run_id: ID assigned by post_analysis() before scheduling this worker.
+            deadline: Absolute monotonic stop time shared by all analysis stages.
+            cancelled: Thread-safe stop flag set when the HTTP wait is interrupted.
+
+        Returns:
+            The analyze() execution dictionary. Uses the enclosing app's loaded index,
+            root and journal; closes its SDK client and releases the slot on exit.
+        """
         client = None
         try:
             if provider_factory is None:
@@ -204,6 +227,7 @@ def create_app(root: Path = ROOT, *, provider_factory=None):
                 provider = GeminiProvider(client, journal)
             else:
                 provider = provider_factory(journal)
+            # Share the validated index, but bind this request's provider/cache on a copy.
             retriever = copy(app.state.retriever)
             retriever.provider = provider
             retriever.query_cache = EmbeddingCache(root / "data/local/query-embeddings.sqlite")
@@ -237,6 +261,17 @@ def create_app(root: Path = ROOT, *, provider_factory=None):
         },
     )
     async def post_analysis(body: AnalysisRequest, response: Response):
+        """Validate admission, schedule one analysis and return its HTTP result.
+
+        Args:
+            body: AnalysisRequest object built by FastAPI after validating the JSON body.
+            response: FastAPI response object used to set the completed run's HTTP status.
+
+        Returns:
+            A typed analysis result, or a JSON error for rejected/interrupted work.
+            Uses the enclosing app's index and active slot; HTTP timeout signals the
+            worker to stop but cannot forcibly kill an already submitted remote call.
+        """
         retriever = app.state.retriever
         if retriever is None:
             return error_response(
@@ -263,6 +298,7 @@ def create_app(root: Path = ROOT, *, provider_factory=None):
             )
         run_id, cancelled = str(uuid4()), Event()
         deadline = monotonic() + CONFIGURATION["deadline_seconds"]
+        # Run blocking SDK work in a thread so health/result requests can still respond.
         task = asyncio.create_task(asyncio.to_thread(execute, body, run_id, deadline, cancelled))
         tasks[task] = cancelled
 
@@ -273,6 +309,7 @@ def create_app(root: Path = ROOT, *, provider_factory=None):
 
         task.add_done_callback(finished)
         try:
+            # shield lets the worker finish recording after this HTTP wait times out.
             record = await asyncio.wait_for(
                 asyncio.shield(task), timeout=max(0, deadline - monotonic())
             )
@@ -310,6 +347,15 @@ def create_app(root: Path = ROOT, *, provider_factory=None):
         responses={**errors, 404: {"model": APIError}},
     )
     def get_analysis(run_id: UUID):
+        """Retrieve an existing execution without rerunning inference.
+
+        Args:
+            run_id: UUID parsed and validated by FastAPI from the URL path.
+
+        Returns:
+            The public saved result, or a JSON error for missing/unreadable storage.
+            The journal path comes from create_app(), not from the HTTP client.
+        """
         try:
             record = read_analysis(journal, str(run_id))
         except OSError, sqlite3.Error, ValueError:

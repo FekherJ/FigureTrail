@@ -14,6 +14,8 @@ import numpy as np
 from app.corpus import digest, encode
 from app.llm import DIMENSIONS, EMBEDDING_MODEL
 
+# An embedding is a list of numbers representing text for similarity search.
+# Stored chunks and new questions must use the same model and compatible formatting.
 EMBEDDING_CONFIG = {
     "model": EMBEDDING_MODEL,
     "dimensions": DIMENSIONS,
@@ -23,6 +25,7 @@ EMBEDDING_CONFIG = {
     "query_format": "task: search result | query: {query}",
 }
 PACING_RPM = 80
+# This byte-based rate allowance is a conservative proxy, not a measured token count.
 PACING_INPUT_ALLOWANCE = 24_000
 
 
@@ -31,6 +34,7 @@ def document_input(text: str) -> str:
 
 
 def input_key(text: str) -> str:
+    # Same text and settings produce the same cache key, avoiding another embedding request.
     return digest(
         {"configuration": EMBEDDING_CONFIG, "input_sha256": sha256(text.encode()).hexdigest()}
     )
@@ -57,6 +61,15 @@ class EmbeddingCache:
             )
 
     def get(self, text: str):
+        """Read a reusable vector for this exact formatted text and model settings.
+
+        Args:
+            text: Formatted embedding input, identical to the text sent to Gemini.
+
+        Returns:
+            A dictionary with key, NumPy vector and provenance metadata, or None on a miss.
+            Uses this cache's SQLite path; corrupt/mismatched entries raise ValueError.
+        """
         key = input_key(text)
         with closing(sqlite3.connect(self.path)) as database:
             row = database.execute(
@@ -84,6 +97,16 @@ class EmbeddingCache:
         return {"key": key, "vector": vector, "metadata": metadata}
 
     def put(self, text: str, values, call: dict):
+        """Store a validated provider vector so the same input can reuse it later.
+
+        Args:
+            text: Exact formatted input whose fingerprint identifies the cache entry.
+            values: Returned vector numbers, checked for dimension, finiteness and norm.
+            call: Successful embedding call record proving model and input provenance.
+
+        Returns:
+            The verified cache item from get(); an existing entry is retained.
+        """
         input_hash = sha256(text.encode()).hexdigest()
         if (
             call["status"] != "passed"
@@ -114,6 +137,7 @@ class EmbeddingPacer:
     ):
         self.clock, self.sleep = clock, sleep
         self.events = deque()
+        # Recover recent requests so restarting Python does not reset the rate-limit history.
         if journal.exists():
             now, utc_now = clock(), wall_time()
             with closing(sqlite3.connect(journal)) as database:
@@ -131,6 +155,18 @@ class EmbeddingPacer:
             self.events.extend(sorted(recent))
 
     def wait(self, allowance: int, *, deadline=None, cancelled=None) -> float:
+        """Wait for room in the local embedding rate allowance, then reserve a slot.
+
+        Args:
+            allowance: Conservative input-size proxy, typically UTF-8 bytes plus 64;
+                not a measured token count or EUR amount.
+            deadline: Optional absolute stop time on this pacer's monotonic clock.
+            cancelled: Optional Event requesting a cooperative stop while waiting.
+
+        Returns:
+            Seconds spent waiting. Expiry/cancellation raises TimeoutError before the
+            caller sends an embedding request; this method itself makes no SDK call.
+        """
         if not 1 <= allowance <= 8192:
             raise ValueError("Embedding input exceeds the conservative per-request allowance.")
         started = self.clock()

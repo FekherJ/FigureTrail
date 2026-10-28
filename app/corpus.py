@@ -14,6 +14,8 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from app.schemas import SourceDocument
 
+# The corpus is the source collection used for search. Chunks are searchable excerpts;
+# cells retain individual table values and their original coordinates.
 VERSION = "finqa-prepared-v1"
 SOURCE_FIELDS = ("filename", "pre_text", "post_text", "table", "table_ori")
 CHUNKING = {
@@ -36,6 +38,7 @@ def encode(value) -> bytes:
 
 
 def digest(value) -> str:
+    # A content fingerprint: changing the data changes this ID, even with the same filename.
     return sha256(encode(value)).hexdigest()
 
 
@@ -151,6 +154,7 @@ def verify_prepared(bundle: dict) -> None:
         raise ValueError("Prepared-corpus fingerprint mismatch.")
     if any(not isinstance(bundle[key], list) for key in ("sources", "cells", "chunks")):
         raise ValueError("Corpus sources, cells and chunks must be lists.")
+    # Rebuild cells/chunks from the sources to check their contents, not just their hashes.
     sources, cells, chunks, ids = bundle["sources"], [], [], set()
     for item in sources:
         if not isinstance(item, dict) or set(item) != {
@@ -298,6 +302,7 @@ def write_atomic(path: Path, content: bytes) -> None:
 
 
 def read_current(directory: Path, key: str) -> Path:
+    # current.json selects the active version; older hash-named files can remain on disk.
     pointer = json.loads((directory / "current.json").read_text(encoding="utf-8"))
     if (
         not isinstance(pointer, dict)

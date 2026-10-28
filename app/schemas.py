@@ -8,6 +8,7 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
 class CellSelection(BaseModel):
+    # Pydantic uses these fields for runtime validation and Gemini's JSON output schema.
     model_config = ConfigDict(extra="forbid", strict=True)
     status: Literal["ready", "insufficient_evidence", "unsupported_request"]
     operation: Literal["ratio_percent", "percent_change"] | None
@@ -183,6 +184,7 @@ class Operand(BaseModel):
 class Calculation(BaseModel):
     operation: Literal["ratio_percent", "percent_change"]
     formula: str
+    # Preserve Decimal precision as text; JSON floating-point numbers can lose digits.
     value: str
     display: str
     unit: Literal["%"]

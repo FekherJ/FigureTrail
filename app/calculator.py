@@ -46,6 +46,16 @@ def dates(text):
 
 
 def context_for(cell, chunks):
+    """Establish the units, scale and period supported by one retrieved source cell.
+
+    Args:
+        cell: Original cell record, including cell_id, value, row label and column header.
+        chunks: Retrieved excerpts; only those referencing this cell supply context.
+
+    Returns:
+        A dictionary with unit, scale, year/date, reported/estimate nature and source
+        text supporting those choices. Missing/ambiguous context raises EvidenceError.
+    """
     text = "\n".join(chunk["text"] for chunk in chunks if cell["cell_id"] in chunk["cell_ids"])
     if not text:
         raise EvidenceError("invalid_cell_reference", "failed")
@@ -99,8 +109,23 @@ def context_for(cell, chunks):
 
 
 def calculate(selection, question, cells, chunks):
+    """Validate the selected source operands and calculate an allowed percentage.
+
+    Args:
+        selection: Validated ready CellSelection with operation and two ordered cell IDs.
+        question: User question used to check requested units and periods.
+        cells: Original corpus cell records from which values are resolved.
+        chunks: Evidence actually retrieved for this question; limits accessible cells.
+
+    Returns:
+        A dictionary with formula, Decimal value as text, rounded display and source
+        operands/context. Invalid evidence raises EvidenceError for analyze() to record;
+        no model-generated number or code is executed.
+    """
     if selection.status != "ready":
         raise EvidenceError("selection_not_ready")
+    # A cell must have been retrieved for this question; existing somewhere in the corpus
+    # is not enough to make it permitted evidence for this calculation.
     allowed = {cell_id for chunk in chunks for cell_id in chunk["cell_ids"]}
     source_cells = {cell["cell_id"]: cell for cell in cells}
     if any(cell_id not in allowed or cell_id not in source_cells for cell_id in selection.cell_ids):
@@ -147,10 +172,12 @@ def calculate(selection, question, cells, chunks):
             raise EvidenceError("incompatible_change_periods_or_labels")
     else:
         raise EvidenceError("unsupported_operation", "unsupported_request")
+    # Operand order is numerator/denominator for a ratio, and new/old for a change.
     a, b = [Decimal(item["value"]) for item in operands]
     if b <= 0:
         raise EvidenceError("nonpositive_denominator", "unsupported_request")
     try:
+        # Use explicit decimal precision for arithmetic; round to two places only for display.
         with localcontext(Context(prec=28, rounding=ROUND_HALF_EVEN)):
             answer = Decimal(100) * (a if selection.operation == "ratio_percent" else a - b) / b
             display = answer.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)

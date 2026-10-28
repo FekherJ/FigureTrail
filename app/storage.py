@@ -32,6 +32,8 @@ def file_hash(path: Path) -> str:
 
 
 def write_database(path: Path, corpus: dict, embeddings: list[dict]) -> None:
+    # SQLite stores sources/cells/chunks and the word-search index; vectors.npy stores numbers
+    # for semantic search. Both must refer to the same chunk order.
     with closing(sqlite3.connect(path)) as database, database:
         database.executescript("""
             PRAGMA foreign_keys=ON;
@@ -172,6 +174,8 @@ def load_index(directory: Path, expected_corpus_version: str | None = None):
         raise ValueError("Vector matrix dimensions or type do not match the chunks.")
     if len(fts_rows) != len(chunk_rows):
         raise ValueError("FTS row count mismatch.")
+    # Row i must identify the same chunk in SQLite, FTS5 and the vector matrix; otherwise
+    # retrieval could attach a good similarity score to the wrong source.
     for ordinal, (chunk, row, vector) in enumerate(
         zip(corpus["chunks"], manifest["rows"], vectors, strict=True)
     ):
