@@ -22,6 +22,8 @@ Record priority (`P0`/`P1`), milestone and estimated hours. Optional labels are 
 
 Close an issue only after verifying its criteria and saving or linking evidence. Distinguish simulated from live model calls. Documentation alone does not establish an implemented feature.
 
+**CI follow-up, 1 November 2026:** [one workflow](../../.github/workflows/ci.yml) now defines locked setup, pinned public data, lint, formatting and offline tests. Local Ubuntu validation passes all 58 tests and propagates an intentionally failing test as exit code 1. Hosted green/red runs remain pending publication; see [CI evidence](../verification/CI_WORKFLOW.md). No B08 acceptance criterion is marked complete by this infrastructure change.
+
 ## 2. Delivery plan and validation allowance
 
 Initial estimates total **31 hours of implementation and verification**, plus five hours for integration, diagnosis and fixes: **36 hours**, including documentation and issue tracking. These are provisional estimates, not a delivery commitment.
@@ -337,4 +339,4 @@ Objective: release a reproducible version with measured results and documented t
 
 Exclude arbitrary PDF/OCR ingestion, user-supplied URL downloads, slow local models, fine-tuning, multi-agent systems, multiple providers, SSO, distributed cloud deployment, full dashboards and systematic LLM judging from this cycle.
 
-Add an extension only to address an observed weakness, and replace another task within the available allowance. The next implementation item is **B08**: formalize end-to-end evaluations and measure an improvement. CI remains planned; the current checks are run locally.
+Add an extension only to address an observed weakness, and replace another task within the available allowance. The next implementation item is **B08**: formalize end-to-end evaluations and measure an improvement. The credential-free CI workflow is implemented and validated in an isolated local Ubuntu checkout; GitHub-hosted acceptance remains pending publication.

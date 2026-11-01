@@ -8,6 +8,8 @@ The project largely follows the reviewed principles. Its current architecture do
 
 **Cleanup follow-up, 1 November 2026:** F03 and F04 are now resolved. The two CLI paths explicitly close their clients, with success/setup/provider/storage failure tests and lexical/cache-only checks. Backlog/integration statements reflect B07 completion and B08 next; CI is explicitly planned. All 58 offline tests pass. F02 (complete execution identity) remains open. Original audit measurements and JSON evidence are preserved.
 
+**CI follow-up, 1 November 2026:** the workflow is now implemented and passes isolated local Ubuntu validation, including a failing-test exit check. GitHub-hosted acceptance remains pending publication; see [CI verification](CI_WORKFLOW.md). Prior review observations and measurements below remain historical evidence.
+
 ## Source and adoption
 
 The [upstream repository](https://github.com/multica-ai/andrej-karpathy-skills/tree/2c606141936f1eeef17fa3043a72095b4765b9c2) contains **one skill**, [karpathy-guidelines](https://github.com/multica-ai/andrej-karpathy-skills/blob/2c606141936f1eeef17fa3043a72095b4765b9c2/skills/karpathy-guidelines/SKILL.md), with four principles. The [CLAUDE.md version](https://github.com/multica-ai/andrej-karpathy-skills/blob/2c606141936f1eeef17fa3043a72095b4765b9c2/CLAUDE.md) expresses the same principles. This is guidance maintained by multica-ai and inspired by Karpathy's observations, not a formal AI engineering standard or certification.

@@ -14,6 +14,10 @@ The raw file includes annotations and existing retrieval fields. It is ignored b
 
 References in `evals/cases/` retain `question`, `answer`, `exe_ans`, `program`, `gold_inds`, case ID and the local `development` partition. The verifier never executes FinQA programs. This selection does not reserve final cases or measure retrieval quality.
 
+## Pinned CI download
+
+CI setup added on 1 November 2026 downloads `dataset/dev.json` at immutable FinQA commit `0f16e2867befa6840783e58be38c9efb9229d742` and verifies the existing reviewed SHA-256 before writing source exports. The README uses the same pinned download. Original download metadata above remains historical; no source values, references or expected hashes changed.
+
 ## Second detailed case
 
 `FBHS/2017/page_23.pdf-2`, context `FBHS/2017/page_23.pdf`, comes from the same download and notice. Exports: `data/samples/finqa-b01-growth-source.json` and `evals/cases/finqa-b01-growth-reference.json`. Only distributed text/tables were reviewed.

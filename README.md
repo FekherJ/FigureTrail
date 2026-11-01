@@ -106,7 +106,7 @@ Gemini chooses cell IDs in a native function call. Python validates the name and
 
 ```powershell
 New-Item -ItemType Directory -Force -Path data/raw | Out-Null
-Invoke-WebRequest -UseBasicParsing -Uri 'https://raw.githubusercontent.com/czyssrs/FinQA/main/dataset/dev.json' -OutFile data/raw/finqa-dev.json
+Invoke-WebRequest -UseBasicParsing -Uri 'https://raw.githubusercontent.com/czyssrs/FinQA/0f16e2867befa6840783e58be38c9efb9229d742/dataset/dev.json' -OutFile data/raw/finqa-dev.json
 uv run --locked python -B -X utf8 scripts/inspect_finqa.py --case all
 ```
 
@@ -156,7 +156,7 @@ uv run --locked python -B -X utf8 -m evals.retrieval --mode compare --live
 uv run --locked python -B -X utf8 -m evals.retrieval --mode compare
 ```
 
-The first command plans at most ten missing query embeddings; document embeddings are reused. The second requires all query inputs cached and sends zero model requests. Search and retrieval-evaluation commands explicitly close each SDK client they create, including on failure. CI is planned; the checks below currently run locally. Add `--method semantic --live` to the search command for a new question; subsequent identical questions can omit `--live` and the key. Query vectors are cached separately in ignored `data/local/query-embeddings.sqlite`; all live calls retain the shared provider journal and allowance controls.
+The first command plans at most ten missing query embeddings; document embeddings are reused. The second requires all query inputs cached and sends zero model requests. Search and retrieval-evaluation commands explicitly close each SDK client they create, including on failure. The [CI workflow](.github/workflows/ci.yml) runs the offline checks on pushes and pull requests; hosted-run verification is pending publication. See [CI verification](docs/verification/CI_WORKFLOW.md). Add `--method semantic --live` to the search command for a new question; subsequent identical questions can omit `--live` and the key. Query vectors are cached separately in ignored `data/local/query-embeddings.sqlite`; all live calls retain the shared provider journal and allowance controls.
 
 Measured on ten development questions over all 186 chunks: lexical recall@5 **95%**, complete proof **9/10**; semantic recall@5 **100%**, complete proof **10/10**, with a **0.423 s** median including live query embedding. Semantic at k=5 is the provisional B06 choice; lexical does better at k=3. Cached replay reproduced every ranking and score without requests. Complete proof means both operand cells are present, not that an answer is correct. See [comparison, difficult cases and limits](docs/verification/B05_RETRIEVAL.md) and [machine-readable evidence](docs/verification/B05_RETRIEVAL_RESULTS.json).
 
@@ -215,6 +215,10 @@ uv run --locked python -B -X utf8 -m unittest discover -s tests -v
 Verified results: **10 valid cases and 3 passing negative tests**. The tests reject the wrong year, confusion between ratios and percentages, and answers leaked into source exports. The verifier rejects Python's `-O` mode because it disables assertions.
 
 All **58 offline tests** pass. Seventeen API tests cover typed results, read-only lookup, validation, local request restrictions, single-analysis concurrency, deadlines and simulated provider/storage failures. One starts a real local Uvicorn HTTP server with simulated SDK responses. Fixed-analysis tests cover source arithmetic, units/periods/scales, accessible cells, outcomes, durable records and failure-aware scoring. Retrieval tests cover literal query handling, scope before top-k, cosine/cache behavior, invalid requests, evaluator separation and failure-aware metrics. A filesystem or SQLite storage error stops the retrieval campaign: the triggering entry is failed and every remaining query/method entry is blocked without another search. Blocked entries remain in metric denominators; `blocked` is reported separately as a subset of the existing non-passing `failures` count. Index checks cover cached rebuild/resume, file-lock recovery, pacing/restart history, cache corruption and mismatched SQLite/FTS/vector rows and configuration. Corpus checks cover source isolation, deduplication, original values/context, repeatable artifacts and rejection of inconsistent input/output. Native-tool tests also cover eleven response/execution cases and a simulated quota failure. The provider tests additionally simulate quota errors on both SDK endpoints and verify credential exclusion, retained unknown usage, source/plan boundaries, invented cells and a budget block before network access. CLI lifecycle tests verify SDK cleanup on success, provider/pacing setup failures, provider errors and storage failures, plus operation without a client for lexical/cached paths. Ruff checks lint across the codebase and formatting in the application, current preparation/provider/index/search/evaluation commands and their tests. FinQA verification also runs with the Python standard library alone. These checks are separate from live development retrieval/workflow evaluations and future reserved-case measurements.
+
+## Continuous integration
+
+[CI](.github/workflows/ci.yml) defines one Ubuntu 24.04 job: pinned Python/uv, locked dependency installation, hash-verified FinQA setup, source-only exports, lint, formatting and offline tests. It uses no model credentials and makes no hosted inference calls. An isolated local Ubuntu run passed all 58 tests; an intentionally failing temporary test returned exit code 1. GitHub-hosted success/failure runs remain pending publication; see [verification and acceptance steps](docs/verification/CI_WORKFLOW.md).
 
 ## Repository layout
 

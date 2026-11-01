@@ -60,6 +60,8 @@ Apply all four principles from the single [karpathy-guidelines skill](https://gi
 
 - B07 is implemented: `/reports`, fixed `POST /analyses`, read-only `GET /analyses/{run_id}`, loaded-corpus health and typed OpenAPI contracts. [API verification](docs/verification/B07_API.md): 51 offline tests, including 17 API tests and real local HTTP with simulated SDK responses. All 14 old analyses read correctly with no SDK initialization; the 215 calls and 14 analyses are unchanged. Run one worker on 127.0.0.1 without reload. Retain the analysis slot until the worker exits after an HTTP timeout; never claim that a remote call was forcibly cancelled. B08 is next.
 
+- CI is defined in `.github/workflows/ci.yml`: one credential-free Ubuntu job with locked setup, hash-pinned FinQA inputs and offline checks. Keep workflow formatting scope aligned with README. Hosted-run acceptance is tracked in `docs/verification/CI_WORKFLOW.md`; local Linux validation alone is not a hosted result.
+
 ## Development and verification
 
 - Use Python 3.14.5 and the project `.venv/`. Manage dependencies in `pyproject.toml` and preserve exact resolutions in `uv.lock`; use locked installs. Follow README commands with ordinary `git` and `uv` executables.

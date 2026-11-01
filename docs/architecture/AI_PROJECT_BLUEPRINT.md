@@ -40,7 +40,7 @@ figuretrail/
 │   ├── architecture/
 │   ├── Backlog/
 │   └── verification/            # curated reports and measured JSON
-├── .github/workflows/ci.yml     # planned credential-free checks
+├── .github/workflows/ci.yml     # credential-free checks; hosted proof pending
 ├── pyproject.toml               # dependencies and tool configuration
 ├── uv.lock                     # resolved dependencies
 ├── .python-version             # tested interpreter
@@ -103,6 +103,6 @@ Bound every model/embedding call centrally: deadline, output tokens, retries, to
 
 Record `run_id`, versions, retrieved ranks, tool events, state/errors, durations, tokens and estimated cost in SQLite. Unknown usage stays unknown; redact secrets. OpenTelemetry is optional later.
 
-CI is planned and no workflow is currently committed. Its intended scope is formatting, tests and leakage/contract checks without live LLM credentials; the existing checks currently run locally. Run paid comparisons explicitly within budget; protect secrets from untrusted PRs. [GitHub Actions](https://docs.github.com/en/actions/reference/security/secure-use). `.gitignore` is not access control. [Git](https://git-scm.com/docs/gitignore)
+The [CI workflow](../../.github/workflows/ci.yml) defines credential-free formatting, tests and source/export checks with locked dependencies and hash-pinned public data. Isolated Ubuntu validation passes; GitHub-hosted run verification is pending publication. See [CI verification](../verification/CI_WORKFLOW.md). Run paid comparisons explicitly within budget; protect secrets from untrusted PRs. [GitHub Actions](https://docs.github.com/en/actions/reference/security/secure-use). `.gitignore` is not access control. [Git](https://git-scm.com/docs/gitignore)
 
 Publish a reproducible demo, measured comparisons, representative failures and one trace explaining an answer. Add cloud deployment, orchestration frameworks or distributed databases only for a demonstrated requirement.

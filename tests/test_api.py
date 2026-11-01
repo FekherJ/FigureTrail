@@ -309,7 +309,8 @@ class APITests(unittest.TestCase):
             return embedding
 
         self.embed.side_effect = slow
-        with self.client() as client, patch.dict(CONFIGURATION, deadline_seconds=0.15):
+        # Allow setup on slower CI disks to reach the blocked SDK stage before expiry.
+        with self.client() as client, patch.dict(CONFIGURATION, deadline_seconds=1.0):
             try:
                 started = monotonic()
                 response = client.post("/analyses", json=BODY)
@@ -367,7 +368,8 @@ class APITests(unittest.TestCase):
             return generation()
 
         self.generate.side_effect = slow
-        with self.client() as client, patch.dict(CONFIGURATION, deadline_seconds=0.15):
+        # Allow setup on slower CI disks to reach the blocked SDK stage before expiry.
+        with self.client() as client, patch.dict(CONFIGURATION, deadline_seconds=1.0):
             try:
                 response = client.post("/analyses", json=BODY)
                 self.assertEqual(response.status_code, 504, response.text)

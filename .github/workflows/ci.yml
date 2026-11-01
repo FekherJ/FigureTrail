@@ -1,0 +1,88 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      GEMINI_API_KEY: ""
+      GOOGLE_API_KEY: ""
+    steps:
+      - name: Check out source
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+        with:
+          version: "0.11.14"
+          enable-cache: false
+
+      - name: Install Python and locked dependencies
+        run: |
+          uv python install
+          uv sync --locked --no-build
+
+      - name: Prepare pinned test data
+        run: |
+          uv run --locked python -B -X utf8 - <<'PY'
+          from hashlib import sha256
+          import json
+          from pathlib import Path
+          from urllib.request import urlopen
+          from scripts.inspect_finqa import source_only
+
+          url = "https://raw.githubusercontent.com/czyssrs/FinQA/0f16e2867befa6840783e58be38c9efb9229d742/dataset/dev.json"
+          manifest = json.loads(Path("evals/cases/finqa-b01-reviewed.json").read_text(encoding="utf-8"))
+          expected = manifest["raw_sha256"]
+          with urlopen(url, timeout=60) as response:
+              data = response.read()
+          if sha256(data).hexdigest() != expected:
+              raise SystemExit("Pinned FinQA SHA-256 mismatch; no exports were generated.")
+          destination = Path("data/raw/finqa-dev.json")
+          destination.parent.mkdir(parents=True, exist_ok=True)
+          destination.write_bytes(data)
+          by_id = {case["id"]: case for case in json.loads(data)}
+          samples = Path("data/samples")
+          samples.mkdir(parents=True, exist_ok=True)
+          for case in manifest["cases"]:
+              source = source_only(by_id[case["case_id"]])
+              (samples / f"{case['stem']}-source.json").write_text(
+                  json.dumps(source, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+              )
+          print(f"Verified FinQA SHA-256: {expected}")
+          PY
+          uv run --locked python -B -X utf8 scripts/inspect_finqa.py --case all --check
+
+      - name: Check environment
+        run: uv run --locked python -B -X utf8 scripts/check_environment.py
+
+      - name: Lint
+        run: uv run --locked ruff check .
+
+      - name: Check formatting
+        run: >-
+          uv run --locked ruff format --check
+          app scripts/check_environment.py scripts/check_provider.py
+          scripts/run_source_case.py scripts/check_tool_call.py
+          scripts/prepare_corpus.py scripts/build_index.py
+          tests/test_provider_connection.py tests/test_source_case.py
+          tests/test_tool_call.py tests/test_corpus.py tests/test_index.py
+          scripts/search.py evals/retrieval.py tests/test_retrieval.py
+          scripts/analyze.py evals/analysis.py tests/test_analysis.py
+          tests/test_analysis_evaluation.py tests/test_api.py tests/test_cli_lifecycle.py
+
+      - name: Run offline tests
+        run: uv run --locked python -B -X utf8 -m unittest discover -s tests -v
+
+      - name: Check reproducibility and whitespace
+        run: git diff --exit-code && git diff --check

@@ -895,3 +895,30 @@ git diff --check
 ```
 
 Ran the complete formatting command from README, including tests/test_cli_lifecycle.py. No live AI calls, dependencies, staging, commit, push or GitHub issue/board changes occurred. B08 remains the next implementation item; the complete-execution-identity finding F02 remains open.
+
+
+## 36. Minimal credential-free CI workflow — 1 November 2026
+
+Added .github/workflows/ci.yml with one Ubuntu 24.04 job for pushes, pull requests and manual dispatch. Pins checkout/setup-uv commits, uv 0.11.14 and the project's Python 3.14.5; uses uv sync --locked --no-build. Token permissions are contents:read, checkout credentials are not persisted, caches are disabled, and model API keys are empty. No live model command is included. Downloads FinQA at immutable commit 0f16e2867befa6840783e58be38c9efb9229d742, verifies the existing SHA-256, generates only ignored source exports and runs the existing ten-case --check verifier. This avoids rewriting committed JSON reference bytes across operating systems. The job checks environment/FTS5/NumPy, lint, formatting, all offline tests and tracked-file/whitespace preservation.
+
+Validation: actionlint 1.7.12 passed. Created an isolated Ubuntu 24.04 WSL checkout, downloaded a fresh Python runtime and installed all 33 locked distributions with a separate cache/environment, then executed the workflow run blocks verbatim. All ten data cases, environment checks, lint, 30-file formatting and 58 offline tests passed (14.313 s). A temporary deliberate failure produced 59 tests, one expected failure and exit code 1 through the same test command/shell; removed the probe and confirmed a clean tracked-file diff. A separate wrong-hash probe failed before raw/export files were written. Downloaded validation tools were verified against upstream checksums and confined to the task workspace; a task-owned Python launcher link created during setup was removed after checking its target.
+
+The first local validation helper needed its step-name parser corrected before execution. The first Ubuntu suite then exposed a 150 ms deadline test expiring before generation began on slower mounted storage. Changed only the two test margins to 1.0 s, preserving cancellation/slot/result/latency assertions and leaving production deadlines/application code unchanged. The corrected Ubuntu run passed. Windows regression also passes: 58 tests in 9.946 s, lint and the documented formatting scope. The existing TestClient/httpx deprecation warning remains visible. Checked 97 relative Markdown links and workflow/README formatting-command alignment.
+
+Updated README, blueprint, backlog, engineering instructions, source provenance and audit follow-up. [CI verification](CI_WORKFLOW.md) and [structured evidence](CI_WORKFLOW_RESULTS.json) distinguish local validation from hosted acceptance. GitHub-hosted green/red runs remain pending publication; no hosted run URL or success is claimed. Existing instructions to leave commits/pushes to the user remain in force. No GitHub write/issue/board operation, live AI request, application/dependency upgrade or project-journal mutation occurred. Historical reports/reference bytes, data/index/cache/journal files and private materials retain baseline fingerprints. Staging is unchanged; B08 remains next.
+
+Actual local commands included checksum-verified Linux uv/actionlint executables and these project commands:
+
+```text
+actionlint -shellcheck= -pyflakes= .github/workflows/ci.yml
+uv python install
+uv sync --locked --no-build
+uv run --locked python -B -X utf8 scripts/inspect_finqa.py --case all --check
+uv run --locked python -B -X utf8 scripts/check_environment.py
+uv run --locked ruff check .
+uv run --locked python -B -X utf8 -m unittest discover -s tests -v
+git diff --exit-code
+git diff --check
+```
+
+The workflow's inline data preparation and full README formatting command were also executed. The deliberate failure and wrong-hash probes ran only in isolated task directories, not the project working tree.
