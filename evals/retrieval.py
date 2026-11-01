@@ -42,8 +42,21 @@ class Queries(BaseModel):
 
 def retrieve_cases(retriever, queries, methods, run_id):
     results = []
+    storage_failed = False
     for query in queries:
         for method in methods:
+            # Retain every planned result for scoring without attempting more work.
+            if storage_failed:
+                results.append(
+                    {
+                        "case_id": query.id,
+                        "status": "blocked",
+                        "method": method,
+                        "hits": [],
+                        "error_code": "campaign_storage_failure",
+                    }
+                )
+                continue
             try:
                 # Case IDs and references are bookkeeping only, never search inputs.
                 result = retriever.search(
@@ -61,7 +74,16 @@ def retrieve_cases(retriever, queries, methods, run_id):
                     "error_code": str(error),
                     "call": error.record,
                 }
-            except (OSError, ValueError, sqlite3.Error) as error:
+            except (OSError, sqlite3.Error) as error:
+                storage_failed = True
+                result = {
+                    "status": "failed",
+                    "method": method,
+                    "hits": [],
+                    "error_type": type(error).__name__,
+                    "error_code": "retrieval_storage_failed",
+                }
+            except ValueError as error:
                 result = {
                     "status": "failed",
                     "method": method,
@@ -106,6 +128,7 @@ def score_results(results, references):
         metrics[method] = {
             "cases": len(entries),
             "failures": sum(item["status"] != "passed" for item in entries),
+            "blocked": sum(item["status"] == "blocked" for item in entries),
             "at_k": {
                 str(k): {
                     "evidence_recall": sum(
@@ -157,6 +180,7 @@ def main() -> int:
         "metric_k": list(METRIC_K),
         "results": [],
     }
+    client = None
     try:
         query_path = ROOT / "evals/queries/finqa-b05.json"
         fixture = Queries.model_validate_json(query_path.read_bytes())
@@ -212,7 +236,8 @@ def main() -> int:
                 raise ValueError("Query campaign would exceed the local allowance limit.")
             retriever.query_cache = cache
             if missing:
-                retriever.provider = GeminiProvider(create_client())
+                client = create_client()
+                retriever.provider = GeminiProvider(client)
                 retriever.pacer = EmbeddingPacer(JOURNAL)
         report["configuration_sha256"] = digest(RETRIEVAL_CONFIG)
         write_atomic(destination, json.dumps(report, indent=2).encode())
@@ -238,6 +263,9 @@ def main() -> int:
             error_code=str(error) if isinstance(error, ProviderError) else "evaluation_failed",
         )
         print(f"Retrieval evaluation failed: {type(error).__name__}")
+    finally:
+        if client is not None:
+            client.close()
     report["finished_at_utc"] = datetime.now(timezone.utc).isoformat()
     write_atomic(destination, json.dumps(report, indent=2).encode())
     print(

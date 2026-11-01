@@ -1,6 +1,6 @@
 # FigureTrail architecture
 
-**Version 1.1 — target design dated 24 October 2026; implementation status updated 28 October 2026 — Fekher Jarrar.**
+**Version 1.1 — target design dated 24 October 2026; implementation status updated 1 November 2026 — Fekher Jarrar.**
 
 FigureTrail answers simple numerical questions about public reports. It finds evidence, calculates a result and shows a verifiable analysis: values, periods, units, sources and formula. Example: “What was the percentage change in this measure between these two years?”
 
@@ -86,7 +86,7 @@ The [B03 provider decision](PROVIDER_SELECTION.md) selects Google's Gemini Devel
 
 ## 3. Data scope and preparation
 
-Start from a public [FinQA](https://github.com/czyssrs/FinQA) subset. The first ten cases were verified on 24 October 2026; see [B01 verification](../verification/B01_DATA_VERIFICATION.md). The source-selection pilot measures one controlled example. The B04 corpus/index bundle is verified; end-to-end answer evaluation remains planned.
+Start from a public [FinQA](https://github.com/czyssrs/FinQA) subset. The first ten cases were verified on 24 October 2026; see [B01 verification](../verification/B01_DATA_VERIFICATION.md). The source-selection pilot measures one controlled example. The B04 corpus/index bundle is verified. B06 records an initial end-to-end answer campaign, including provider failures; broader comparisons and reserved-case evaluation remain planned for B08/B13.
 
 ### Initial scope
 
@@ -96,7 +96,7 @@ Start from a public [FinQA](https://github.com/czyssrs/FinQA) subset. The first 
 - Keep text for context and retrieval. Arbitrary numerical extraction from paragraphs is outside the initial scope.
 - Display company, period and title only when present or verified. Otherwise retain an opaque document ID.
 
-B04's offline implementation uses `app/corpus.py` and `python -m scripts.prepare_corpus`. A pinned twenty-filename source selection drives preparation independently of evaluation references. Generated JSON is a validated intermediate artifact. `app/embeddings.py` caches/paces document vectors, `app/storage.py` publishes and validates SQLite/FTS5 plus vectors, and `python -m scripts.build_index` rebuilds from cache; only `--live` allows missing embedding requests. The complete bundle below is verified and remains separate from the service until analysis integration.
+B04's offline implementation uses `app/corpus.py` and `python -m scripts.prepare_corpus`. A pinned twenty-filename source selection drives preparation independently of evaluation references. Generated JSON is a validated intermediate artifact. `app/embeddings.py` caches/paces document vectors, `app/storage.py` publishes and validates SQLite/FTS5 plus vectors, and `python -m scripts.build_index` rebuilds from cache; only `--live` allows missing embedding requests. The verified bundle is used by the shared B06 analysis service and loaded by the B07 API at startup. Preparation and index publication remain separate commands.
 
 ### Separate corpus and references
 

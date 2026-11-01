@@ -775,3 +775,123 @@ uv run --locked ruff format --check app
 uv run --locked python -B -X utf8 -m unittest discover -s tests -v
 git diff --check
 ```
+
+
+## 26. Essential runtime line explanations — 29 October 2026
+
+Resumed after a usage-limit interruption. The earlier attempt had saved a draft annotation plan and flagged 76 lines requiring explanations; it had not applied the new line annotations. A fresh resumption baseline confirmed clean local commit `2f09352`, containing the earlier comments/docs. Preserved that state and completed the audited plan rather than resetting work.
+
+The user explicitly requested beginner explanations of every line in the essential sequence, replacing the earlier sparse-comment preference for that scope. Added line explanations across six runtime modules and direct helpers: API admission/execution/lookup, shared workflow, source payloads, query cache/retrieval, SDK/budget handling and deterministic context/calculation. Comments explain variable contents, arguments, dictionary fields, branches, comprehensions, resource cleanup, callbacks and time/stop controls. Existing purpose/parameter/return docstrings are unchanged. Blank lines and standalone closing punctuation are explained in the reading map's syntax key rather than receiving repetitive closing-bracket comments. The annotation audit covers 859 meaningful source lines; unrelated preparation implementations and tests are unchanged.
+
+Updated AGENTS with the explicit scope of the newer comment preference and expanded the ignored private reading map with a short Python notation key. The existing sequence image remains valid and unchanged. Kept the current application layout and dependencies; no behavior, feature, model or configuration change was introduced.
+
+Verification: complete Python syntax trees, including literals and docstrings, are identical to the fresh baseline after applying/formatting annotations. Ruff lint passes; all ten application files pass formatting. All 51 offline tests passed in 7.587 s with simulated provider responses. Checked all 22 private-guide links. The existing TestClient/httpx deprecation warning remains visible. Baseline fingerprints verify preservation of source data, bundles, caches, provider/analysis journals, historical evidence, private PDFs and the guide image. No live AI request, package installation, billing change, staging, commit, push or GitHub issue update occurred. Code fingerprints naturally change with comment bytes; previous execution fingerprints remain historical records. B08 remains the next implementation item.
+
+Reproduce the project checks from the repository root:
+
+```powershell
+uv run --locked ruff check .
+uv run --locked ruff format --check app
+uv run --locked python -B -X utf8 -m unittest discover -s tests -v
+git diff --check
+git diff --cached --name-only
+```
+
+
+## 27. Execute function reference — 30 October 2026
+
+Created an ignored private Markdown reference explaining the current execute() function: inputs, SDK client/provider distinction, enclosing variables, retriever/cache/pacer setup, delegation to analyze(), named arguments and nested finally cleanup. Checked the explanation against the actual function and verified the three relative file links and Git exclusion. No application code changed; no model requests, new dependencies, staging, commit or push occurred. Application tests were not repeated for this documentation-only change.
+
+
+## 28. Private workflow references — 30 October 2026
+
+Added an ignored private workflow index and eight stage-based Markdown guides covering orchestration, retrieval/cache, source payload construction, provider calls/accounting, evidence validation/calculation, API/persistence, data preparation/index loading and evaluation. Linked the existing reading map and execute reference to the new guides. Source-derived signatures show actual parameter names and defaults; explanations distinguish implemented fixed behavior from planned agents and broader evaluation.
+
+Verification: checked 73 relative file/directory links, balanced code fences and 15 signatures extracted from current source syntax trees. Git confirms all nine new documents are ignored. Before/after SHA-256 inventories confirm preservation of application code, prompts, tests, evaluation artifacts, data/indexes/caches/journal and existing private PDFs/assets. Only the two existing private navigation documents were intentionally extended. This is a documentation-only change; application tests were not repeated. No SDK/model calls, dependencies, staging, commit, push or backlog status changes occurred.
+
+
+## 29. Consolidated private workflow explanation — 30 October 2026
+
+Consolidated the full execute reference and eight stage explanations into the existing private workflow guide. It now contains the explanations directly, with an internal reading order and corrected source links, rather than requiring separate documents. Retained the original references and updated the reading map to identify the consolidated guide as self-contained. Verified all 47 links/anchors, balanced code fences, inclusion of all nine sections, and unchanged application/data/prompt/test/evaluation file fingerprints. No application behavior changed; no model calls or tests were run for this documentation-only change. No staging, commit or push.
+
+
+## 30. Restore concise source comments — 30 October 2026
+
+Read current GitHub main through the GitHub connector: commit `2f09352754b9ac9668267a9167ae2103d513809b` ("added comments"). Confirmed that the same immutable commit is available locally. All 31 tracked Python syntax trees, including docstrings, matched the current local files before restoration. Restored the six locally expanded modules exactly from that commit: calculator, embeddings, llm, main, retrieval and service. The entire app directory now matches the verified GitHub commit, retaining its essential comments and parameter/return docstrings.
+
+Updated AGENTS to keep concise comments in code and beginner explanations in private guides. Corrected the private reading map's obsolete claim about line-by-line source annotations. The full workflow guide, original execute guide, other private references, PDFs and assets are preserved. Saved a recoverable copy of the verbose source outside the repository in the task workspace.
+
+Verification: Ruff lint passed across the repository; all ten app files passed formatting; all 51 offline tests passed using simulated providers; git diff --check passed. The existing Starlette TestClient/httpx deprecation warning remains visible. Before/after fingerprints preserve other tracked files, source data, index bundles, caches, journals, tests, prompts, evaluation evidence and private documents except the intentionally updated reading map. Staging is unchanged. No model requests, package changes, commit, push or backlog status changes occurred. Existing saved execution fingerprints remain historical records.
+
+Commands used (installed project executables, equivalent to the following locked environment commands):
+
+```powershell
+uv run --locked ruff check .
+uv run --locked ruff format --check app
+uv run --locked python -B -X utf8 -m unittest discover -s tests -v
+git diff --check
+```
+
+
+## 31. Private SDK/client/provider chart — 30 October 2026
+
+Added the previously discussed Mermaid relationship chart beside the Gemini provider explanation in the private consolidated workflow guide, with a plain-text fallback. Checked insertion and balanced Markdown code fences. Documentation-only change; no application code, tests, data or other guides changed, and no model calls, staging, commit or push occurred.
+
+
+## 32. Preview-compatible private chart — 30 October 2026
+
+The supplied editor screenshot showed a blank Mermaid chart. Replaced that inline block in the private workflow guide with a relative PNG image reference, retaining Mermaid source as a separate private asset. Rendered locally using Windows System.Drawing, visually inspected the PNG for labels/arrows/contrast, and verified copied image bytes, PNG signature, relative asset existence and balanced code fences. No dependency or application change; no model calls or application tests were needed. No staging, commit or push.
+
+
+## 33. Coding-principles adoption and project audit — 1 November 2026
+
+Reviewed multica-ai/andrej-karpathy-skills at upstream commit `2c606141936f1eeef17fa3043a72095b4765b9c2` through the GitHub connector, including its single karpathy-guidelines skill and CLAUDE.md/README descriptions. Added all four principles to AGENTS as project-compatible instructions, preserving existing requirements and local edits. No global skill installation or dependency was needed. See [review](KARPATHY_GUIDELINES_REVIEW.md) and [structured evidence](KARPATHY_GUIDELINES_REVIEW_RESULTS.json).
+
+Reviewed runtime/preparation/evaluation/test/configuration responsibilities and current documentation. The tracked inventory covers 86 files; all 31 Python files parsed and tracked JSON parsed successfully. Ruff lint passed; the README's full formatting scope passed for 29 files; all 51 offline tests passed in 15.426 s. Environment, ten-case source/export verification, reproducible corpus preparation and current index checks passed without writing those artifacts. Checked 184 existing Markdown targets with no missing links, plus the new review/instruction links. The existing TestClient/httpx warning remains visible.
+
+A simulated two-query probe confirmed that retrieval evaluation continues after a SQLite storage error. Other findings concern incomplete execution fingerprints, stale documentation/CI claims and explicit SDK cleanup in two CLI paths. The audit distinguishes confirmed behavior, source observations, planned B08/B12 work and scope limits. No runtime fixes or wholesale refactors were applied. Existing application code, tests, prompts, data, bundles, caches, journals, evidence and private guides/PDFs remain unchanged. No live model request, package installation, staging, commit, push or issue/board update occurred. B08 remains the next implementation item; address the evaluator storage-stop finding before the next live retrieval campaign.
+
+Commands are recorded in the structured evidence and the report. Tests used installed project executables equivalent to the documented locked-environment commands; artifact verification used --check only.
+
+
+## 34. Retrieval evaluator storage-stop correction — 1 November 2026
+
+Resolved audit finding F01 in the existing retrieve_cases() function. Filesystem/SQLite storage exceptions now fail the triggering entry with retrieval_storage_failed and stop all later searches across methods and questions. Remaining planned entries receive blocked/campaign_storage_failure with empty hits; completed results remain intact. score_results() retains every entry in its existing denominator and non-passing failures count, and adds a separate blocked subset count. Ordinary ValueError and ProviderError behavior is unchanged. A failure to write the final report can still prevent durable output; the evaluator cannot guarantee persistence on failed storage.
+
+Added three regression tests before the fix. The initial nine-test retrieval run failed with nine reported failures (the cache test and eight storage-position subtests), reproducing extra searches and missing storage-specific error codes. After the fix, all nine retrieval tests pass. The position test covers filesystem and SQLite errors at each of four scheduled query/method positions, checks exact search counts and preserved case/method coverage, and verifies scoring denominators/blocked counts. The cache test exercises the real retriever with a failing cache put and simulated provider: only one search and one embedding attempt occur. A compatibility test confirms ordinary input/provider failures still allow later cases. Raw storage messages are excluded from result records.
+
+Ruff lint and the README's 29-file formatting scope pass. All 54 offline tests pass in 8.122 s, including the existing local HTTP tests with simulated providers. The existing TestClient/httpx warning remains visible. Updated current test counts and the storage-stop contract in README/AGENTS, the B05 backlog follow-up, the audit resolution note and the private consolidated workflow guide. Historical B05/B07 measurements and the original audit JSON remain unchanged; B08 and audit F02–F04 remain outstanding.
+
+Commands used via installed project executables, equivalent to:
+
+```powershell
+uv run --locked python -B -X utf8 -m unittest discover -s tests -p test_retrieval.py -v
+uv run --locked ruff check .
+uv run --locked ruff format --check evals/retrieval.py tests/test_retrieval.py
+uv run --locked python -B -X utf8 -m unittest discover -s tests -v
+git diff --check
+```
+
+Also ran the full formatting command from README. Before/after fingerprints preserve unrelated code, prompts, dependencies, data, corpus/index bundles, caches, provider/analysis journals, historical evidence and private PDFs/assets. Existing instruction/log edits were preserved. No live AI requests, dependency installation, staging, commit, push or GitHub issue/board change occurred.
+
+
+## 35. CLI client ownership and current-state documentation — 1 November 2026
+
+Rechecked audit F03/F04 against current files: both CLI paths still constructed GeminiProvider(create_client()) without explicit client cleanup, and the backlog/integration/CI statements remained stale. Added local client ownership and guarded finally cleanup in scripts/search.py and evals/retrieval.py, including failures during provider or pacer construction. Lexical and cached evaluator paths still create no SDK client. Retained the existing F01 campaign-storage-stop implementation and tests unchanged.
+
+Added four offline CLI lifecycle tests before the fix. The initial run reported ten failing cleanup subtests: neither path called close on success, provider/pacer setup failure, provider failure or storage failure. After the fix all lifecycle checks pass, including two non-live search variants and three lexical/cached evaluator variants. Providers, SDK clients and search results are simulated; fixtures and evaluation outputs use temporary directories and a local test journal.
+
+Corrected current backlog transitions to B08, architecture descriptions of implemented B06 evaluation/B07 integration, and blueprint CI claims. CI is explicitly planned; no workflow was created. Preserved dated measurements, historical verification JSON and original audit evidence; dated follow-ups mark F03/F04 resolved and F02 still open. Updated current test counts, README formatting scope and the private consolidated guide. No unrelated architecture or feature change was introduced.
+
+Verification: repository Ruff lint passes; the expanded documented formatting scope passes for 30 files; all 58 offline tests pass in 8.538 s. The existing TestClient/httpx warning remains visible. Checked 119 links in changed Markdown and removed the identified stale phrases. Git diff --check passes. Before/after fingerprints preserve other application code, prior tests (including F01), dependencies, data, corpus/index bundles, caches, provider/analysis journals, historical reports/JSON and private PDFs/assets. Existing local edits and staging are preserved.
+
+Commands used through installed project executables, equivalent to:
+
+```powershell
+uv run --locked python -B -X utf8 -m unittest discover -s tests -p test_cli_lifecycle.py -v
+uv run --locked ruff check .
+uv run --locked python -B -X utf8 -m unittest discover -s tests -v
+git diff --check
+```
+
+Ran the complete formatting command from README, including tests/test_cli_lifecycle.py. No live AI calls, dependencies, staging, commit, push or GitHub issue/board changes occurred. B08 remains the next implementation item; the complete-execution-identity finding F02 remains open.

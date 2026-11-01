@@ -1,6 +1,6 @@
 # FigureTrail backlog
 
-**Version 1.1 — implementation roadmap dated 24 October 2026; implementation status updated 28 October 2026 — Fekher Jarrar.**
+**Version 1.1 — implementation roadmap dated 24 October 2026; implementation status updated 1 November 2026 — Fekher Jarrar.**
 
 This backlog implements the [architecture](../architecture/ARCHITECTURE.md). B01–B13 are stable work-item IDs. They are now linked to [repository issues](https://github.com/FekherJ/FigureTrail/issues) and [Project 2](https://github.com/users/FekherJ/projects/2), verified on 25 October 2026. Their current GitHub issue numbers are 1–13; the Bxx IDs remain the roadmap identifiers.
 
@@ -114,7 +114,7 @@ Objective: create a reproducible environment and a verifiable HTTP foundation.
 
 **Design note:** configuration, inference sources and evaluation references have separate responsibilities.
 
-**Verified status:** final review completed on 25 October: published foundation commit `d5c26ca`, current dependency/FTS5/NumPy checks and in-process `/health`/OpenAPI contracts confirmed. The original live HTTP results remain in the [B02 report](../verification/B02_ENVIRONMENT.md). [Issue #2](https://github.com/FekherJ/FigureTrail/issues/2) is closed as completed and its board item is Done; both were read back. B03's source-case pilot and native tool check are complete. B04 indexing is also complete; B05 retrieval and B06 fixed CLI analysis are now verified; B07 analysis API is next.
+**Verified status:** final review completed on 25 October: published foundation commit `d5c26ca`, current dependency/FTS5/NumPy checks and in-process `/health`/OpenAPI contracts confirmed. The original live HTTP results remain in the [B02 report](../verification/B02_ENVIRONMENT.md). [Issue #2](https://github.com/FekherJ/FigureTrail/issues/2) is closed as completed and its board item is Done; both were read back. B03's source-case pilot and native tool check are complete. B04 indexing is also complete; B05 retrieval, B06 fixed CLI analysis and B07 analysis API are complete; B08 evaluation is next.
 
 ### B03 — Verify a hosted LLM, its output contract and cost
 
@@ -174,7 +174,11 @@ Objective: retrieve useful evidence from multiple contexts rather than preselect
 
 **Design note:** similarity ranks candidates; reference-based evaluation measures relevance.
 
-**Verified status:** completed locally on 26 October 2026. [Comparison and case review](../verification/B05_RETRIEVAL.md): ten questions, all 186 chunks eligible, lexical complete proof@5 9/10 (95% cell recall), semantic 10/10 (100% cell recall), zero technical failures. Cached semantic replay reproduces rankings/scores with zero requests. Two difficult cases, six new tests and provisional semantic k=5 choice are documented. Twenty-six offline tests passed at the B05 snapshot. B06 now records initial answer results, including provider failures; B07 is next and reserved-case accuracy remains unmeasured.
+**Verified status:** completed locally on 26 October 2026. [Comparison and case review](../verification/B05_RETRIEVAL.md): ten questions, all 186 chunks eligible, lexical complete proof@5 9/10 (95% cell recall), semantic 10/10 (100% cell recall), zero technical failures. Cached semantic replay reproduces rankings/scores with zero requests. Two difficult cases, six new tests and provisional semantic k=5 choice are documented. Twenty-six offline tests passed at the B05 snapshot. B06 records initial answer results, including provider failures, and B07 API integration is complete. B08 evaluation is next; reserved-case accuracy remains unmeasured.
+
+**Reliability follow-up, 1 November 2026:** audit F01 is resolved. Retrieval evaluation stops after a filesystem/SQLite storage error, retains earlier results and marks every remaining query/method pair blocked without another search. Three regression tests cover campaign stopping/scoring, actual cache-write failure with a simulated provider, and unchanged ordinary-error behavior. All 54 offline tests pass. This is a B05 reliability correction; broader B08 evaluation remains next. See the [implementation log](../verification/IMPLEMENTATION_LOG.md).
+
+**Maintenance follow-up, 1 November 2026:** audit F03/F04 cleanup is complete. Search and retrieval-evaluation CLI paths explicitly close owned SDK clients on success and failure. Four additional offline tests cover lifecycle ownership and key-free lexical/cached operation; the current suite has 58 tests. Current-state backlog/integration wording is aligned, and CI is explicitly planned. Historical measurements remain unchanged.
 
 ### B06 — Assemble the fixed workflow and verifiable calculation
 
@@ -193,7 +197,7 @@ Objective: question → retrieval → structured LLM selection → calculation i
 
 **Design note:** the model selects operation/cells; code validates the data and calculates.
 
-**Verified status:** completed locally on 26 October 2026 within the [documented source-format and operational limits](../verification/B06_FIXED_WORKFLOW.md). One search, at most one generation, source-only operands, Decimal calculation, explicit outcomes and saved analyses are implemented. All 34 offline tests pass. The initial campaign retains 5/10 correct answers, one conservative abstention and four HTTP 504s; both negative checks passed. Two bounded v2 follow-ups returned 24.69% and −7.44% at 15.1/19.2 s. They do not replace the initial denominator or establish a full v2 score. Provider responsiveness/reliability remains open for further measurement. B07 analysis API is next.
+**Verified status:** completed locally on 26 October 2026 within the [documented source-format and operational limits](../verification/B06_FIXED_WORKFLOW.md). One search, at most one generation, source-only operands, Decimal calculation, explicit outcomes and saved analyses are implemented. All 34 offline tests pass. The initial campaign retains 5/10 correct answers, one conservative abstention and four HTTP 504s; both negative checks passed. Two bounded v2 follow-ups returned 24.69% and −7.44% at 15.1/19.2 s. They do not replace the initial denominator or establish a full v2 score. Provider responsiveness/reliability remains open for further measurement. B07 API integration is complete; B08 evaluation is next.
 
 ### B07 — Expose a documented API with explicit contracts and errors
 
@@ -333,4 +337,4 @@ Objective: release a reproducible version with measured results and documented t
 
 Exclude arbitrary PDF/OCR ingestion, user-supplied URL downloads, slow local models, fine-tuning, multi-agent systems, multiple providers, SSO, distributed cloud deployment, full dashboards and systematic LLM judging from this cycle.
 
-Add an extension only to address an observed weakness, and replace another task within the available allowance. The next technical step is **B05**: implement and measure retrieval against the completed index bundle.
+Add an extension only to address an observed weakness, and replace another task within the available allowance. The next implementation item is **B08**: formalize end-to-end evaluations and measure an improvement. CI remains planned; the current checks are run locally.

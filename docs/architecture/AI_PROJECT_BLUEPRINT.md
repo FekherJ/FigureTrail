@@ -1,6 +1,6 @@
 # AI Project Blueprint — FigureTrail
 
-**Standards reviewed 24 October; implementation status updated 28 October 2026. Build incrementally.**
+**Standards reviewed 24 October; implementation status updated 1 November 2026. Build incrementally.**
 
 Purpose: answer numerical questions from public reports with traceable evidence. Scope: one local Python service, a bounded report corpus, deterministic calculations and measured retrieval/model variants. Data references, the HTTP health contract, provider access, a bounded native tool call and the SQLite/vector index bundle are verified. B05 retrieval and B06 fixed CLI analysis have initial development measurements; B07 exposes that shared service through typed HTTP contracts; wider reliability verification follows the roadmap.
 
@@ -40,7 +40,7 @@ figuretrail/
 │   ├── architecture/
 │   ├── Backlog/
 │   └── verification/            # curated reports and measured JSON
-├── .github/workflows/ci.yml     # credential-free checks
+├── .github/workflows/ci.yml     # planned credential-free checks
 ├── pyproject.toml               # dependencies and tool configuration
 ├── uv.lock                     # resolved dependencies
 ├── .python-version             # tested interpreter
@@ -103,6 +103,6 @@ Bound every model/embedding call centrally: deadline, output tokens, retries, to
 
 Record `run_id`, versions, retrieved ranks, tool events, state/errors, durations, tokens and estimated cost in SQLite. Unknown usage stays unknown; redact secrets. OpenTelemetry is optional later.
 
-CI runs formatting, tests and leakage/contract checks without live LLM credentials. Run paid comparisons explicitly within budget; protect secrets from untrusted PRs. [GitHub Actions](https://docs.github.com/en/actions/reference/security/secure-use). `.gitignore` is not access control. [Git](https://git-scm.com/docs/gitignore)
+CI is planned and no workflow is currently committed. Its intended scope is formatting, tests and leakage/contract checks without live LLM credentials; the existing checks currently run locally. Run paid comparisons explicitly within budget; protect secrets from untrusted PRs. [GitHub Actions](https://docs.github.com/en/actions/reference/security/secure-use). `.gitignore` is not access control. [Git](https://git-scm.com/docs/gitignore)
 
 Publish a reproducible demo, measured comparisons, representative failures and one trace explaining an answer. Add cloud deployment, orchestration frameworks or distributed databases only for a demonstrated requirement.

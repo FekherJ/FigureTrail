@@ -9,6 +9,36 @@
 - Document product behavior, contracts, decisions, verification evidence and operational limits in an impersonal, technical style. Distinguish implemented capabilities from design targets.
 - Follow B01–B13 dependencies and priorities: LLM/RAG, API/architecture and evaluations first; bounded tools, security and observability next.
 
+## Coding principles
+
+Apply all four principles from the single [karpathy-guidelines skill](https://github.com/multica-ai/andrej-karpathy-skills/blob/2c606141936f1eeef17fa3043a72095b4765b9c2/skills/karpathy-guidelines/SKILL.md), maintained by multica-ai and inspired by Andrej Karpathy's observations. Reviewed on 1 November 2026 at upstream commit `2c606141936f1eeef17fa3043a72095b4765b9c2`. The rules below adapt that guidance to this repository; they do not imply that Karpathy authored or endorsed this project. For trivial changes, use proportionate checks. These principles supplement the project requirements and the user's current instructions.
+
+### 1. Think before coding
+
+- Read the relevant implementation, callers, tests and project constraints before proposing changes. State consequential assumptions and uncertainty rather than silently choosing an interpretation.
+- Explain materially different interpretations and tradeoffs. Recommend the simpler adequate approach and challenge unnecessary scope.
+- Ask a focused question when unresolved ambiguity affects correctness or requires a user decision; continue independent, authorized work. Do not turn routine implementation choices into approval requests.
+
+### 2. Simplicity first
+
+- Implement only the behavior needed for the current request. Avoid speculative features, single-use abstractions and unrequested configuration or extension points.
+- Reuse existing code and standard-library/platform capabilities before adding dependencies. Every helper or wrapper must have a concrete responsibility or verification need; test injection and shared budget/security enforcement are valid needs.
+- Do not add branches for impossible states. Retain validation and error handling for real input, provider, filesystem, database and numerical failures, supported by the application's trust boundaries.
+- If a substantially shorter implementation is equally clear, correct and testable, prefer it. Review complexity as an experienced maintainer would, rather than optimizing line counts at the expense of safeguards.
+
+### 3. Surgical changes
+
+- Limit edits to what the request requires. Preserve surrounding behavior, comments, formatting and existing style; do not perform unrelated refactors or cosmetic cleanup.
+- Remove imports, variables or helpers made unused by the current change. Report pre-existing dead code separately rather than deleting it during unrelated work.
+- Every changed line must have a reason tied to the request. Preserve user edits, historical measurements and private materials; review the final diff before handing it back.
+
+### 4. Goal-driven execution
+
+- Define observable acceptance criteria before implementation. For multi-step work, state a short sequence pairing each step with its verification.
+- Reproduce a bug with a focused failing check before fixing it; test invalid inputs when adding validation. For refactors, compare behavior and run relevant checks before and after.
+- Work through failures until the defined criteria are met or a concrete blocker is identified. Keep checks meaningful and proportionate; documentation-only changes do not require new behavioral tests.
+- Report actual commands, results and remaining uncertainty. Passing offline tests does not establish live-model accuracy, provider reliability, production readiness or complete compliance with these principles.
+
 ## Communication and handoff
 
 - Before each implementation step, explain the active backlog item, its purpose, the affected components and how the result will be verified in plain English.
@@ -24,7 +54,7 @@
 
 - B04 is complete: [index verification](docs/verification/B04_INDEX_BUILD.md) confirms 20 contexts, 186 chunks, 243 original cells, SQLite/FTS5 and an aligned 186 × 768 matrix. There are 184 distinct cached inputs. B05 retrieval is complete; the API loads the validated current index at startup when both pointers are available; partial/corrupt bundles fail startup. The earlier preparation report is a historical intermediate snapshot.
 
-- B05 is complete: [retrieval verification](docs/verification/B05_RETRIEVAL.md) measures lexical recall@5 95% / complete proof 9/10 and semantic recall@5 100% / complete proof 10/10 on ten development questions. All 186 chunks are eligible; references are read only after candidates are retrieved. Semantic k=5 is the B06 default; the search CLI defaults to local lexical search. Twenty-six tests passed at the B05 snapshot; the current suite has 51. The cached replay made zero requests. B06 functionality is now complete; B07 analysis API is implemented; B08 evaluation is next.
+- B05 is complete: [retrieval verification](docs/verification/B05_RETRIEVAL.md) measures lexical recall@5 95% / complete proof 9/10 and semantic recall@5 100% / complete proof 10/10 on ten development questions. All 186 chunks are eligible; references are read only after candidates are retrieved. Semantic k=5 is the B06 default; the search CLI defaults to local lexical search. Twenty-six tests passed at the B05 snapshot; the current suite has 58. The cached replay made zero requests. B06 functionality is now complete; B07 analysis API is implemented; B08 evaluation is next.
 
 - B06 is implemented: `app/service.py`, `app/calculator.py`, `prompts/analysis_selection.md` and `scripts/analyze.py`. [Verification](docs/verification/B06_FIXED_WORKFLOW.md) retains the initial 5/10 correct answers, one abstention and four 504s; two v2 follow-ups succeeded at 15.1/19.2 s. Do not describe provider latency/reliability as solved. The B06 snapshot passed 34 offline tests. B07 API integration is implemented.
 
@@ -34,7 +64,7 @@
 
 - Use Python 3.14.5 and the project `.venv/`. Manage dependencies in `pyproject.toml` and preserve exact resolutions in `uv.lock`; use locked installs. Follow README commands with ordinary `git` and `uv` executables.
 - Prefer standard-library functionality and small readable functions. Keep one local Python application; introduce abstractions only for a demonstrated requirement.
-- Use comments sparingly to explain non-obvious decisions, constraints and trust boundaries. Do not narrate self-explanatory code or comment every line.
+- Keep comments concise and focused on non-obvious decisions, constraints and trust boundaries. Preserve useful function parameter/return docstrings. Keep beginner walkthroughs in the ignored private workflow guide rather than adding line-by-line explanations to application code.
 - Run checks proportionate to the change. Preserve executable checks for data separation, numeric conventions and trust boundaries. Do not rewrite numerical fixtures or measured results to make a check pass.
 - Ruff lint covers the codebase; formatting covers `app/`, environment/provider/source-case/tool/corpus/index/search/analysis/evaluation commands and their tests. Avoid unrelated reformatting of verified reference tooling.
 - The offline FinQA verifier uses assertions and rejects `-O`. Runtime API/provider/domain validation must use explicit validation and exceptions.
@@ -60,7 +90,7 @@
 - Keep cumulative hosted-AI spending strictly below €30. Preparation, evaluations, errors and retries count toward this limit. Local estimates are not a guaranteed provider billing cap.
 - Build indexes from the validated prepared artifact. Use the current-version pointers and `app/storage.py` loader; reject corpus/model/file/row mismatches. Reuse the content-addressed embedding cache; missing vectors require `--live`, and cache-only builds/checks must make no model requests. Run one builder at a time.
 - Pacing uses 80 RPM and a 24,000/minute byte-based allowance proxy; actual embedding usage remains unknown. Local file-write retries are bounded and separate from disabled SDK/network retries. Preserve returned vectors before progress-record updates.
-- Retrieval uses `app/retrieval.py` and the validated index loader. Keep explicit scope before top-k and references out of search inputs. Query embeddings use `data/local/query-embeddings.sqlite`; document cache/bundles remain immutable. The CLI/evaluator require `--live` for missing query vectors. Retain failures in evidence metrics and distinguish retrieval coverage from answer correctness.
+- Retrieval uses `app/retrieval.py` and the validated index loader. Keep explicit scope before top-k and references out of search inputs. In retrieval evaluation, filesystem/SQLite storage errors stop further searches across the entire campaign; retain unattempted query/method entries as blocked in scoring denominators. Query embeddings use `data/local/query-embeddings.sqlite`; document cache/bundles remain immutable. The CLI/evaluator require `--live` for missing query vectors. Retain failures in evidence metrics and distinguish retrieval coverage from answer correctness.
 - Fixed analysis makes one search and at most one generation. Preserve the same shared service for CLI/API/evaluations; keep reference loading in evaluators after execution. Save accepted runs in the journal's `analyses` table without overwriting `calls`. Unknown cells fail; unknown units, scales or periods cannot become numerical successes. Keep the current conservative source-format policy explicit, and preserve baseline failures when comparing variants.
 - Introduce the agent only after the fixed baseline is measured. Initial ceiling: four generation calls and six tool calls, including at most two searches; enforce limits in code.
 - Minimize provider payloads, redact secrets from traces and escape displayed source content. Guardrails supplement explicit permissions and boundary validation.

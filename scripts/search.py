@@ -23,13 +23,15 @@ def main() -> int:
     args = parser.parse_args()
     if args.live and args.method != "semantic":
         parser.error("--live applies only to semantic retrieval.")
+    client = None
     try:
         retriever = load_current(ROOT)
         retriever.validate_request(args.question, args.method, args.k, args.report_ids)
         if args.method == "semantic":
             retriever.query_cache = EmbeddingCache(ROOT / "data/local/query-embeddings.sqlite")
             if args.live:
-                retriever.provider = GeminiProvider(create_client())
+                client = create_client()
+                retriever.provider = GeminiProvider(client)
                 retriever.pacer = EmbeddingPacer(JOURNAL)
         result = retriever.search(
             args.question,
@@ -48,6 +50,9 @@ def main() -> int:
                 {"status": "failed", "error_type": type(error).__name__, "error": str(error)}
             )
         )
+    finally:
+        if client is not None:
+            client.close()
     return 1
 
 
