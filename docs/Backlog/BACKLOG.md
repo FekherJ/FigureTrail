@@ -226,18 +226,20 @@ Objective: make the service usable and testable independently of the UI.
 
 Objective: measure strengths/failures and avoid a demonstration based only on selected successes.
 
-**Preparation completed, 9 November 2026:** audit F02 is resolved for the fixed workflow. New records identify all top-level application modules and dependency files, effective workflow/retrieval/embedding/provider/pacing settings and installed runtime versions. Four regression tests cover changes, owned snapshots, secret exclusion, legacy lookup and missing dependency input; all 62 offline tests pass. All 14 historical analyses remain readable and the journal is unchanged. See [verification](../verification/B08_EXECUTION_IDENTITY.md). B08's evaluation criteria below remain open; the wider event/export/UI observability work remains B12.
+**Preparation completed, 9 November 2026:** audit F02 is resolved for the fixed workflow. New records identify all top-level application modules and dependency files, effective workflow/retrieval/embedding/provider/pacing settings and installed runtime versions. Four regression tests cover changes, owned snapshots, secret exclusion, legacy lookup and missing dependency input; all 62 offline tests pass. All 14 historical analyses remain readable and the journal is unchanged. See [verification](../verification/B08_EXECUTION_IDENTITY.md). The broader evaluation implementation and measured results are recorded below; the wider event/export/UI observability work remains B12.
 
-- [ ] Build the evaluator around the API's shared service. Only the evaluator loads expected answers/evidence, separately from analysis.
-- [ ] If feasible, extend to 20 development cases and 10 reserved cases split by report group; report actual counts if preparation takes longer.
-- [ ] Define tolerances, percentage conventions, retrieval/accuracy/unit/abstention metrics, evidence review, latency/cost and error categories.
-- [ ] Compare retrieval variants within the fixed workflow; fix an observed weakness and remeasure development cases.
+- [x] Build the evaluator around the API's shared service. Only the evaluator loads expected answers/evidence, separately from analysis.
+- [x] Record actual scope: ten development positives and two negatives. The optional 20-development/10-reserved expansion is deferred; no reserved accuracy is reported. Prepare/review report-disjoint reserved cases before B13 final trials.
+- [x] Define tolerances, percentage conventions, retrieval/accuracy/unit/abstention metrics, evidence review, latency/cost and error categories.
+- [x] Compare retrieval variants within the fixed workflow; fix observed generation pacing/quota stopping and remeasure development cases, retaining all failures.
 
 **Acceptance criteria:** repeatable command, published versions/counts and retained failures. Reserved cases do not tune variants. Do not derive document filters from answers. Measure an improvement or explain the lack of gain. Evaluate beyond JSON validity.
 
 **Evidence:** before/after reports, scoring rules and at least one detailed error analysis. Record numerical thresholds and their rationale before final trials.
 
 **Design note:** calculation, retrieval and end-to-end checks use distinct metrics.
+
+**Verified status, 9 November 2026:** initial B08 comparison is complete locally on ten development positives and two negatives per variant. [Evidence](../verification/B08_WORKFLOW_EVALUATION.md): paced lexical 8/10 correct, semantic 6/10, complete proof 9/10 versus 10/10, negative checks 2/2 versus 1/2. The initial failed semantic run is retained. Generation pacing and stop-on-quota are tested; no 429 occurs in the paced pair, while three semantic 503s remain. All 72 offline tests pass. Larger/held-out evaluation is not delivered; B13 requires report-disjoint reserved cases. B09 is next. GitHub issue/board state above remains the dated 28 October observation; this local completion has not changed external tracking.
 
 ### B09 — Build an interface that shows the evidence
 
@@ -314,7 +316,7 @@ Objective: extend B03 traces to diagnose quality, cost and failures.
 Objective: release a reproducible version with measured results and documented technical decisions.
 
 - [ ] Freeze code, prompts, corpus, models/configuration and scoring rules; estimate the final campaign before running it.
-- [ ] Run fixed variants and the agent on reserved cases; publish actual counts, scores, failures, latency and cost.
+- [ ] Prepare/review a report-disjoint reserved set without tuning on it, then run fixed variants and the agent on those cases; publish actual counts, scores, failures, latency and cost.
 - [ ] Verify startup in a fresh Python environment; document downloads, configuration and commands without secrets. Clearly identify any simulated offline checks.
 - [ ] Align README/diagrams with the code. Record a short demo: sourced success, difficult case/improvement and missing evidence. Document limits, trade-offs and error-driven next steps.
 
@@ -341,4 +343,4 @@ Objective: release a reproducible version with measured results and documented t
 
 Exclude arbitrary PDF/OCR ingestion, user-supplied URL downloads, slow local models, fine-tuning, multi-agent systems, multiple providers, SSO, distributed cloud deployment, full dashboards and systematic LLM judging from this cycle.
 
-Add an extension only to address an observed weakness, and replace another task within the available allowance. The next implementation item is **B08**: formalize end-to-end evaluations and measure an improvement. The credential-free CI workflow is implemented and validated in an isolated local Ubuntu checkout; GitHub-hosted success, deliberate test-failure propagation and restored-green acceptance are all verified; see [CI verification](../verification/CI_WORKFLOW.md).
+Add an extension only to address an observed weakness, and replace another task within the available allowance. The next implementation item is **B09**: build the evidence-focused interface over the existing API. B08's scoped development comparison is complete; wider/held-out evaluation remains required before release. The credential-free CI workflow is implemented and validated in an isolated local Ubuntu checkout; GitHub-hosted success, deliberate test-failure propagation and restored-green acceptance are all verified; see [CI verification](../verification/CI_WORKFLOW.md).

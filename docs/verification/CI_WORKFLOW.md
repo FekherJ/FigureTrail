@@ -48,3 +48,8 @@ Commits and pushes remain under the user's control unless separately authorized.
 ## Sources
 
 The setup follows [Astral's GitHub Actions integration](https://docs.astral.sh/uv/guides/integration/github/) and [GitHub workflow syntax](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax). Action pins were checked against the upstream repositories: [checkout](https://github.com/actions/checkout/commit/d23441a48e516b6c34aea4fa41551a30e30af803), [setup-uv](https://github.com/astral-sh/setup-uv/commit/bec219d24cd3e171d82865faccec33120bb574f4). The [FinQA provenance](../../data/FINQA_PROVENANCE.md) and reviewed manifest remain the source-data record.
+
+
+## Published identity baseline, 9 November 2026
+
+[Run 42684643190](https://github.com/FekherJ/FigureTrail/actions/runs/42684643190) at commit `b9cd10942217418380c72ceb76de251f0d82f296` passes all 62 tests in 7.280 s and every job step. This is the latest published baseline; earlier 58-test green/red/restored-green evidence is preserved above. B08 evaluator changes have 72 locally passing tests and await user commit/push.

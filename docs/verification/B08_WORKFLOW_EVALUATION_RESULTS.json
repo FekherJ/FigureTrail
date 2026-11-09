@@ -1,0 +1,2331 @@
+{
+  "date": "2026-11-09",
+  "offline_validation": {
+    "date": "2026-11-09",
+    "tests": 72,
+    "test_seconds": 13.702,
+    "checks": [
+      {
+        "name": "lint",
+        "exit_code": 0
+      },
+      {
+        "name": "format",
+        "exit_code": 0
+      },
+      {
+        "name": "offline-tests",
+        "exit_code": 0
+      },
+      {
+        "name": "data",
+        "exit_code": 0
+      },
+      {
+        "name": "corpus",
+        "exit_code": 0
+      },
+      {
+        "name": "index",
+        "exit_code": 0
+      },
+      {
+        "name": "lexical-plan",
+        "exit_code": 0
+      },
+      {
+        "name": "semantic-plan",
+        "exit_code": 0
+      }
+    ],
+    "live_model_calls": 0,
+    "existing_data_and_history_preserved": true
+  },
+  "partition": "development",
+  "positive_cases_per_method": 10,
+  "negative_cases_per_method": 2,
+  "reserved_cases": 0,
+  "historical_rows_preserved": {
+    "calls": 215,
+    "analyses": 14,
+    "query_embeddings": 10
+  },
+  "current_rows": {
+    "calls": 265,
+    "analyses": 62,
+    "query_embeddings": 12
+  },
+  "live_calls": {
+    "generation": 48,
+    "embedding": 2,
+    "total": 50
+  },
+  "cumulative_local_allowance_eur": "15.5512000",
+  "actual_charge_eur": null,
+  "campaigns": {
+    "initial_lexical": {
+      "run_id": "84466ab4-21bc-4df0-bc51-d89f5603ac3b",
+      "method": "lexical",
+      "plan": {
+        "method": "lexical",
+        "planned_cases": 12,
+        "maximum_generation_requests": 12,
+        "maximum_embedding_requests": 0,
+        "additional_allowance_reservation_eur": "12.00",
+        "current_allowance_eur": "6.1633250",
+        "local_limit_eur": "25",
+        "fits_local_allowance": true,
+        "actual_charge_eur": null
+      },
+      "scoring_policy": {
+        "version": "analysis-evaluation-v2",
+        "numeric_tolerance": "reference absolute tolerance in percentage points",
+        "correct_answer": "success, complete proof, ordered cells, operation, finite value and known units/scales/years",
+        "negative_outcome": "exact expected status and no calculation",
+        "denominators": "all planned cases, including failures and unattempted blocks",
+        "latency": "attempted cases only, including failed requests; nearest-rank p95",
+        "case_order": "positive fixture order, then negative fixture order"
+      },
+      "evaluator_sha256": "8e6207f0f1c2211d4544f6244405b46bab561a9f8a8800aa4945169013f01fe4",
+      "case_fixture_sha256": "3b2eb282fd7b161ec0adf4a8842630b2b6df1a9c19a627a462a425a3863e3f17",
+      "reference_sha256": "a416ae37cbbd9557df733c8320e37dd17a325f555fc235cae1b444a3d407b832",
+      "corpus_version": "32a94d8310f88e3987e833044c6131c808e4ac7da7391270aec098e59f062887",
+      "index_version": "c0a8c69496f03a95e2049096228afaaec2f410547d14a384bc34b6e78f1225fb",
+      "prompt_sha256": "623b355ad6248d626c5c13847ea4848c19c6f593d4d458a5ad01d643b30fe5b9",
+      "metrics": {
+        "development_cases": 10,
+        "correct_answers": 8,
+        "answer_accuracy": 0.8,
+        "answer_successes": 8,
+        "answer_abstentions": 2,
+        "blocked": 0,
+        "technical_failures": 0,
+        "complete_proofs_at_k": 9,
+        "mean_cell_recall_at_k": 0.95,
+        "correct_cell_selections": 9,
+        "unit_scored_cases": 10,
+        "correct_unit_contexts": 8,
+        "year_scored_cases": 10,
+        "correct_period_years": 8,
+        "latency_attempted_cases": 10,
+        "median_development_seconds": 0.9893485,
+        "p95_development_seconds": 1.531126,
+        "negative_cases": 2,
+        "correct_negative_outcomes": 2,
+        "error_categories": {
+          "correct": 8,
+          "incomplete_retrieval": 1,
+          "ambiguous_unit": 1
+        },
+        "provider": {
+          "call_records": 12,
+          "generation_records": 12,
+          "embedding_records": 0,
+          "reported_tokens": {
+            "input_tokens": 22040,
+            "output_tokens": 807,
+            "thought_tokens": null,
+            "total_tokens": 22847
+          },
+          "calls_with_unknown_usage": 0,
+          "known_estimated_paid_cost_usd": "0.0571175",
+          "calls_with_unknown_cost": 0,
+          "estimated_paid_cost_usd": "0.0571175",
+          "actual_charge_eur": null
+        }
+      },
+      "raw_report_sha256": "621b320a7c2d693be33cc3f3269b3599435e50568598b8d0534854806118046c",
+      "campaign_pacing": null,
+      "campaign_duration_seconds": null,
+      "generation_wait_seconds": null,
+      "outcomes": [
+        {
+          "case_id": "C01",
+          "status": "success",
+          "error_code": null,
+          "duration_seconds": 1.323931,
+          "campaign_wait_seconds": null,
+          "evaluation": {
+            "expected_cell_ids": [
+              "DVN/2007/page_58.pdf#table[3][4]",
+              "DVN/2007/page_58.pdf#table[5][4]"
+            ],
+            "expected_operation": "ratio_percent",
+            "expected_percent": "24.69135802469135802469135802",
+            "tolerance": "0.000005",
+            "cell_recall_at_k": 1.0,
+            "complete_proof_at_k": true,
+            "ordered_cells_correct": true,
+            "operation_correct": true,
+            "numeric_within_tolerance": true,
+            "unit_context_correct": true,
+            "period_years_correct": true,
+            "correct_answer": true,
+            "error_category": "correct"
+          }
+        },
+        {
+          "case_id": "C02",
+          "status": "success",
+          "error_code": null,
+          "duration_seconds": 1.104018,
+          "campaign_wait_seconds": null,
+          "evaluation": {
+            "expected_cell_ids": [
+              "FBHS/2017/page_23.pdf#table[1][1]",
+              "FBHS/2017/page_23.pdf#table[1][2]"
+            ],
+            "expected_operation": "percent_change",
+            "expected_percent": "2.890149303528234214696805405",
+            "tolerance": "0.000005",
+            "cell_recall_at_k": 1.0,
+            "complete_proof_at_k": true,
+            "ordered_cells_correct": true,
+            "operation_correct": true,
+            "numeric_within_tolerance": true,
+            "unit_context_correct": true,
+            "period_years_correct": true,
+            "correct_answer": true,
+            "error_category": "correct"
+          }
+        },
+        {
+          "case_id": "C03",
+          "status": "insufficient_evidence",
+          "error_code": "model_abstention",
+          "duration_seconds": 0.706366,
+          "campaign_wait_seconds": null,
+          "evaluation": {
+            "expected_cell_ids": [
+              "PKG/2009/page_65.pdf#table[6][1]",
+              "PKG/2009/page_65.pdf#table[7][1]"
+            ],
+            "expected_operation": "ratio_percent",
+            "expected_percent": "56.19671542672529839361033833",
+            "tolerance": "0.000005",
+            "cell_recall_at_k": 0.5,
+            "complete_proof_at_k": false,
+            "ordered_cells_correct": false,
+            "operation_correct": false,
+            "numeric_within_tolerance": false,
+            "unit_context_correct": false,
+            "period_years_correct": false,
+            "correct_answer": false,
+            "error_category": "incomplete_retrieval"
+          }
+        },
+        {
+          "case_id": "C04",
+          "status": "success",
+          "error_code": null,
+          "duration_seconds": 0.812088,
+          "campaign_wait_seconds": null,
+          "evaluation": {
+            "expected_cell_ids": [
+              "UNP/2008/page_77.pdf#table[2][1]",
+              "UNP/2008/page_77.pdf#table[8][1]"
+            ],
+            "expected_operation": "ratio_percent",
+            "expected_percent": "14.3359375",
+            "tolerance": "0.000005",
+            "cell_recall_at_k": 1.0,
+            "complete_proof_at_k": true,
+            "ordered_cells_correct": true,
+            "operation_correct": true,
+            "numeric_within_tolerance": true,
+            "unit_context_correct": true,
+            "period_years_correct": true,
+            "correct_answer": true,
+            "error_category": "correct"
+          }
+        },
+        {
+          "case_id": "C05",
+          "status": "success",
+          "error_code": null,
+          "duration_seconds": 1.021608,
+          "campaign_wait_seconds": null,
+          "evaluation": {
+            "expected_cell_ids": [
+              "INTC/2013/page_29.pdf#table[1][2]",
+              "INTC/2013/page_29.pdf#table[1][3]"
+            ],
+            "expected_operation": "ratio_percent",
+            "expected_percent": "35.83690987124463519313304721",
+            "tolerance": "0.000005",
+            "cell_recall_at_k": 1.0,
+            "complete_proof_at_k": true,
+            "ordered_cells_correct": true,
+            "operation_correct": true,
+            "numeric_within_tolerance": true,
+            "unit_context_correct": true,
+            "period_years_correct": true,
+            "correct_answer": true,
+            "error_category": "correct"
+          }
+        },
+        {
+          "case_id": "C06",
+          "status": "success",
+          "error_code": null,
+          "duration_seconds": 1.531126,
+          "campaign_wait_seconds": null,
+          "evaluation": {
+            "expected_cell_ids": [
+              "ZBH/2017/page_53.pdf#table[2][1]",
+              "ZBH/2017/page_53.pdf#table[1][1]"
+            ],
+            "expected_operation": "ratio_percent",
+            "expected_percent": "4.392242411343744180478331427",
+            "tolerance": "0.000005",
+            "cell_recall_at_k": 1.0,
+            "complete_proof_at_k": true,
+            "ordered_cells_correct": true,
+            "operation_correct": true,
+            "numeric_within_tolerance": true,
+            "unit_context_correct": true,
+            "period_years_correct": true,
+            "correct_answer": true,
+            "error_category": "correct"
+          }
+        },
+        {
+          "case_id": "C07",
+          "status": "insufficient_evidence",
+          "error_code": "ambiguous_unit",
+          "duration_seconds": 1.115727,
+          "campaign_wait_seconds": null,
+          "evaluation": {
+            "expected_cell_ids": [
+              "LMT/2012/page_47.pdf#table[2][2]",
+              "LMT/2012/page_47.pdf#table[2][3]"
+            ],
+            "expected_operation": "percent_change",
+            "expected_percent": "3.203883495145631067961165049",
+            "tolerance": "0.000005",
+            "cell_recall_at_k": 1.0,
+            "complete_proof_at_k": true,
+            "ordered_cells_correct": true,
+            "operation_correct": true,
+            "numeric_within_tolerance": false,
+            "unit_context_correct": false,
+            "period_years_correct": false,
+            "correct_answer": false,
+            "error_category": "ambiguous_unit"
+          }
+        },
+        {
+          "case_id": "C08",
+          "status": "success",
+          "error_code": null,
+          "duration_seconds": 0.770702,
+          "campaign_wait_seconds": null,
+          "evaluation": {
+            "expected_cell_ids": [
+              "MAS/2018/page_35.pdf#table[1][1]",
+              "MAS/2018/page_35.pdf#table[1][2]"
+            ],
+            "expected_operation": "percent_change",
+            "expected_percent": "1.423785594639865996649916248",
+            "tolerance": "0.000005",
+            "cell_recall_at_k": 1.0,
+            "complete_proof_at_k": true,
+            "ordered_cells_correct": true,
+            "operation_correct": true,
+            "numeric_within_tolerance": true,
+            "unit_context_correct": true,
+            "period_years_correct": true,
+            "correct_answer": true,
+            "error_category": "correct"
+          }
+        },
+        {
+          "case_id": "C09",
+          "status": "success",
+          "error_code": null,
+          "duration_seconds": 0.957089,
+          "campaign_wait_seconds": null,
+          "evaluation": {
+            "expected_cell_ids": [
+              "ETR/2004/page_213.pdf#table[7][1]",
+              "ETR/2004/page_213.pdf#table[1][1]"
+            ],
+            "expected_operation": "percent_change",
+            "expected_percent": "5.504388341098710586195687507",
+            "tolerance": "0.000005",
+            "cell_recall_at_k": 1.0,
+            "complete_proof_at_k": true,
+            "ordered_cells_correct": true,
+            "operation_correct": true,
+            "numeric_within_tolerance": true,
+            "unit_context_correct": true,
+            "period_years_correct": true,
+            "correct_answer": true,
+            "error_category": "correct"
+          }
+        },
+        {
+          "case_id": "C10",
+          "status": "success",
+          "error_code": null,
+          "duration_seconds": 0.815213,
+          "campaign_wait_seconds": null,
+          "evaluation": {
+            "expected_cell_ids": [
+              "ETR/2017/page_26.pdf#table[8][1]",
+              "ETR/2017/page_26.pdf#table[1][1]"
+            ],
+            "expected_operation": "percent_change",
+            "expected_percent": "-7.442977190876350540216086435",
+            "tolerance": "0.000005",
+            "cell_recall_at_k": 1.0,
+            "complete_proof_at_k": true,
+            "ordered_cells_correct": true,
+            "operation_correct": true,
+            "numeric_within_tolerance": true,
+            "unit_context_correct": true,
+            "period_years_correct": true,
+            "correct_answer": true,
+            "error_category": "correct"
+          }
+        },
+        {
+          "case_id": "N01",
+          "status": "insufficient_evidence",
+          "error_code": "model_abstention",
+          "duration_seconds": 0.773507,
+          "campaign_wait_seconds": null,
+          "evaluation": {
+            "expected_status": "insufficient_evidence",
+            "correct_outcome": true
+          }
+        },
+        {
+          "case_id": "N02",
+          "status": "unsupported_request",
+          "error_code": "model_abstention",
+          "duration_seconds": 0.95162,
+          "campaign_wait_seconds": null,
+          "evaluation": {
+            "expected_status": "unsupported_request",
+            "correct_outcome": true
+          }
+        }
+      ]
+    },
+    "initial_semantic": {
+      "run_id": "df5cb57d-d398-4ba1-acb2-1b4645379ac8",
+      "method": "semantic",
+      "plan": {
+        "method": "semantic",
+        "planned_cases": 12,
+        "maximum_generation_requests": 12,
+        "maximum_embedding_requests": 2,
+        "additional_allowance_reservation_eur": "12.02",
+        "current_allowance_eur": "6.2775600",
+        "local_limit_eur": "25",
+        "fits_local_allowance": true,
+        "actual_charge_eur": null
+      },
+      "scoring_policy": {
+        "version": "analysis-evaluation-v2",
+        "numeric_tolerance": "reference absolute tolerance in percentage points",
+        "correct_answer": "success, complete proof, ordered cells, operation, finite value and known units/scales/years",
+        "negative_outcome": "exact expected status and no calculation",
+        "denominators": "all planned cases, including failures and unattempted blocks",
+        "latency": "attempted cases only, including failed requests; nearest-rank p95",
+        "case_order": "positive fixture order, then negative fixture order"
+      },
+      "evaluator_sha256": "8e6207f0f1c2211d4544f6244405b46bab561a9f8a8800aa4945169013f01fe4",
+      "case_fixture_sha256": "3b2eb282fd7b161ec0adf4a8842630b2b6df1a9c19a627a462a425a3863e3f17",
+      "reference_sha256": "a416ae37cbbd9557df733c8320e37dd17a325f555fc235cae1b444a3d407b832",
+      "corpus_version": "32a94d8310f88e3987e833044c6131c808e4ac7da7391270aec098e59f062887",
+      "index_version": "c0a8c69496f03a95e2049096228afaaec2f410547d14a384bc34b6e78f1225fb",
+      "prompt_sha256": "623b355ad6248d626c5c13847ea4848c19c6f593d4d458a5ad01d643b30fe5b9",
+      "metrics": {
+        "development_cases": 10,
+        "correct_answers": 5,
+        "answer_accuracy": 0.5,
+        "answer_successes": 5,
+        "answer_abstentions": 1,
+        "blocked": 0,
+        "technical_failures": 4,
+        "complete_proofs_at_k": 10,
+        "mean_cell_recall_at_k": 1.0,
+        "correct_cell_selections": 6,
+        "unit_scored_cases": 10,
+        "correct_unit_contexts": 5,
+        "year_scored_cases": 10,
+        "correct_period_years": 5,
+        "latency_attempted_cases": 10,
+        "median_development_seconds": 0.913226,
+        "p95_development_seconds": 1.317859,
+        "negative_cases": 2,
+        "correct_negative_outcomes": 0,
+        "error_categories": {
+          "correct": 5,
+          "provider_http_503": 1,
+          "ambiguous_unit": 1,
+          "provider_http_429": 3
+        },
+        "provider": {
+          "call_records": 14,
+          "generation_records": 12,
+          "embedding_records": 2,
+          "reported_tokens": {
+            "input_tokens": null,
+            "output_tokens": null,
+            "thought_tokens": null,
+            "total_tokens": null
+          },
+          "calls_with_unknown_usage": 8,
+          "known_estimated_paid_cost_usd": "0.0293375",
+          "calls_with_unknown_cost": 8,
+          "estimated_paid_cost_usd": null,
+          "actual_charge_eur": null
+        }
+      },
+      "raw_report_sha256": "3bc4d3ff2fcd11ced8f5dfcb747e491806bc585b9322bf0a9a0c8192a2c78e2f",
+      "campaign_pacing": null,
+      "campaign_duration_seconds": null,
+      "generation_wait_seconds": null,
+      "outcomes": [
+        {
+          "case_id": "C01",
+          "status": "success",
+          "error_code": null,
+          "duration_seconds": 1.132795,
+          "campaign_wait_seconds": null,
+          "evaluation": {
+            "expected_cell_ids": [
+              "DVN/2007/page_58.pdf#table[3][4]",
+              "DVN/2007/page_58.pdf#table[5][4]"
+            ],
+            "expected_operation": "ratio_percent",
+            "expected_percent": "24.69135802469135802469135802",
+            "tolerance": "0.000005",
+            "cell_recall_at_k": 1.0,
+            "complete_proof_at_k": true,
+            "ordered_cells_correct": true,
+            "operation_correct": true,
+            "numeric_within_tolerance": true,
+            "unit_context_correct": true,
+            "period_years_correct": true,
+            "correct_answer": true,
+            "error_category": "correct"
+          }
+        },
+        {
+          "case_id": "C02",
+          "status": "success",
+          "error_code": null,
+          "duration_seconds": 1.317859,
+          "campaign_wait_seconds": null,
+          "evaluation": {
+            "expected_cell_ids": [
+              "FBHS/2017/page_23.pdf#table[1][1]",
+              "FBHS/2017/page_23.pdf#table[1][2]"
+            ],
+            "expected_operation": "percent_change",
+            "expected_percent": "2.890149303528234214696805405",
+            "tolerance": "0.000005",
+            "cell_recall_at_k": 1.0,
+            "complete_proof_at_k": true,
+            "ordered_cells_correct": true,
+            "operation_correct": true,
+            "numeric_within_tolerance": true,
+            "unit_context_correct": true,
+            "period_years_correct": true,
+            "correct_answer": true,
+            "error_category": "correct"
+          }
+        },
+        {
+          "case_id": "C03",
+          "status": "failed",
+          "error_code": "provider_http_503",
+          "duration_seconds": 0.67552,
+          "campaign_wait_seconds": null,
+          "evaluation": {
+            "expected_cell_ids": [
+              "PKG/2009/page_65.pdf#table[6][1]",
+              "PKG/2009/page_65.pdf#table[7][1]"
+            ],
+            "expected_operation": "ratio_percent",
+            "expected_percent": "56.19671542672529839361033833",
+            "tolerance": "0.000005",
+            "cell_recall_at_k": 1.0,
+            "complete_proof_at_k": true,
+            "ordered_cells_correct": false,
+            "operation_correct": false,
+            "numeric_within_tolerance": false,
+            "unit_context_correct": false,
+            "period_years_correct": false,
+            "correct_answer": false,
+            "error_category": "provider_http_503"
+          }
+        },
+        {
+          "case_id": "C04",
+          "status": "success",
+          "error_code": null,
+          "duration_seconds": 1.049166,
+          "campaign_wait_seconds": null,
+          "evaluation": {
+            "expected_cell_ids": [
+              "UNP/2008/page_77.pdf#table[2][1]",
+              "UNP/2008/page_77.pdf#table[8][1]"
+            ],
+            "expected_operation": "ratio_percent",
+            "expected_percent": "14.3359375",
+            "tolerance": "0.000005",
+            "cell_recall_at_k": 1.0,
+            "complete_proof_at_k": true,
+            "ordered_cells_correct": true,
+            "operation_correct": true,
+            "numeric_within_tolerance": true,
+            "unit_context_correct": true,
+            "period_years_correct": true,
+            "correct_answer": true,
+            "error_category": "correct"
+          }
+        },
+        {
+          "case_id": "C05",
+          "status": "success",
+          "error_code": null,
+          "duration_seconds": 1.017883,
+          "campaign_wait_seconds": null,
+          "evaluation": {
+            "expected_cell_ids": [
+              "INTC/2013/page_29.pdf#table[1][2]",
+              "INTC/2013/page_29.pdf#table[1][3]"
+            ],
+            "expected_operation": "ratio_percent",
+            "expected_percent": "35.83690987124463519313304721",
+            "tolerance": "0.000005",
+            "cell_recall_at_k": 1.0,
+            "complete_proof_at_k": true,
+            "ordered_cells_correct": true,
+            "operation_correct": true,
+            "numeric_within_tolerance": true,
+            "unit_context_correct": true,
+            "period_years_correct": true,
+            "correct_answer": true,
+            "error_category": "correct"
+          }
+        },
+        {
+          "case_id": "C06",
+          "status": "success",
+          "error_code": null,
+          "duration_seconds": 0.811855,
+          "campaign_wait_seconds": null,
+          "evaluation": {
+            "expected_cell_ids": [
+              "ZBH/2017/page_53.pdf#table[2][1]",
+              "ZBH/2017/page_53.pdf#table[1][1]"
+            ],
+            "expected_operation": "ratio_percent",
+            "expected_percent": "4.392242411343744180478331427",
+            "tolerance": "0.000005",
+            "cell_recall_at_k": 1.0,
+            "complete_proof_at_k": true,
+            "ordered_cells_correct": true,
+            "operation_correct": true,
+            "numeric_within_tolerance": true,
+            "unit_context_correct": true,
+            "period_years_correct": true,
+            "correct_answer": true,
+            "error_category": "correct"
+          }
+        },
+        {
+          "case_id": "C07",
+          "status": "insufficient_evidence",
+          "error_code": "ambiguous_unit",
+          "duration_seconds": 1.014597,
+          "campaign_wait_seconds": null,
+          "evaluation": {
+            "expected_cell_ids": [
+              "LMT/2012/page_47.pdf#table[2][2]",
+              "LMT/2012/page_47.pdf#table[2][3]"
+            ],
+            "expected_operation": "percent_change",
+            "expected_percent": "3.203883495145631067961165049",
+            "tolerance": "0.000005",
+            "cell_recall_at_k": 1.0,
+            "complete_proof_at_k": true,
+            "ordered_cells_correct": true,
+            "operation_correct": true,
+            "numeric_within_tolerance": false,
+            "unit_context_correct": false,
+            "period_years_correct": false,
+            "correct_answer": false,
+            "error_category": "ambiguous_unit"
+          }
+        },
+        {
+          "case_id": "C08",
+          "status": "failed",
+          "error_code": "provider_http_429",
+          "duration_seconds": 0.29658,
+          "campaign_wait_seconds": null,
+          "evaluation": {
+            "expected_cell_ids": [
+              "MAS/2018/page_35.pdf#table[1][1]",
+              "MAS/2018/page_35.pdf#table[1][2]"
+            ],
+            "expected_operation": "percent_change",
+            "expected_percent": "1.423785594639865996649916248",
+            "tolerance": "0.000005",
+            "cell_recall_at_k": 1.0,
+            "complete_proof_at_k": true,
+            "ordered_cells_correct": false,
+            "operation_correct": false,
+            "numeric_within_tolerance": false,
+            "unit_context_correct": false,
+            "period_years_correct": false,
+            "correct_answer": false,
+            "error_category": "provider_http_429"
+          }
+        },
+        {
+          "case_id": "C09",
+          "status": "failed",
+          "error_code": "provider_http_429",
+          "duration_seconds": 0.302464,
+          "campaign_wait_seconds": null,
+          "evaluation": {
+            "expected_cell_ids": [
+              "ETR/2004/page_213.pdf#table[7][1]",
+              "ETR/2004/page_213.pdf#table[1][1]"
+            ],
+            "expected_operation": "percent_change",
+            "expected_percent": "5.504388341098710586195687507",
+            "tolerance": "0.000005",
+            "cell_recall_at_k": 1.0,
+            "complete_proof_at_k": true,
+            "ordered_cells_correct": false,
+            "operation_correct": false,
+            "numeric_within_tolerance": false,
+            "unit_context_correct": false,
+            "period_years_correct": false,
+            "correct_answer": false,
+            "error_category": "provider_http_429"
+          }
+        },
+        {
+          "case_id": "C10",
+          "status": "failed",
+          "error_code": "provider_http_429",
+          "duration_seconds": 0.29921,
+          "campaign_wait_seconds": null,
+          "evaluation": {
+            "expected_cell_ids": [
+              "ETR/2017/page_26.pdf#table[8][1]",
+              "ETR/2017/page_26.pdf#table[1][1]"
+            ],
+            "expected_operation": "percent_change",
+            "expected_percent": "-7.442977190876350540216086435",
+            "tolerance": "0.000005",
+            "cell_recall_at_k": 1.0,
+            "complete_proof_at_k": true,
+            "ordered_cells_correct": false,
+            "operation_correct": false,
+            "numeric_within_tolerance": false,
+            "unit_context_correct": false,
+            "period_years_correct": false,
+            "correct_answer": false,
+            "error_category": "provider_http_429"
+          }
+        },
+        {
+          "case_id": "N01",
+          "status": "failed",
+          "error_code": "provider_http_429",
+          "duration_seconds": 0.606713,
+          "campaign_wait_seconds": null,
+          "evaluation": {
+            "expected_status": "insufficient_evidence",
+            "correct_outcome": false
+          }
+        },
+        {
+          "case_id": "N02",
+          "status": "failed",
+          "error_code": "provider_http_429",
+          "duration_seconds": 0.607997,
+          "campaign_wait_seconds": null,
+          "evaluation": {
+            "expected_status": "unsupported_request",
+            "correct_outcome": false
+          }
+        }
+      ]
+    },
+    "paced_lexical": {
+      "run_id": "b4afb150-a07c-4643-b8a0-7edcd946a52b",
+      "method": "lexical",
+      "plan": {
+        "method": "lexical",
+        "planned_cases": 12,
+        "maximum_generation_requests": 12,
+        "maximum_embedding_requests": 0,
+        "additional_allowance_reservation_eur": "12.00",
+        "current_allowance_eur": "12.3562350",
+        "local_limit_eur": "25",
+        "fits_local_allowance": true,
+        "actual_charge_eur": null
+      },
+      "scoring_policy": {
+        "version": "analysis-evaluation-v2",
+        "numeric_tolerance": "reference absolute tolerance in percentage points",
+        "correct_answer": "success, complete proof, ordered cells, operation, finite value and known units/scales/years",
+        "negative_outcome": "exact expected status and no calculation",
+        "denominators": "all planned cases, including failures and unattempted blocks",
+        "latency": "analysis attempts exclude campaign pacing, include failures; nearest-rank p95",
+        "case_order": "positive fixture order, then negative fixture order"
+      },
+      "evaluator_sha256": "853bcd93ce5b938b6c14c644594e028a953c5a9bab091aa10142ba5fc627261f",
+      "case_fixture_sha256": "3b2eb282fd7b161ec0adf4a8842630b2b6df1a9c19a627a462a425a3863e3f17",
+      "reference_sha256": "a416ae37cbbd9557df733c8320e37dd17a325f555fc235cae1b444a3d407b832",
+      "corpus_version": "32a94d8310f88e3987e833044c6131c808e4ac7da7391270aec098e59f062887",
+      "index_version": "c0a8c69496f03a95e2049096228afaaec2f410547d14a384bc34b6e78f1225fb",
+      "prompt_sha256": "623b355ad6248d626c5c13847ea4848c19c6f593d4d458a5ad01d643b30fe5b9",
+      "metrics": {
+        "development_cases": 10,
+        "correct_answers": 8,
+        "answer_accuracy": 0.8,
+        "answer_successes": 8,
+        "answer_abstentions": 2,
+        "blocked": 0,
+        "technical_failures": 0,
+        "complete_proofs_at_k": 9,
+        "mean_cell_recall_at_k": 0.95,
+        "correct_cell_selections": 9,
+        "unit_scored_cases": 10,
+        "correct_unit_contexts": 8,
+        "year_scored_cases": 10,
+        "correct_period_years": 8,
+        "latency_attempted_cases": 10,
+        "median_development_seconds": 1.1089285,
+        "p95_development_seconds": 2.733564,
+        "negative_cases": 2,
+        "correct_negative_outcomes": 2,
+        "error_categories": {
+          "correct": 8,
+          "incomplete_retrieval": 1,
+          "ambiguous_unit": 1
+        },
+        "provider": {
+          "call_records": 12,
+          "generation_records": 12,
+          "embedding_records": 0,
+          "reported_tokens": {
+            "input_tokens": 22040,
+            "output_tokens": 807,
+            "thought_tokens": null,
+            "total_tokens": 22847
+          },
+          "calls_with_unknown_usage": 0,
+          "known_estimated_paid_cost_usd": "0.0571175",
+          "calls_with_unknown_cost": 0,
+          "estimated_paid_cost_usd": "0.0571175",
+          "actual_charge_eur": null
+        }
+      },
+      "raw_report_sha256": "7824941f4391704055d5527dacfec1da4340a50c67be8a11493f60aecb037ab1",
+      "campaign_pacing": {
+        "generation_rpm": 12,
+        "history": "shared-journal"
+      },
+      "campaign_duration_seconds": 15.36019,
+      "generation_wait_seconds": 0.0,
+      "outcomes": [
+        {
+          "case_id": "C01",
+          "status": "success",
+          "error_code": null,
+          "duration_seconds": 1.2366,
+          "campaign_wait_seconds": 0.0,
+          "evaluation": {
+            "expected_cell_ids": [
+              "DVN/2007/page_58.pdf#table[3][4]",
+              "DVN/2007/page_58.pdf#table[5][4]"
+            ],
+            "expected_operation": "ratio_percent",
+            "expected_percent": "24.69135802469135802469135802",
+            "tolerance": "0.000005",
+            "cell_recall_at_k": 1.0,
+            "complete_proof_at_k": true,
+            "ordered_cells_correct": true,
+            "operation_correct": true,
+            "numeric_within_tolerance": true,
+            "unit_context_correct": true,
+            "period_years_correct": true,
+            "correct_answer": true,
+            "error_category": "correct"
+          }
+        },
+        {
+          "case_id": "C02",
+          "status": "success",
+          "error_code": null,
+          "duration_seconds": 1.103719,
+          "campaign_wait_seconds": 0.0,
+          "evaluation": {
+            "expected_cell_ids": [
+              "FBHS/2017/page_23.pdf#table[1][1]",
+              "FBHS/2017/page_23.pdf#table[1][2]"
+            ],
+            "expected_operation": "percent_change",
+            "expected_percent": "2.890149303528234214696805405",
+            "tolerance": "0.000005",
+            "cell_recall_at_k": 1.0,
+            "complete_proof_at_k": true,
+            "ordered_cells_correct": true,
+            "operation_correct": true,
+            "numeric_within_tolerance": true,
+            "unit_context_correct": true,
+            "period_years_correct": true,
+            "correct_answer": true,
+            "error_category": "correct"
+          }
+        },
+        {
+          "case_id": "C03",
+          "status": "insufficient_evidence",
+          "error_code": "model_abstention",
+          "duration_seconds": 1.240957,
+          "campaign_wait_seconds": 0.0,
+          "evaluation": {
+            "expected_cell_ids": [
+              "PKG/2009/page_65.pdf#table[6][1]",
+              "PKG/2009/page_65.pdf#table[7][1]"
+            ],
+            "expected_operation": "ratio_percent",
+            "expected_percent": "56.19671542672529839361033833",
+            "tolerance": "0.000005",
+            "cell_recall_at_k": 0.5,
+            "complete_proof_at_k": false,
+            "ordered_cells_correct": false,
+            "operation_correct": false,
+            "numeric_within_tolerance": false,
+            "unit_context_correct": false,
+            "period_years_correct": false,
+            "correct_answer": false,
+            "error_category": "incomplete_retrieval"
+          }
+        },
+        {
+          "case_id": "C04",
+          "status": "success",
+          "error_code": null,
+          "duration_seconds": 2.733564,
+          "campaign_wait_seconds": 0.0,
+          "evaluation": {
+            "expected_cell_ids": [
+              "UNP/2008/page_77.pdf#table[2][1]",
+              "UNP/2008/page_77.pdf#table[8][1]"
+            ],
+            "expected_operation": "ratio_percent",
+            "expected_percent": "14.3359375",
+            "tolerance": "0.000005",
+            "cell_recall_at_k": 1.0,
+            "complete_proof_at_k": true,
+            "ordered_cells_correct": true,
+            "operation_correct": true,
+            "numeric_within_tolerance": true,
+            "unit_context_correct": true,
+            "period_years_correct": true,
+            "correct_answer": true,
+            "error_category": "correct"
+          }
+        },
+        {
+          "case_id": "C05",
+          "status": "success",
+          "error_code": null,
+          "duration_seconds": 0.993682,
+          "campaign_wait_seconds": 0.0,
+          "evaluation": {
+            "expected_cell_ids": [
+              "INTC/2013/page_29.pdf#table[1][2]",
+              "INTC/2013/page_29.pdf#table[1][3]"
+            ],
+            "expected_operation": "ratio_percent",
+            "expected_percent": "35.83690987124463519313304721",
+            "tolerance": "0.000005",
+            "cell_recall_at_k": 1.0,
+            "complete_proof_at_k": true,
+            "ordered_cells_correct": true,
+            "operation_correct": true,
+            "numeric_within_tolerance": true,
+            "unit_context_correct": true,
+            "period_years_correct": true,
+            "correct_answer": true,
+            "error_category": "correct"
+          }
+        },
+        {
+          "case_id": "C06",
+          "status": "success",
+          "error_code": null,
+          "duration_seconds": 1.018563,
+          "campaign_wait_seconds": 0.0,
+          "evaluation": {
+            "expected_cell_ids": [
+              "ZBH/2017/page_53.pdf#table[2][1]",
+              "ZBH/2017/page_53.pdf#table[1][1]"
+            ],
+            "expected_operation": "ratio_percent",
+            "expected_percent": "4.392242411343744180478331427",
+            "tolerance": "0.000005",
+            "cell_recall_at_k": 1.0,
+            "complete_proof_at_k": true,
+            "ordered_cells_correct": true,
+            "operation_correct": true,
+            "numeric_within_tolerance": true,
+            "unit_context_correct": true,
+            "period_years_correct": true,
+            "correct_answer": true,
+            "error_category": "correct"
+          }
+        },
+        {
+          "case_id": "C07",
+          "status": "insufficient_evidence",
+          "error_code": "ambiguous_unit",
+          "duration_seconds": 1.029083,
+          "campaign_wait_seconds": 0.0,
+          "evaluation": {
+            "expected_cell_ids": [
+              "LMT/2012/page_47.pdf#table[2][2]",
+              "LMT/2012/page_47.pdf#table[2][3]"
+            ],
+            "expected_operation": "percent_change",
+            "expected_percent": "3.203883495145631067961165049",
+            "tolerance": "0.000005",
+            "cell_recall_at_k": 1.0,
+            "complete_proof_at_k": true,
+            "ordered_cells_correct": true,
+            "operation_correct": true,
+            "numeric_within_tolerance": false,
+            "unit_context_correct": false,
+            "period_years_correct": false,
+            "correct_answer": false,
+            "error_category": "ambiguous_unit"
+          }
+        },
+        {
+          "case_id": "C08",
+          "status": "success",
+          "error_code": null,
+          "duration_seconds": 1.831361,
+          "campaign_wait_seconds": 0.0,
+          "evaluation": {
+            "expected_cell_ids": [
+              "MAS/2018/page_35.pdf#table[1][1]",
+              "MAS/2018/page_35.pdf#table[1][2]"
+            ],
+            "expected_operation": "percent_change",
+            "expected_percent": "1.423785594639865996649916248",
+            "tolerance": "0.000005",
+            "cell_recall_at_k": 1.0,
+            "complete_proof_at_k": true,
+            "ordered_cells_correct": true,
+            "operation_correct": true,
+            "numeric_within_tolerance": true,
+            "unit_context_correct": true,
+            "period_years_correct": true,
+            "correct_answer": true,
+            "error_category": "correct"
+          }
+        },
+        {
+          "case_id": "C09",
+          "status": "success",
+          "error_code": null,
+          "duration_seconds": 1.114138,
+          "campaign_wait_seconds": 0.0,
+          "evaluation": {
+            "expected_cell_ids": [
+              "ETR/2004/page_213.pdf#table[7][1]",
+              "ETR/2004/page_213.pdf#table[1][1]"
+            ],
+            "expected_operation": "percent_change",
+            "expected_percent": "5.504388341098710586195687507",
+            "tolerance": "0.000005",
+            "cell_recall_at_k": 1.0,
+            "complete_proof_at_k": true,
+            "ordered_cells_correct": true,
+            "operation_correct": true,
+            "numeric_within_tolerance": true,
+            "unit_context_correct": true,
+            "period_years_correct": true,
+            "correct_answer": true,
+            "error_category": "correct"
+          }
+        },
+        {
+          "case_id": "C10",
+          "status": "success",
+          "error_code": null,
+          "duration_seconds": 0.808997,
+          "campaign_wait_seconds": 0.0,
+          "evaluation": {
+            "expected_cell_ids": [
+              "ETR/2017/page_26.pdf#table[8][1]",
+              "ETR/2017/page_26.pdf#table[1][1]"
+            ],
+            "expected_operation": "percent_change",
+            "expected_percent": "-7.442977190876350540216086435",
+            "tolerance": "0.000005",
+            "cell_recall_at_k": 1.0,
+            "complete_proof_at_k": true,
+            "ordered_cells_correct": true,
+            "operation_correct": true,
+            "numeric_within_tolerance": true,
+            "unit_context_correct": true,
+            "period_years_correct": true,
+            "correct_answer": true,
+            "error_category": "correct"
+          }
+        },
+        {
+          "case_id": "N01",
+          "status": "insufficient_evidence",
+          "error_code": "model_abstention",
+          "duration_seconds": 0.905759,
+          "campaign_wait_seconds": 0.0,
+          "evaluation": {
+            "expected_status": "insufficient_evidence",
+            "correct_outcome": true
+          }
+        },
+        {
+          "case_id": "N02",
+          "status": "unsupported_request",
+          "error_code": "model_abstention",
+          "duration_seconds": 1.115195,
+          "campaign_wait_seconds": 0.0,
+          "evaluation": {
+            "expected_status": "unsupported_request",
+            "correct_outcome": true
+          }
+        }
+      ]
+    },
+    "paced_semantic": {
+      "run_id": "947b3082-84ea-4483-9ce1-cf6c60b3bacd",
+      "method": "semantic",
+      "plan": {
+        "method": "semantic",
+        "planned_cases": 12,
+        "maximum_generation_requests": 12,
+        "maximum_embedding_requests": 0,
+        "additional_allowance_reservation_eur": "12.00",
+        "current_allowance_eur": "12.4704700",
+        "local_limit_eur": "25",
+        "fits_local_allowance": true,
+        "actual_charge_eur": null
+      },
+      "scoring_policy": {
+        "version": "analysis-evaluation-v2",
+        "numeric_tolerance": "reference absolute tolerance in percentage points",
+        "correct_answer": "success, complete proof, ordered cells, operation, finite value and known units/scales/years",
+        "negative_outcome": "exact expected status and no calculation",
+        "denominators": "all planned cases, including failures and unattempted blocks",
+        "latency": "analysis attempts exclude campaign pacing, include failures; nearest-rank p95",
+        "case_order": "positive fixture order, then negative fixture order"
+      },
+      "evaluator_sha256": "853bcd93ce5b938b6c14c644594e028a953c5a9bab091aa10142ba5fc627261f",
+      "case_fixture_sha256": "3b2eb282fd7b161ec0adf4a8842630b2b6df1a9c19a627a462a425a3863e3f17",
+      "reference_sha256": "a416ae37cbbd9557df733c8320e37dd17a325f555fc235cae1b444a3d407b832",
+      "corpus_version": "32a94d8310f88e3987e833044c6131c808e4ac7da7391270aec098e59f062887",
+      "index_version": "c0a8c69496f03a95e2049096228afaaec2f410547d14a384bc34b6e78f1225fb",
+      "prompt_sha256": "623b355ad6248d626c5c13847ea4848c19c6f593d4d458a5ad01d643b30fe5b9",
+      "metrics": {
+        "development_cases": 10,
+        "correct_answers": 6,
+        "answer_accuracy": 0.6,
+        "answer_successes": 6,
+        "answer_abstentions": 2,
+        "blocked": 0,
+        "technical_failures": 2,
+        "complete_proofs_at_k": 10,
+        "mean_cell_recall_at_k": 1.0,
+        "correct_cell_selections": 8,
+        "unit_scored_cases": 10,
+        "correct_unit_contexts": 6,
+        "year_scored_cases": 10,
+        "correct_period_years": 6,
+        "latency_attempted_cases": 10,
+        "median_development_seconds": 1.6018775,
+        "p95_development_seconds": 3.129094,
+        "negative_cases": 2,
+        "correct_negative_outcomes": 1,
+        "error_categories": {
+          "provider_http_503": 2,
+          "correct": 6,
+          "ambiguous_unit": 2
+        },
+        "provider": {
+          "call_records": 12,
+          "generation_records": 12,
+          "embedding_records": 0,
+          "reported_tokens": {
+            "input_tokens": null,
+            "output_tokens": null,
+            "thought_tokens": null,
+            "total_tokens": null
+          },
+          "calls_with_unknown_usage": 3,
+          "known_estimated_paid_cost_usd": "0.0403650",
+          "calls_with_unknown_cost": 3,
+          "estimated_paid_cost_usd": null,
+          "actual_charge_eur": null
+        }
+      },
+      "raw_report_sha256": "88dfdd40492709f7543291d4192fdf0fe480c75f74a50d5e1a9986f925dc2d56",
+      "campaign_pacing": {
+        "generation_rpm": 12,
+        "history": "shared-journal"
+      },
+      "campaign_duration_seconds": 40.78982,
+      "generation_wait_seconds": 13.461176633834839,
+      "outcomes": [
+        {
+          "case_id": "C01",
+          "status": "failed",
+          "error_code": "provider_http_503",
+          "duration_seconds": 0.86948,
+          "campaign_wait_seconds": 13.113399028778076,
+          "evaluation": {
+            "expected_cell_ids": [
+              "DVN/2007/page_58.pdf#table[3][4]",
+              "DVN/2007/page_58.pdf#table[5][4]"
+            ],
+            "expected_operation": "ratio_percent",
+            "expected_percent": "24.69135802469135802469135802",
+            "tolerance": "0.000005",
+            "cell_recall_at_k": 1.0,
+            "complete_proof_at_k": true,
+            "ordered_cells_correct": false,
+            "operation_correct": false,
+            "numeric_within_tolerance": false,
+            "unit_context_correct": false,
+            "period_years_correct": false,
+            "correct_answer": false,
+            "error_category": "provider_http_503"
+          }
+        },
+        {
+          "case_id": "C02",
+          "status": "success",
+          "error_code": null,
+          "duration_seconds": 2.107448,
+          "campaign_wait_seconds": 0.3477776050567627,
+          "evaluation": {
+            "expected_cell_ids": [
+              "FBHS/2017/page_23.pdf#table[1][1]",
+              "FBHS/2017/page_23.pdf#table[1][2]"
+            ],
+            "expected_operation": "percent_change",
+            "expected_percent": "2.890149303528234214696805405",
+            "tolerance": "0.000005",
+            "cell_recall_at_k": 1.0,
+            "complete_proof_at_k": true,
+            "ordered_cells_correct": true,
+            "operation_correct": true,
+            "numeric_within_tolerance": true,
+            "unit_context_correct": true,
+            "period_years_correct": true,
+            "correct_answer": true,
+            "error_category": "correct"
+          }
+        },
+        {
+          "case_id": "C03",
+          "status": "insufficient_evidence",
+          "error_code": "ambiguous_unit",
+          "duration_seconds": 1.411215,
+          "campaign_wait_seconds": 0.0,
+          "evaluation": {
+            "expected_cell_ids": [
+              "PKG/2009/page_65.pdf#table[6][1]",
+              "PKG/2009/page_65.pdf#table[7][1]"
+            ],
+            "expected_operation": "ratio_percent",
+            "expected_percent": "56.19671542672529839361033833",
+            "tolerance": "0.000005",
+            "cell_recall_at_k": 1.0,
+            "complete_proof_at_k": true,
+            "ordered_cells_correct": true,
+            "operation_correct": true,
+            "numeric_within_tolerance": false,
+            "unit_context_correct": false,
+            "period_years_correct": false,
+            "correct_answer": false,
+            "error_category": "ambiguous_unit"
+          }
+        },
+        {
+          "case_id": "C04",
+          "status": "success",
+          "error_code": null,
+          "duration_seconds": 2.683564,
+          "campaign_wait_seconds": 0.0,
+          "evaluation": {
+            "expected_cell_ids": [
+              "UNP/2008/page_77.pdf#table[2][1]",
+              "UNP/2008/page_77.pdf#table[8][1]"
+            ],
+            "expected_operation": "ratio_percent",
+            "expected_percent": "14.3359375",
+            "tolerance": "0.000005",
+            "cell_recall_at_k": 1.0,
+            "complete_proof_at_k": true,
+            "ordered_cells_correct": true,
+            "operation_correct": true,
+            "numeric_within_tolerance": true,
+            "unit_context_correct": true,
+            "period_years_correct": true,
+            "correct_answer": true,
+            "error_category": "correct"
+          }
+        },
+        {
+          "case_id": "C05",
+          "status": "success",
+          "error_code": null,
+          "duration_seconds": 3.129094,
+          "campaign_wait_seconds": 0.0,
+          "evaluation": {
+            "expected_cell_ids": [
+              "INTC/2013/page_29.pdf#table[1][2]",
+              "INTC/2013/page_29.pdf#table[1][3]"
+            ],
+            "expected_operation": "ratio_percent",
+            "expected_percent": "35.83690987124463519313304721",
+            "tolerance": "0.000005",
+            "cell_recall_at_k": 1.0,
+            "complete_proof_at_k": true,
+            "ordered_cells_correct": true,
+            "operation_correct": true,
+            "numeric_within_tolerance": true,
+            "unit_context_correct": true,
+            "period_years_correct": true,
+            "correct_answer": true,
+            "error_category": "correct"
+          }
+        },
+        {
+          "case_id": "C06",
+          "status": "failed",
+          "error_code": "provider_http_503",
+          "duration_seconds": 3.115118,
+          "campaign_wait_seconds": 0.0,
+          "evaluation": {
+            "expected_cell_ids": [
+              "ZBH/2017/page_53.pdf#table[2][1]",
+              "ZBH/2017/page_53.pdf#table[1][1]"
+            ],
+            "expected_operation": "ratio_percent",
+            "expected_percent": "4.392242411343744180478331427",
+            "tolerance": "0.000005",
+            "cell_recall_at_k": 1.0,
+            "complete_proof_at_k": true,
+            "ordered_cells_correct": false,
+            "operation_correct": false,
+            "numeric_within_tolerance": false,
+            "unit_context_correct": false,
+            "period_years_correct": false,
+            "correct_answer": false,
+            "error_category": "provider_http_503"
+          }
+        },
+        {
+          "case_id": "C07",
+          "status": "insufficient_evidence",
+          "error_code": "ambiguous_unit",
+          "duration_seconds": 1.676927,
+          "campaign_wait_seconds": 0.0,
+          "evaluation": {
+            "expected_cell_ids": [
+              "LMT/2012/page_47.pdf#table[2][2]",
+              "LMT/2012/page_47.pdf#table[2][3]"
+            ],
+            "expected_operation": "percent_change",
+            "expected_percent": "3.203883495145631067961165049",
+            "tolerance": "0.000005",
+            "cell_recall_at_k": 1.0,
+            "complete_proof_at_k": true,
+            "ordered_cells_correct": true,
+            "operation_correct": true,
+            "numeric_within_tolerance": false,
+            "unit_context_correct": false,
+            "period_years_correct": false,
+            "correct_answer": false,
+            "error_category": "ambiguous_unit"
+          }
+        },
+        {
+          "case_id": "C08",
+          "status": "success",
+          "error_code": null,
+          "duration_seconds": 1.526828,
+          "campaign_wait_seconds": 0.0,
+          "evaluation": {
+            "expected_cell_ids": [
+              "MAS/2018/page_35.pdf#table[1][1]",
+              "MAS/2018/page_35.pdf#table[1][2]"
+            ],
+            "expected_operation": "percent_change",
+            "expected_percent": "1.423785594639865996649916248",
+            "tolerance": "0.000005",
+            "cell_recall_at_k": 1.0,
+            "complete_proof_at_k": true,
+            "ordered_cells_correct": true,
+            "operation_correct": true,
+            "numeric_within_tolerance": true,
+            "unit_context_correct": true,
+            "period_years_correct": true,
+            "correct_answer": true,
+            "error_category": "correct"
+          }
+        },
+        {
+          "case_id": "C09",
+          "status": "success",
+          "error_code": null,
+          "duration_seconds": 0.811358,
+          "campaign_wait_seconds": 0.0,
+          "evaluation": {
+            "expected_cell_ids": [
+              "ETR/2004/page_213.pdf#table[7][1]",
+              "ETR/2004/page_213.pdf#table[1][1]"
+            ],
+            "expected_operation": "percent_change",
+            "expected_percent": "5.504388341098710586195687507",
+            "tolerance": "0.000005",
+            "cell_recall_at_k": 1.0,
+            "complete_proof_at_k": true,
+            "ordered_cells_correct": true,
+            "operation_correct": true,
+            "numeric_within_tolerance": true,
+            "unit_context_correct": true,
+            "period_years_correct": true,
+            "correct_answer": true,
+            "error_category": "correct"
+          }
+        },
+        {
+          "case_id": "C10",
+          "status": "success",
+          "error_code": null,
+          "duration_seconds": 1.516143,
+          "campaign_wait_seconds": 0.0,
+          "evaluation": {
+            "expected_cell_ids": [
+              "ETR/2017/page_26.pdf#table[8][1]",
+              "ETR/2017/page_26.pdf#table[1][1]"
+            ],
+            "expected_operation": "percent_change",
+            "expected_percent": "-7.442977190876350540216086435",
+            "tolerance": "0.000005",
+            "cell_recall_at_k": 1.0,
+            "complete_proof_at_k": true,
+            "ordered_cells_correct": true,
+            "operation_correct": true,
+            "numeric_within_tolerance": true,
+            "unit_context_correct": true,
+            "period_years_correct": true,
+            "correct_answer": true,
+            "error_category": "correct"
+          }
+        },
+        {
+          "case_id": "N01",
+          "status": "failed",
+          "error_code": "provider_http_503",
+          "duration_seconds": 3.748291,
+          "campaign_wait_seconds": 0.0,
+          "evaluation": {
+            "expected_status": "insufficient_evidence",
+            "correct_outcome": false
+          }
+        },
+        {
+          "case_id": "N02",
+          "status": "unsupported_request",
+          "error_code": "model_abstention",
+          "duration_seconds": 4.414366,
+          "campaign_wait_seconds": 0.0,
+          "evaluation": {
+            "expected_status": "unsupported_request",
+            "correct_outcome": true
+          }
+        }
+      ]
+    }
+  },
+  "matched_comparison": {
+    "scoring_policy": {
+      "version": "analysis-evaluation-v2",
+      "numeric_tolerance": "reference absolute tolerance in percentage points",
+      "correct_answer": "success, complete proof, ordered cells, operation, finite value and known units/scales/years",
+      "negative_outcome": "exact expected status and no calculation",
+      "denominators": "all planned cases, including failures and unattempted blocks",
+      "latency": "analysis attempts exclude campaign pacing, include failures; nearest-rank p95",
+      "case_order": "positive fixture order, then negative fixture order"
+    },
+    "lexical_run_id": "b4afb150-a07c-4643-b8a0-7edcd946a52b",
+    "semantic_run_id": "947b3082-84ea-4483-9ce1-cf6c60b3bacd",
+    "lexical": {
+      "development_cases": 10,
+      "correct_answers": 8,
+      "answer_accuracy": 0.8,
+      "answer_successes": 8,
+      "answer_abstentions": 2,
+      "blocked": 0,
+      "technical_failures": 0,
+      "complete_proofs_at_k": 9,
+      "mean_cell_recall_at_k": 0.95,
+      "correct_cell_selections": 9,
+      "unit_scored_cases": 10,
+      "correct_unit_contexts": 8,
+      "year_scored_cases": 10,
+      "correct_period_years": 8,
+      "latency_attempted_cases": 10,
+      "median_development_seconds": 1.1089285,
+      "p95_development_seconds": 2.733564,
+      "negative_cases": 2,
+      "correct_negative_outcomes": 2,
+      "error_categories": {
+        "correct": 8,
+        "incomplete_retrieval": 1,
+        "ambiguous_unit": 1
+      },
+      "provider": {
+        "call_records": 12,
+        "generation_records": 12,
+        "embedding_records": 0,
+        "reported_tokens": {
+          "input_tokens": 22040,
+          "output_tokens": 807,
+          "thought_tokens": null,
+          "total_tokens": 22847
+        },
+        "calls_with_unknown_usage": 0,
+        "known_estimated_paid_cost_usd": "0.0571175",
+        "calls_with_unknown_cost": 0,
+        "estimated_paid_cost_usd": "0.0571175",
+        "actual_charge_eur": null
+      }
+    },
+    "semantic": {
+      "development_cases": 10,
+      "correct_answers": 6,
+      "answer_accuracy": 0.6,
+      "answer_successes": 6,
+      "answer_abstentions": 2,
+      "blocked": 0,
+      "technical_failures": 2,
+      "complete_proofs_at_k": 10,
+      "mean_cell_recall_at_k": 1.0,
+      "correct_cell_selections": 8,
+      "unit_scored_cases": 10,
+      "correct_unit_contexts": 6,
+      "year_scored_cases": 10,
+      "correct_period_years": 6,
+      "latency_attempted_cases": 10,
+      "median_development_seconds": 1.6018775,
+      "p95_development_seconds": 3.129094,
+      "negative_cases": 2,
+      "correct_negative_outcomes": 1,
+      "error_categories": {
+        "provider_http_503": 2,
+        "correct": 6,
+        "ambiguous_unit": 2
+      },
+      "provider": {
+        "call_records": 12,
+        "generation_records": 12,
+        "embedding_records": 0,
+        "reported_tokens": {
+          "input_tokens": null,
+          "output_tokens": null,
+          "thought_tokens": null,
+          "total_tokens": null
+        },
+        "calls_with_unknown_usage": 3,
+        "known_estimated_paid_cost_usd": "0.0403650",
+        "calls_with_unknown_cost": 3,
+        "estimated_paid_cost_usd": null,
+        "actual_charge_eur": null
+      }
+    },
+    "accuracy_delta_percentage_points": -20.000000000000007,
+    "cases": [
+      {
+        "case_id": "C01",
+        "lexical_status": "success",
+        "semantic_status": "failed",
+        "lexical_evaluation": {
+          "expected_cell_ids": [
+            "DVN/2007/page_58.pdf#table[3][4]",
+            "DVN/2007/page_58.pdf#table[5][4]"
+          ],
+          "expected_operation": "ratio_percent",
+          "expected_percent": "24.69135802469135802469135802",
+          "tolerance": "0.000005",
+          "cell_recall_at_k": 1.0,
+          "complete_proof_at_k": true,
+          "ordered_cells_correct": true,
+          "operation_correct": true,
+          "numeric_within_tolerance": true,
+          "unit_context_correct": true,
+          "period_years_correct": true,
+          "correct_answer": true,
+          "error_category": "correct"
+        },
+        "semantic_evaluation": {
+          "expected_cell_ids": [
+            "DVN/2007/page_58.pdf#table[3][4]",
+            "DVN/2007/page_58.pdf#table[5][4]"
+          ],
+          "expected_operation": "ratio_percent",
+          "expected_percent": "24.69135802469135802469135802",
+          "tolerance": "0.000005",
+          "cell_recall_at_k": 1.0,
+          "complete_proof_at_k": true,
+          "ordered_cells_correct": false,
+          "operation_correct": false,
+          "numeric_within_tolerance": false,
+          "unit_context_correct": false,
+          "period_years_correct": false,
+          "correct_answer": false,
+          "error_category": "provider_http_503"
+        }
+      },
+      {
+        "case_id": "C02",
+        "lexical_status": "success",
+        "semantic_status": "success",
+        "lexical_evaluation": {
+          "expected_cell_ids": [
+            "FBHS/2017/page_23.pdf#table[1][1]",
+            "FBHS/2017/page_23.pdf#table[1][2]"
+          ],
+          "expected_operation": "percent_change",
+          "expected_percent": "2.890149303528234214696805405",
+          "tolerance": "0.000005",
+          "cell_recall_at_k": 1.0,
+          "complete_proof_at_k": true,
+          "ordered_cells_correct": true,
+          "operation_correct": true,
+          "numeric_within_tolerance": true,
+          "unit_context_correct": true,
+          "period_years_correct": true,
+          "correct_answer": true,
+          "error_category": "correct"
+        },
+        "semantic_evaluation": {
+          "expected_cell_ids": [
+            "FBHS/2017/page_23.pdf#table[1][1]",
+            "FBHS/2017/page_23.pdf#table[1][2]"
+          ],
+          "expected_operation": "percent_change",
+          "expected_percent": "2.890149303528234214696805405",
+          "tolerance": "0.000005",
+          "cell_recall_at_k": 1.0,
+          "complete_proof_at_k": true,
+          "ordered_cells_correct": true,
+          "operation_correct": true,
+          "numeric_within_tolerance": true,
+          "unit_context_correct": true,
+          "period_years_correct": true,
+          "correct_answer": true,
+          "error_category": "correct"
+        }
+      },
+      {
+        "case_id": "C03",
+        "lexical_status": "insufficient_evidence",
+        "semantic_status": "insufficient_evidence",
+        "lexical_evaluation": {
+          "expected_cell_ids": [
+            "PKG/2009/page_65.pdf#table[6][1]",
+            "PKG/2009/page_65.pdf#table[7][1]"
+          ],
+          "expected_operation": "ratio_percent",
+          "expected_percent": "56.19671542672529839361033833",
+          "tolerance": "0.000005",
+          "cell_recall_at_k": 0.5,
+          "complete_proof_at_k": false,
+          "ordered_cells_correct": false,
+          "operation_correct": false,
+          "numeric_within_tolerance": false,
+          "unit_context_correct": false,
+          "period_years_correct": false,
+          "correct_answer": false,
+          "error_category": "incomplete_retrieval"
+        },
+        "semantic_evaluation": {
+          "expected_cell_ids": [
+            "PKG/2009/page_65.pdf#table[6][1]",
+            "PKG/2009/page_65.pdf#table[7][1]"
+          ],
+          "expected_operation": "ratio_percent",
+          "expected_percent": "56.19671542672529839361033833",
+          "tolerance": "0.000005",
+          "cell_recall_at_k": 1.0,
+          "complete_proof_at_k": true,
+          "ordered_cells_correct": true,
+          "operation_correct": true,
+          "numeric_within_tolerance": false,
+          "unit_context_correct": false,
+          "period_years_correct": false,
+          "correct_answer": false,
+          "error_category": "ambiguous_unit"
+        }
+      },
+      {
+        "case_id": "C04",
+        "lexical_status": "success",
+        "semantic_status": "success",
+        "lexical_evaluation": {
+          "expected_cell_ids": [
+            "UNP/2008/page_77.pdf#table[2][1]",
+            "UNP/2008/page_77.pdf#table[8][1]"
+          ],
+          "expected_operation": "ratio_percent",
+          "expected_percent": "14.3359375",
+          "tolerance": "0.000005",
+          "cell_recall_at_k": 1.0,
+          "complete_proof_at_k": true,
+          "ordered_cells_correct": true,
+          "operation_correct": true,
+          "numeric_within_tolerance": true,
+          "unit_context_correct": true,
+          "period_years_correct": true,
+          "correct_answer": true,
+          "error_category": "correct"
+        },
+        "semantic_evaluation": {
+          "expected_cell_ids": [
+            "UNP/2008/page_77.pdf#table[2][1]",
+            "UNP/2008/page_77.pdf#table[8][1]"
+          ],
+          "expected_operation": "ratio_percent",
+          "expected_percent": "14.3359375",
+          "tolerance": "0.000005",
+          "cell_recall_at_k": 1.0,
+          "complete_proof_at_k": true,
+          "ordered_cells_correct": true,
+          "operation_correct": true,
+          "numeric_within_tolerance": true,
+          "unit_context_correct": true,
+          "period_years_correct": true,
+          "correct_answer": true,
+          "error_category": "correct"
+        }
+      },
+      {
+        "case_id": "C05",
+        "lexical_status": "success",
+        "semantic_status": "success",
+        "lexical_evaluation": {
+          "expected_cell_ids": [
+            "INTC/2013/page_29.pdf#table[1][2]",
+            "INTC/2013/page_29.pdf#table[1][3]"
+          ],
+          "expected_operation": "ratio_percent",
+          "expected_percent": "35.83690987124463519313304721",
+          "tolerance": "0.000005",
+          "cell_recall_at_k": 1.0,
+          "complete_proof_at_k": true,
+          "ordered_cells_correct": true,
+          "operation_correct": true,
+          "numeric_within_tolerance": true,
+          "unit_context_correct": true,
+          "period_years_correct": true,
+          "correct_answer": true,
+          "error_category": "correct"
+        },
+        "semantic_evaluation": {
+          "expected_cell_ids": [
+            "INTC/2013/page_29.pdf#table[1][2]",
+            "INTC/2013/page_29.pdf#table[1][3]"
+          ],
+          "expected_operation": "ratio_percent",
+          "expected_percent": "35.83690987124463519313304721",
+          "tolerance": "0.000005",
+          "cell_recall_at_k": 1.0,
+          "complete_proof_at_k": true,
+          "ordered_cells_correct": true,
+          "operation_correct": true,
+          "numeric_within_tolerance": true,
+          "unit_context_correct": true,
+          "period_years_correct": true,
+          "correct_answer": true,
+          "error_category": "correct"
+        }
+      },
+      {
+        "case_id": "C06",
+        "lexical_status": "success",
+        "semantic_status": "failed",
+        "lexical_evaluation": {
+          "expected_cell_ids": [
+            "ZBH/2017/page_53.pdf#table[2][1]",
+            "ZBH/2017/page_53.pdf#table[1][1]"
+          ],
+          "expected_operation": "ratio_percent",
+          "expected_percent": "4.392242411343744180478331427",
+          "tolerance": "0.000005",
+          "cell_recall_at_k": 1.0,
+          "complete_proof_at_k": true,
+          "ordered_cells_correct": true,
+          "operation_correct": true,
+          "numeric_within_tolerance": true,
+          "unit_context_correct": true,
+          "period_years_correct": true,
+          "correct_answer": true,
+          "error_category": "correct"
+        },
+        "semantic_evaluation": {
+          "expected_cell_ids": [
+            "ZBH/2017/page_53.pdf#table[2][1]",
+            "ZBH/2017/page_53.pdf#table[1][1]"
+          ],
+          "expected_operation": "ratio_percent",
+          "expected_percent": "4.392242411343744180478331427",
+          "tolerance": "0.000005",
+          "cell_recall_at_k": 1.0,
+          "complete_proof_at_k": true,
+          "ordered_cells_correct": false,
+          "operation_correct": false,
+          "numeric_within_tolerance": false,
+          "unit_context_correct": false,
+          "period_years_correct": false,
+          "correct_answer": false,
+          "error_category": "provider_http_503"
+        }
+      },
+      {
+        "case_id": "C07",
+        "lexical_status": "insufficient_evidence",
+        "semantic_status": "insufficient_evidence",
+        "lexical_evaluation": {
+          "expected_cell_ids": [
+            "LMT/2012/page_47.pdf#table[2][2]",
+            "LMT/2012/page_47.pdf#table[2][3]"
+          ],
+          "expected_operation": "percent_change",
+          "expected_percent": "3.203883495145631067961165049",
+          "tolerance": "0.000005",
+          "cell_recall_at_k": 1.0,
+          "complete_proof_at_k": true,
+          "ordered_cells_correct": true,
+          "operation_correct": true,
+          "numeric_within_tolerance": false,
+          "unit_context_correct": false,
+          "period_years_correct": false,
+          "correct_answer": false,
+          "error_category": "ambiguous_unit"
+        },
+        "semantic_evaluation": {
+          "expected_cell_ids": [
+            "LMT/2012/page_47.pdf#table[2][2]",
+            "LMT/2012/page_47.pdf#table[2][3]"
+          ],
+          "expected_operation": "percent_change",
+          "expected_percent": "3.203883495145631067961165049",
+          "tolerance": "0.000005",
+          "cell_recall_at_k": 1.0,
+          "complete_proof_at_k": true,
+          "ordered_cells_correct": true,
+          "operation_correct": true,
+          "numeric_within_tolerance": false,
+          "unit_context_correct": false,
+          "period_years_correct": false,
+          "correct_answer": false,
+          "error_category": "ambiguous_unit"
+        }
+      },
+      {
+        "case_id": "C08",
+        "lexical_status": "success",
+        "semantic_status": "success",
+        "lexical_evaluation": {
+          "expected_cell_ids": [
+            "MAS/2018/page_35.pdf#table[1][1]",
+            "MAS/2018/page_35.pdf#table[1][2]"
+          ],
+          "expected_operation": "percent_change",
+          "expected_percent": "1.423785594639865996649916248",
+          "tolerance": "0.000005",
+          "cell_recall_at_k": 1.0,
+          "complete_proof_at_k": true,
+          "ordered_cells_correct": true,
+          "operation_correct": true,
+          "numeric_within_tolerance": true,
+          "unit_context_correct": true,
+          "period_years_correct": true,
+          "correct_answer": true,
+          "error_category": "correct"
+        },
+        "semantic_evaluation": {
+          "expected_cell_ids": [
+            "MAS/2018/page_35.pdf#table[1][1]",
+            "MAS/2018/page_35.pdf#table[1][2]"
+          ],
+          "expected_operation": "percent_change",
+          "expected_percent": "1.423785594639865996649916248",
+          "tolerance": "0.000005",
+          "cell_recall_at_k": 1.0,
+          "complete_proof_at_k": true,
+          "ordered_cells_correct": true,
+          "operation_correct": true,
+          "numeric_within_tolerance": true,
+          "unit_context_correct": true,
+          "period_years_correct": true,
+          "correct_answer": true,
+          "error_category": "correct"
+        }
+      },
+      {
+        "case_id": "C09",
+        "lexical_status": "success",
+        "semantic_status": "success",
+        "lexical_evaluation": {
+          "expected_cell_ids": [
+            "ETR/2004/page_213.pdf#table[7][1]",
+            "ETR/2004/page_213.pdf#table[1][1]"
+          ],
+          "expected_operation": "percent_change",
+          "expected_percent": "5.504388341098710586195687507",
+          "tolerance": "0.000005",
+          "cell_recall_at_k": 1.0,
+          "complete_proof_at_k": true,
+          "ordered_cells_correct": true,
+          "operation_correct": true,
+          "numeric_within_tolerance": true,
+          "unit_context_correct": true,
+          "period_years_correct": true,
+          "correct_answer": true,
+          "error_category": "correct"
+        },
+        "semantic_evaluation": {
+          "expected_cell_ids": [
+            "ETR/2004/page_213.pdf#table[7][1]",
+            "ETR/2004/page_213.pdf#table[1][1]"
+          ],
+          "expected_operation": "percent_change",
+          "expected_percent": "5.504388341098710586195687507",
+          "tolerance": "0.000005",
+          "cell_recall_at_k": 1.0,
+          "complete_proof_at_k": true,
+          "ordered_cells_correct": true,
+          "operation_correct": true,
+          "numeric_within_tolerance": true,
+          "unit_context_correct": true,
+          "period_years_correct": true,
+          "correct_answer": true,
+          "error_category": "correct"
+        }
+      },
+      {
+        "case_id": "C10",
+        "lexical_status": "success",
+        "semantic_status": "success",
+        "lexical_evaluation": {
+          "expected_cell_ids": [
+            "ETR/2017/page_26.pdf#table[8][1]",
+            "ETR/2017/page_26.pdf#table[1][1]"
+          ],
+          "expected_operation": "percent_change",
+          "expected_percent": "-7.442977190876350540216086435",
+          "tolerance": "0.000005",
+          "cell_recall_at_k": 1.0,
+          "complete_proof_at_k": true,
+          "ordered_cells_correct": true,
+          "operation_correct": true,
+          "numeric_within_tolerance": true,
+          "unit_context_correct": true,
+          "period_years_correct": true,
+          "correct_answer": true,
+          "error_category": "correct"
+        },
+        "semantic_evaluation": {
+          "expected_cell_ids": [
+            "ETR/2017/page_26.pdf#table[8][1]",
+            "ETR/2017/page_26.pdf#table[1][1]"
+          ],
+          "expected_operation": "percent_change",
+          "expected_percent": "-7.442977190876350540216086435",
+          "tolerance": "0.000005",
+          "cell_recall_at_k": 1.0,
+          "complete_proof_at_k": true,
+          "ordered_cells_correct": true,
+          "operation_correct": true,
+          "numeric_within_tolerance": true,
+          "unit_context_correct": true,
+          "period_years_correct": true,
+          "correct_answer": true,
+          "error_category": "correct"
+        }
+      },
+      {
+        "case_id": "N01",
+        "lexical_status": "insufficient_evidence",
+        "semantic_status": "failed",
+        "lexical_evaluation": {
+          "expected_status": "insufficient_evidence",
+          "correct_outcome": true
+        },
+        "semantic_evaluation": {
+          "expected_status": "insufficient_evidence",
+          "correct_outcome": false
+        }
+      },
+      {
+        "case_id": "N02",
+        "lexical_status": "unsupported_request",
+        "semantic_status": "unsupported_request",
+        "lexical_evaluation": {
+          "expected_status": "unsupported_request",
+          "correct_outcome": true
+        },
+        "semantic_evaluation": {
+          "expected_status": "unsupported_request",
+          "correct_outcome": true
+        }
+      }
+    ]
+  },
+  "matched_pair_controlled_inputs": {
+    "evaluator_sha256": "853bcd93ce5b938b6c14c644594e028a953c5a9bab091aa10142ba5fc627261f",
+    "scoring_policy": {
+      "version": "analysis-evaluation-v2",
+      "numeric_tolerance": "reference absolute tolerance in percentage points",
+      "correct_answer": "success, complete proof, ordered cells, operation, finite value and known units/scales/years",
+      "negative_outcome": "exact expected status and no calculation",
+      "denominators": "all planned cases, including failures and unattempted blocks",
+      "latency": "analysis attempts exclude campaign pacing, include failures; nearest-rank p95",
+      "case_order": "positive fixture order, then negative fixture order"
+    },
+    "case_fixture_sha256": "3b2eb282fd7b161ec0adf4a8842630b2b6df1a9c19a627a462a425a3863e3f17",
+    "reference_sha256": "a416ae37cbbd9557df733c8320e37dd17a325f555fc235cae1b444a3d407b832",
+    "corpus_version": "32a94d8310f88e3987e833044c6131c808e4ac7da7391270aec098e59f062887",
+    "index_version": "c0a8c69496f03a95e2049096228afaaec2f410547d14a384bc34b6e78f1225fb",
+    "prompt_sha256": "623b355ad6248d626c5c13847ea4848c19c6f593d4d458a5ad01d643b30fe5b9",
+    "campaign_pacing": {
+      "generation_rpm": 12,
+      "history": "shared-journal"
+    },
+    "workflow_identity": {
+      "identity_version": "fixed-execution-v1",
+      "code_files": {
+        ".python-version": "11418a5b37ee3358335edfaf2c728355c3a955d040aee91fa881842b8891cb9c",
+        "app/__init__.py": "7c0822d40d9ab7c384b89e83abe3fc36539670f864b097ded44f34ddc792da3e",
+        "app/calculator.py": "a647ad7b1095ac23c98c8a6acc7aec6273e5ef562713e620be2a56918780dd15",
+        "app/corpus.py": "70dedbfed9465cd6da50f323d09bf4d669faea509409da2a423c9aa2c7a9a67f",
+        "app/embeddings.py": "e85d747f91fb8a36a5ad189ab701633d9cf558956fd48c0da2447603e04c8c6b",
+        "app/llm.py": "6aaacb6d01d50acab6b43b50f92f098a5f8b42e040e1b819d57c7eb36c0e2a5b",
+        "app/main.py": "ed646ffbe63b3c22dcfc3f6cbd5ba54ece2e8e3aa37f88f00ba2551d0acdfad4",
+        "app/retrieval.py": "dc2eafd07d6cd4208b8d6d8679e8787d5e9c48cf3516a358a7a3bc58a99b5840",
+        "app/schemas.py": "0184df5660a827d30b3a8d001e4320926c41cf29ede23f96a9f8025e94563ca4",
+        "app/service.py": "7737b76afa939c1dcd5c78791d1bdfe989a49a922c6adafb2ee9ddd60aef285c",
+        "app/storage.py": "44c4ce7464345234979895b68090155eb6a72a2f66f2609cd6cc6ef9cd19928a",
+        "pyproject.toml": "d56341905b79bb5c5f4439a166046e6d7338876e8dcc85a9606350cd529840e8",
+        "uv.lock": "bd106ebbfab317acff2c1e74fd98ac07301b1740f4925d2198124364dc6f53c7"
+      },
+      "code_sha256": "a993b48bdc6596aa0e849d755543b3b46b5c56e311d620bdeb42a8336ff98bd4",
+      "configuration": {
+        "version": "fixed-analysis-v2",
+        "payload": "source-local-exact-line-dedup-v1",
+        "k": 5,
+        "generation_calls": 1,
+        "max_context_characters": 20000,
+        "deadline_seconds": 60,
+        "calculator_version": "table-calculation-v2",
+        "retrieval": {
+          "version": "figuretrail-retrieval-v1",
+          "lexical_query": "literal unicode words joined with OR",
+          "stop_words": [
+            "a",
+            "an",
+            "and",
+            "are",
+            "as",
+            "at",
+            "be",
+            "by",
+            "did",
+            "do",
+            "does",
+            "for",
+            "from",
+            "how",
+            "in",
+            "is",
+            "it",
+            "of",
+            "on",
+            "or",
+            "that",
+            "the",
+            "their",
+            "these",
+            "this",
+            "to",
+            "was",
+            "were",
+            "what",
+            "when",
+            "which",
+            "with"
+          ],
+          "max_lexical_terms": 64,
+          "lexical_score": "SQLite FTS5 BM25; lower is better",
+          "semantic_score": "float64 cosine similarity; higher is better",
+          "query_format": "task: search result | query: {query}",
+          "tie_break": "corpus ordinal ascending",
+          "default_k": 5,
+          "max_k": 20,
+          "method": "lexical",
+          "report_ids": null
+        },
+        "embedding": {
+          "model": "gemini-embedding-2",
+          "dimensions": 768,
+          "dtype": "<f4",
+          "format_version": "retrieval-prefix-v1",
+          "document_format": "title: none | text: {content}",
+          "query_format": "task: search result | query: {query}"
+        },
+        "pacing": {
+          "requests_per_minute": 80,
+          "input_allowance_per_minute": 24000
+        },
+        "provider": {
+          "api_version": "v1beta",
+          "vertexai": false,
+          "transport_timeout_seconds": 20,
+          "attempts": 1,
+          "max_output_tokens": 1000,
+          "thinking_level": "MINIMAL",
+          "automatic_function_calling": false,
+          "generation_model": "gemini-3.5-flash-lite",
+          "embedding_model": "gemini-embedding-2",
+          "local_limit_eur": "25",
+          "generation_allowance_eur": "1",
+          "embedding_allowance_eur": "0.01"
+        },
+        "runtime": {
+          "python": "3.14.5",
+          "implementation": "CPython",
+          "sqlite": "3.50.4",
+          "packages": {
+            "annotated-doc": "0.0.5",
+            "annotated-types": "0.8.0",
+            "anyio": "4.15.1",
+            "certifi": "2026.10.23",
+            "cffi": "2.1.1",
+            "charset-normalizer": "3.5.2",
+            "click": "8.5.0",
+            "cryptography": "50.0.2",
+            "distro": "1.9.0",
+            "fastapi": "0.162.0",
+            "google-auth": "2.62.0",
+            "google-genai": "2.33.0",
+            "h11": "0.16.0",
+            "httpcore": "1.0.9",
+            "httpx": "0.28.1",
+            "idna": "3.20",
+            "numpy": "2.5.4",
+            "opentelemetry-api": "1.45.1",
+            "pyasn1": "0.6.4",
+            "pyasn1_modules": "0.4.2",
+            "pycparser": "3.12",
+            "pydantic": "2.14.1",
+            "pydantic_core": "2.50.1",
+            "requests": "2.34.2",
+            "ruff": "0.17.2",
+            "sniffio": "1.3.1",
+            "starlette": "1.10.0",
+            "tenacity": "9.1.4",
+            "typing_extensions": "4.16.0",
+            "typing-inspection": "0.4.4",
+            "urllib3": "2.8.0",
+            "uvicorn": "0.54.0",
+            "websockets": "17.3"
+          }
+        }
+      },
+      "configuration_sha256": "1d67793141b9a9774877fcace67922e9ae8d15d068471c0354e4b8d6094c5c65"
+    }
+  },
+  "error_analysis": {
+    "case_id": "C07",
+    "question": "For Lockheed Martin Space Systems, what was the percentage change in operating profit from 2010 to 2011?",
+    "selected_cells": [
+      {
+        "cell_id": "LMT/2012/page_47.pdf#table[2][2]",
+        "source_value": "1,063",
+        "row_label": "Operating profit",
+        "column_header": "2011"
+      },
+      {
+        "cell_id": "LMT/2012/page_47.pdf#table[2][3]",
+        "source_value": "1,030",
+        "row_label": "Operating profit",
+        "column_header": "2010"
+      }
+    ],
+    "selection": {
+      "status": "ready",
+      "operation": "percent_change",
+      "cell_ids": [
+        "LMT/2012/page_47.pdf#table[2][2]",
+        "LMT/2012/page_47.pdf#table[2][3]"
+      ]
+    },
+    "expected_cell_ids": [
+      "LMT/2012/page_47.pdf#table[2][2]",
+      "LMT/2012/page_47.pdf#table[2][3]"
+    ],
+    "complete_proof_at_k": true,
+    "status": "insufficient_evidence",
+    "error_code": "ambiguous_unit",
+    "calculation": null,
+    "generation_payload_comparison": [
+      {
+        "case_id": "C01",
+        "same_generation_payload": false
+      },
+      {
+        "case_id": "C02",
+        "same_generation_payload": false
+      },
+      {
+        "case_id": "C03",
+        "same_generation_payload": false
+      },
+      {
+        "case_id": "C04",
+        "same_generation_payload": false
+      },
+      {
+        "case_id": "C05",
+        "same_generation_payload": false
+      },
+      {
+        "case_id": "C06",
+        "same_generation_payload": true
+      },
+      {
+        "case_id": "C07",
+        "same_generation_payload": false
+      },
+      {
+        "case_id": "C08",
+        "same_generation_payload": false
+      },
+      {
+        "case_id": "C09",
+        "same_generation_payload": false
+      },
+      {
+        "case_id": "C10",
+        "same_generation_payload": false
+      },
+      {
+        "case_id": "N01",
+        "same_generation_payload": false
+      },
+      {
+        "case_id": "N02",
+        "same_generation_payload": false
+      }
+    ]
+  },
+  "preceding_hosted_baseline": {
+    "run_id": 42684643190,
+    "run_url": "https://github.com/FekherJ/FigureTrail/actions/runs/42684643190",
+    "commit_sha": "b9cd10942217418380c72ceb76de251f0d82f296",
+    "job_id": 129388061759,
+    "job_url": "https://github.com/FekherJ/FigureTrail/actions/runs/42684643190/job/129388061759",
+    "conclusion": "success",
+    "tests": 62,
+    "test_seconds": 7.28,
+    "steps": [
+      {
+        "name": "Set up job",
+        "conclusion": "success"
+      },
+      {
+        "name": "Check out source",
+        "conclusion": "success"
+      },
+      {
+        "name": "Install uv",
+        "conclusion": "success"
+      },
+      {
+        "name": "Install Python and locked dependencies",
+        "conclusion": "success"
+      },
+      {
+        "name": "Prepare pinned test data",
+        "conclusion": "success"
+      },
+      {
+        "name": "Check environment",
+        "conclusion": "success"
+      },
+      {
+        "name": "Lint",
+        "conclusion": "success"
+      },
+      {
+        "name": "Check formatting",
+        "conclusion": "success"
+      },
+      {
+        "name": "Run offline tests",
+        "conclusion": "success"
+      },
+      {
+        "name": "Check reproducibility and whitespace",
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Install uv",
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Check out source",
+        "conclusion": "success"
+      },
+      {
+        "name": "Complete job",
+        "conclusion": "success"
+      }
+    ]
+  },
+  "baseline_commit": "b9cd10942217418380c72ceb76de251f0d82f296",
+  "evaluated_working_tree_changes": true,
+  "limitations": [
+    "Ten development positives and two negatives; no reserved cases or independent accuracy estimate.",
+    "One sequential lexical/semantic pass per protocol; ordering and provider variability confound causal attribution.",
+    "Pacing applies to the sequential evaluator, not cross-process rate reservation or the HTTP service.",
+    "Units/scales and explicit period years are checked; this does not independently validate every date, financial scope or source truth.",
+    "Historical failures remain; no automatic model retries, billing changes or allowance reset occurred.",
+    "A further full twelve-generation campaign currently exceeds remaining worst-case local allowance."
+  ]
+}

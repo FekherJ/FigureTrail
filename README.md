@@ -22,9 +22,9 @@ The design combines retrieval, structured LLM selection and deterministic calcul
 | Retrieval | Lexical/semantic comparison measured on ten development questions; complete proof@5: 9/10 and 10/10 |
 | Numerical analysis | Fixed CLI workflow with source validation, Decimal calculation and initial evaluation; provider latency/timeouts remain limitations |
 | Tools and operations | Provider/analysis journals and local allowances implemented; bounded agent events and fuller observability planned |
-| Delivery tracking | [Repository issues](https://github.com/FekherJ/FigureTrail/issues): B01–B07 completed; B08 evaluation is next |
+| Delivery tracking | [Repository issues](https://github.com/FekherJ/FigureTrail/issues): B01–B07 completed; B08 development comparison completed; B09 evidence UI is next |
 
-Existing checks validate reference data, the HTTP foundation, a controlled LLM source-selection pilot and retrieval evidence coverage. Initial fixed-workflow evaluation is documented below, including provider failures. All ten questions are curated development cases; reserved-case performance remains unmeasured. B08 execution-identity preparation is complete. The next work is to extend the existing evaluator and measure fixed-workflow variants before adding the UI or agent.
+Existing checks validate reference data, the HTTP foundation, a controlled LLM source-selection pilot and retrieval evidence coverage. Initial fixed-workflow evaluation is documented below, including provider failures. All ten questions are curated development cases; reserved-case performance remains unmeasured. B08 evaluation is implemented and measured on these development cases: lexical 8/10 correct, semantic 6/10 in the matched paced pair. Semantic proof coverage is higher, while provider failures and unit-context limits remain. B09's evidence UI is next; the agent remains B10.
 
 ## How the application fits together
 
@@ -174,7 +174,29 @@ New analysis records use `fixed-execution-v1`: a named SHA-256 manifest of all t
 
 Current examples include **24.69%** for Canada's estimated production share and **−7.44%** for a signed revenue change. The initial ten-case campaign produced **5 correct answers, 1 conservative abstention and 4 provider HTTP 504s**; both negative checks returned the expected outcome. After removing exact duplicated source context, two bounded follow-ups succeeded in **15.1 s and 19.2 s**. These follow-ups do not replace the original failures or establish a full current-version score. Provider responsiveness and reliability remain limitations.
 
-Run the initial evaluator explicitly with `uv run --locked python -B -X utf8 -m evals.analysis --live`; it plans at most twelve generations and requires the B05 query cache. Every rerun consumes quota and is recorded. See [workflow verification and supported formats](docs/verification/B06_FIXED_WORKFLOW.md) and [full measured evidence](docs/verification/B06_FIXED_WORKFLOW_RESULTS.json). The analysis API is implemented; the browser interface remains planned.
+The current evaluator plans either retrieval variant without requests; `--live` explicitly allows at most twelve generations and any missing query embeddings. Every live rerun consumes quota and is recorded. See [workflow verification and supported formats](docs/verification/B06_FIXED_WORKFLOW.md) and [full measured evidence](docs/verification/B06_FIXED_WORKFLOW_RESULTS.json). The analysis API is implemented; the browser interface remains planned.
+
+## Evaluate the fixed workflow
+
+Print read-only allowance plans first:
+
+```powershell
+uv run --locked python -B -X utf8 -m evals.analysis --method lexical
+uv run --locked python -B -X utf8 -m evals.analysis --method semantic
+```
+
+Add `--live` only to run a campaign whose worst-case reservations fit the local limit. Missing semantic query embeddings are included in the plan. Generation pacing uses recent shared-journal history at 12 RPM; a 429 stops the remaining cases without automatic retries. Run one campaign at a time. Saved reports can be compared offline with `--compare-results LEXICAL_JSON SEMANTIC_JSON`; cases, data, prompts, code, settings and scoring/pacing policies must match except for retrieval method.
+
+Measured on the same ten development positives and two negatives:
+
+| Paced variant | Correct answers | Complete proof@5 | Correct negative outcomes | Positive provider failures |
+|---|---:|---:|---:|---:|
+| Lexical | 8/10 | 9/10 | 2/2 | 0 |
+| Semantic | 6/10 | 10/10 | 1/2 | 2 HTTP 503 |
+
+The first unpaced semantic run's five 429s and one 503 are retained separately. The paced pair had no 429s; 503 failures remain. Higher evidence coverage did not produce better answers in this sample. Median positive-attempt latency was 1.109/1.602 s, including failures and excluding campaign pacing; the semantic batch also waited 13.461 s for quota headroom. No reserved-case accuracy or general latency guarantee is claimed. The API keeps its existing provisional semantic default. See [protocol, failures and detailed error analysis](docs/verification/B08_WORKFLOW_EVALUATION.md).
+
+Actual case counts remain ten development positives and two negatives; the optional larger split is deferred. The cumulative local allowance is EUR 15.5512000; actual billing is unknown. A full further twelve-generation campaign currently exceeds the remaining worst-case allowance, so do not bypass the plan/guard.
 
 ## Use the analysis API
 
@@ -216,11 +238,13 @@ uv run --locked python -B -X utf8 -m unittest discover -s tests -v
 
 Verified results: **10 valid cases and 3 passing negative tests**. The tests reject the wrong year, confusion between ratios and percentages, and answers leaked into source exports. The verifier rejects Python's `-O` mode because it disables assertions.
 
-All **62 offline tests** pass. Seventeen API tests cover typed results, read-only lookup, validation, local request restrictions, single-analysis concurrency, deadlines and simulated provider/storage failures. One starts a real local Uvicorn HTTP server with simulated SDK responses. Fixed-analysis tests cover source arithmetic, units/periods/scales, accessible cells, outcomes, durable records and failure-aware scoring. Four execution-identity tests cover code/dependency changes, effective settings, secret exclusion, legacy lookup and missing-input rejection before model work. Retrieval tests cover literal query handling, scope before top-k, cosine/cache behavior, invalid requests, evaluator separation and failure-aware metrics. A filesystem or SQLite storage error stops the retrieval campaign: the triggering entry is failed and every remaining query/method entry is blocked without another search. Blocked entries remain in metric denominators; `blocked` is reported separately as a subset of the existing non-passing `failures` count. Index checks cover cached rebuild/resume, file-lock recovery, pacing/restart history, cache corruption and mismatched SQLite/FTS/vector rows and configuration. Corpus checks cover source isolation, deduplication, original values/context, repeatable artifacts and rejection of inconsistent input/output. Native-tool tests also cover eleven response/execution cases and a simulated quota failure. The provider tests additionally simulate quota errors on both SDK endpoints and verify credential exclusion, retained unknown usage, source/plan boundaries, invented cells and a budget block before network access. CLI lifecycle tests verify SDK cleanup on success, provider/pacing setup failures, provider errors and storage failures, plus operation without a client for lexical/cached paths. Ruff checks lint across the codebase and formatting in the application, current preparation/provider/index/search/evaluation commands and their tests. FinQA verification also runs with the Python standard library alone. These checks are separate from live development retrieval/workflow evaluations and future reserved-case measurements.
+All **72 offline tests** pass. Seventeen API tests cover typed results, read-only lookup, validation, local request restrictions, single-analysis concurrency, deadlines and simulated provider/storage failures. One starts a real local Uvicorn HTTP server with simulated SDK responses. Fixed-analysis tests cover source arithmetic, units/periods/scales, accessible cells, outcomes, durable records and failure-aware scoring. Four execution-identity tests cover code/dependency changes, effective settings, secret exclusion, legacy lookup and missing-input rejection before model work. Evaluator tests also cover evidence/unit/year scoring, nonfinite values, matched reports, read-only plans, unknown costs, generation pacing and storage/quota stopping. Retrieval tests cover literal query handling, scope before top-k, cosine/cache behavior, invalid requests, evaluator separation and failure-aware metrics. A filesystem or SQLite storage error stops the retrieval campaign: the triggering entry is failed and every remaining query/method entry is blocked without another search. Blocked entries remain in metric denominators; `blocked` is reported separately as a subset of the existing non-passing `failures` count. Index checks cover cached rebuild/resume, file-lock recovery, pacing/restart history, cache corruption and mismatched SQLite/FTS/vector rows and configuration. Corpus checks cover source isolation, deduplication, original values/context, repeatable artifacts and rejection of inconsistent input/output. Native-tool tests also cover eleven response/execution cases and a simulated quota failure. The provider tests additionally simulate quota errors on both SDK endpoints and verify credential exclusion, retained unknown usage, source/plan boundaries, invented cells and a budget block before network access. CLI lifecycle tests verify SDK cleanup on success, provider/pacing setup failures, provider errors and storage failures, plus operation without a client for lexical/cached paths. Ruff checks lint across the codebase and formatting in the application, current preparation/provider/index/search/evaluation commands and their tests. FinQA verification also runs with the Python standard library alone. These checks are separate from live development retrieval/workflow evaluations and future reserved-case measurements.
 
 ## Continuous integration
 
 [CI](.github/workflows/ci.yml) defines one Ubuntu 24.04 job: pinned Python/uv, locked dependency installation, hash-verified FinQA setup, source-only exports, lint, formatting and offline tests. It uses no model credentials and makes no hosted inference calls. An isolated local Ubuntu run passed all 58 tests; an intentionally failing temporary test returned exit code 1. The [GitHub-hosted run](https://github.com/FekherJ/FigureTrail/actions/runs/41318662604) passed all 58 tests; the [hosted deliberate-failure run](https://github.com/FekherJ/FigureTrail/actions/runs/41332322419) failed as intended; the [restored-green run](https://github.com/FekherJ/FigureTrail/actions/runs/41332673328) passed all 58 tests, completing hosted CI acceptance; see [verification and acceptance steps](docs/verification/CI_WORKFLOW.md).
+
+The later [identity baseline run](https://github.com/FekherJ/FigureTrail/actions/runs/42684643190) passes all 62 tests. The current 72-test evaluator changes are locally verified and await publication.
 
 ## Repository layout
 

@@ -63,6 +63,8 @@ def execution_identity(method, report_ids):
             "generation_model": llm.GENERATION_MODEL,
             "embedding_model": llm.EMBEDDING_MODEL,
             "local_limit_eur": str(llm.LIMIT_EUR),
+            "generation_allowance_eur": str(llm.GENERATION_ALLOWANCE_EUR),
+            "embedding_allowance_eur": str(llm.EMBEDDING_ALLOWANCE_EUR),
         },
         "runtime": {
             "python": platform.python_version(),

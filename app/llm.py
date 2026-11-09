@@ -26,6 +26,8 @@ INPUT_USD_PER_MILLION = Decimal("0.30")
 OUTPUT_USD_PER_MILLION = Decimal("2.50")
 PLANNING_EUR_PER_USD = Decimal("2")  # Planning buffer, not a market exchange rate.
 LIMIT_EUR = Decimal("25")
+GENERATION_ALLOWANCE_EUR = Decimal("1")
+EMBEDDING_ALLOWANCE_EUR = Decimal("0.01")
 JOURNAL = Path(__file__).resolve().parents[1] / "data/local/runs.sqlite"
 # Shared request settings are also captured in each analysis configuration.
 PROVIDER_CONFIG = {
@@ -132,7 +134,7 @@ class GeminiProvider:
             failures raise ProviderError carrying that dictionary; unknown usage keeps
             its allowance. Uses this instance's SDK client and shared journal.
         """
-        allowance = Decimal("1") if kind == "generation" else Decimal("0.01")
+        allowance = GENERATION_ALLOWANCE_EUR if kind == "generation" else EMBEDDING_ALLOWANCE_EUR
         record = {
             "call_id": str(uuid4()),
             "run_id": run_id,

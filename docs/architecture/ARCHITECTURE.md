@@ -162,7 +162,7 @@ Search across multiple contexts, including distractors. Never supply the correct
 
 B05 fixes five candidate chunks, retains ranks/scores/cell IDs and compares prefixes at k=1/3/5. Scope is applied before top-k; ties use corpus order. The provisional B06 choice is semantic k=5 (10/10 complete development proofs), with lexical retained as a local comparison (9/10). Lexical performs better at k=3. See [measured comparison and limitations](../verification/B05_RETRIEVAL.md). No hits or low similarity alone do not prove that information is absent.
 
-The implemented retrieval comparison uses the same corpus and questions without a calculator; B06 implements shared calculation and an initial workflow campaign; B08 will broaden comparisons. `app/retrieval.py` performs literal FTS5/BM25 or exact NumPy cosine search; `evals/retrieval.py` loads references only after retrieval. Separate query embeddings reuse the shared provider and journal. Missing vectors require `--live`. A remote vector database is unnecessary for the initial workload.
+The implemented retrieval comparison uses the same corpus and questions without a calculator; B06 implements shared calculation and an initial workflow campaign; B08 now compares fixed lexical/semantic workflows on the same development cases; report-disjoint reserved evaluation remains for release. `app/retrieval.py` performs literal FTS5/BM25 or exact NumPy cosine search; `evals/retrieval.py` loads references only after retrieval. Separate query embeddings reuse the shared provider and journal. Missing vectors require `--live`. A remote vector database is unnecessary for the initial workload.
 
 ### Cell selection and calculation
 

@@ -271,5 +271,69 @@
     "lint": "passed",
     "format": "30 files passed"
   },
-  "local_markdown_links_checked": 97
+  "local_markdown_links_checked": 97,
+  "latest_published_baseline": {
+    "run_id": 42684643190,
+    "run_url": "https://github.com/FekherJ/FigureTrail/actions/runs/42684643190",
+    "commit_sha": "b9cd10942217418380c72ceb76de251f0d82f296",
+    "job_id": 129388061759,
+    "job_url": "https://github.com/FekherJ/FigureTrail/actions/runs/42684643190/job/129388061759",
+    "conclusion": "success",
+    "tests": 62,
+    "test_seconds": 7.28,
+    "steps": [
+      {
+        "name": "Set up job",
+        "conclusion": "success"
+      },
+      {
+        "name": "Check out source",
+        "conclusion": "success"
+      },
+      {
+        "name": "Install uv",
+        "conclusion": "success"
+      },
+      {
+        "name": "Install Python and locked dependencies",
+        "conclusion": "success"
+      },
+      {
+        "name": "Prepare pinned test data",
+        "conclusion": "success"
+      },
+      {
+        "name": "Check environment",
+        "conclusion": "success"
+      },
+      {
+        "name": "Lint",
+        "conclusion": "success"
+      },
+      {
+        "name": "Check formatting",
+        "conclusion": "success"
+      },
+      {
+        "name": "Run offline tests",
+        "conclusion": "success"
+      },
+      {
+        "name": "Check reproducibility and whitespace",
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Install uv",
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Check out source",
+        "conclusion": "success"
+      },
+      {
+        "name": "Complete job",
+        "conclusion": "success"
+      }
+    ]
+  }
 }

@@ -47,3 +47,10 @@ git diff --check
 ```
 
 The exact formatting scope is the command in [README](../../README.md). [Structured results](B08_EXECUTION_IDENTITY_RESULTS.json) retain the observed counts. Historical audit/CI/measurement reports are preserved. The next implementation task is the broader B08 evaluation comparison, not a new agent or framework.
+
+
+## Hosted follow-up, 9 November 2026
+
+The user published identity commit `b9cd10942217418380c72ceb76de251f0d82f296`. [GitHub run 42684643190](https://github.com/FekherJ/FigureTrail/actions/runs/42684643190) passes all 62 tests in 7.280 s; every job step succeeds. This confirms the earlier identity baseline. The subsequent B08 evaluator has separate local 72-test/live-comparison evidence and awaits its own publication.
+
+The subsequent [B08 development comparison](B08_WORKFLOW_EVALUATION.md) is now complete at its declared ten-positive/two-negative scope. B09 is next; provider reliability and reserved-case validation remain open.

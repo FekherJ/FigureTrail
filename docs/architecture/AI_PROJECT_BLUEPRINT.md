@@ -95,6 +95,8 @@ Current retrieval evidence: [B05 comparison](../verification/B05_RETRIEVAL.md), 
 
 Use deterministic reference checks first. Judge-based faithfulness scores are supplementary estimates, calibrated against reviewed examples; they do not prevent hallucinations. [Evaluation guidance](https://developers.openai.com/api/docs/guides/evaluation-best-practices), [Ragas](https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/faithfulness/)
 
+Current [B08 workflow comparison](../verification/B08_WORKFLOW_EVALUATION.md) measures ten development positives and two negatives per method. Paced lexical answers 8/10 versus semantic 6/10 despite semantic's higher proof coverage; retained provider failures and unit-context limits explain why retrieval metrics alone are insufficient. The evaluator is key-free/read-only by default, live operations are explicit, and matched reports compare offline. Generation pacing/stop-on-quota improve batch operation without proving provider reliability. Reserved-case performance remains unmeasured.
+
 ## 6. Safety, operations and delivery
 
 Treat questions, retrieved text and tool outputs as untrusted. Enforce tool allowlists, immutable scope and validated arguments in code; expose no shell, arbitrary URL, filesystem or generated-code execution. Escape displayed source text. Filters are supplementary. Minimize submitted data; redact sensitive fields if introduced. [OWASP](https://genai.owasp.org/llmrisk/llm01-prompt-injection/)
