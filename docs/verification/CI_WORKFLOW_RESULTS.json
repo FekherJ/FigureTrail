@@ -28,9 +28,233 @@
     }
   },
   "github_hosted_validation": {
-    "status": "pending_publication",
-    "green_run_url": null,
-    "red_run_url": null
+    "status": "complete",
+    "run_id": 41318662604,
+    "green_run_url": "https://github.com/FekherJ/FigureTrail/actions/runs/41318662604",
+    "commit_sha": "d901156ba47e075c640b4d27231a376131a9109c",
+    "event": "push",
+    "conclusion": "success",
+    "run_attempt": 1,
+    "job_id": 124884022866,
+    "job_url": "https://github.com/FekherJ/FigureTrail/actions/runs/41318662604/job/124884022866",
+    "runner": "ubuntu-24.04",
+    "started_at_utc": "2026-11-01T14:56:35Z",
+    "completed_at_utc": "2026-11-01T14:56:52Z",
+    "tests": 58,
+    "test_seconds": 4.751,
+    "model_keys_empty": true,
+    "dataset_hash_verified": true,
+    "format_passed": true,
+    "steps": [
+      {
+        "name": "Set up job",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "Check out source",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "Install uv",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "Install Python and locked dependencies",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "Prepare pinned test data",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "Check environment",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "Lint",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "Check formatting",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "Run offline tests",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "Check reproducibility and whitespace",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Install uv",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Check out source",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "Complete job",
+        "status": "completed",
+        "conclusion": "success"
+      }
+    ],
+    "red_run_url": "https://github.com/FekherJ/FigureTrail/actions/runs/41332322419",
+    "restored_green_run_url": "https://github.com/FekherJ/FigureTrail/actions/runs/41332673328",
+    "run_status": "completed",
+    "negative_probe": {
+      "status": "hosted_failure_verified",
+      "branch": "ci/verify-failure",
+      "test_file": "tests/test_ci_failure_probe.py",
+      "local_test_exit_code": 1,
+      "commit_sha": "95b596f15799adc601ca57ee94a477c716ed2736",
+      "run_id": 41332322419,
+      "run_url": "https://github.com/FekherJ/FigureTrail/actions/runs/41332322419",
+      "job_id": 124924827061,
+      "job_url": "https://github.com/FekherJ/FigureTrail/actions/runs/41332322419/job/124924827061",
+      "conclusion": "failure",
+      "tests": 59,
+      "test_seconds": 4.658,
+      "failures": 1,
+      "exit_code": 1,
+      "assertion": "Intentional hosted CI verification failure",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check out source",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install uv",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install Python and locked dependencies",
+          "conclusion": "success"
+        },
+        {
+          "name": "Prepare pinned test data",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check environment",
+          "conclusion": "success"
+        },
+        {
+          "name": "Lint",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check formatting",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run offline tests",
+          "conclusion": "failure"
+        },
+        {
+          "name": "Check reproducibility and whitespace",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Post Install uv",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Post Check out source",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ],
+      "cleanup": "committed_and_pushed_restored_green_verified"
+    },
+    "restored_green": {
+      "run_id": 41332673328,
+      "commit_sha": "16e7ae95f138b6d5efb29ac3794a9665c6ca784d",
+      "branch": "ci/verify-failure",
+      "run_url": "https://github.com/FekherJ/FigureTrail/actions/runs/41332673328",
+      "job_id": 124925874875,
+      "job_url": "https://github.com/FekherJ/FigureTrail/actions/runs/41332673328/job/124925874875",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at_utc": "2026-11-01T17:40:30Z",
+      "completed_at_utc": "2026-11-01T17:40:48Z",
+      "tests": 58,
+      "test_seconds": 4.695,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check out source",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install uv",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install Python and locked dependencies",
+          "conclusion": "success"
+        },
+        {
+          "name": "Prepare pinned test data",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check environment",
+          "conclusion": "success"
+        },
+        {
+          "name": "Lint",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check formatting",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run offline tests",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check reproducibility and whitespace",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Install uv",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Check out source",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ]
+    }
   },
   "dataset": {
     "commit": "0f16e2867befa6840783e58be38c9efb9229d742",

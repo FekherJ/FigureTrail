@@ -27,6 +27,16 @@ OUTPUT_USD_PER_MILLION = Decimal("2.50")
 PLANNING_EUR_PER_USD = Decimal("2")  # Planning buffer, not a market exchange rate.
 LIMIT_EUR = Decimal("25")
 JOURNAL = Path(__file__).resolve().parents[1] / "data/local/runs.sqlite"
+# Shared request settings are also captured in each analysis configuration.
+PROVIDER_CONFIG = {
+    "api_version": "v1beta",
+    "vertexai": False,
+    "transport_timeout_seconds": 20,
+    "attempts": 1,
+    "max_output_tokens": 1000,
+    "thinking_level": types.ThinkingLevel.MINIMAL.value,
+    "automatic_function_calling": False,
+}
 
 
 class ProviderError(RuntimeError):
@@ -41,12 +51,12 @@ def create_client() -> genai.Client:
         raise ValueError("GEMINI_API_KEY is not configured.")
     return genai.Client(
         api_key=key,
-        vertexai=False,
+        vertexai=PROVIDER_CONFIG["vertexai"],
         http_options=types.HttpOptions(
-            api_version="v1beta",
-            timeout=20_000,
+            api_version=PROVIDER_CONFIG["api_version"],
+            timeout=PROVIDER_CONFIG["transport_timeout_seconds"] * 1000,
             # One total attempt prevents hidden retries from multiplying usage.
-            retry_options=types.HttpRetryOptions(attempts=1),
+            retry_options=types.HttpRetryOptions(attempts=PROVIDER_CONFIG["attempts"]),
         ),
     )
 
@@ -131,7 +141,7 @@ class GeminiProvider:
             "created_at_utc": datetime.now(timezone.utc).isoformat(),
             "requested_model": GENERATION_MODEL if kind == "generation" else EMBEDDING_MODEL,
             "sdk_version": version("google-genai"),
-            "automatic_retries": 0,
+            "automatic_retries": PROVIDER_CONFIG["attempts"] - 1,
             "price_date": PRICE_DATE,
             "planning_eur_per_usd": str(PLANNING_EUR_PER_USD),
             "reserved_eur": str(allowance),
@@ -230,7 +240,9 @@ class GeminiProvider:
             raise ValueError("Generation input is empty or exceeds its size limit.")
         if not 1 <= max_output_tokens <= 1000:
             raise ValueError("Output tokens must be between 1 and 1000.")
-        remaining = 20 if deadline is None else min(20, deadline - monotonic())
+        remaining = PROVIDER_CONFIG["transport_timeout_seconds"]
+        if deadline is not None:
+            remaining = min(remaining, deadline - monotonic())
         if remaining <= 0:
             raise TimeoutError("The execution deadline has been reached.")
         tags = {
@@ -242,9 +254,11 @@ class GeminiProvider:
         config = types.GenerateContentConfig(
             system_instruction=instruction or None,
             max_output_tokens=max_output_tokens,
-            thinking_config=types.ThinkingConfig(thinking_level=types.ThinkingLevel.MINIMAL),
+            thinking_config=types.ThinkingConfig(thinking_level=PROVIDER_CONFIG["thinking_level"]),
             # Application code must control tool execution explicitly.
-            automatic_function_calling=types.AutomaticFunctionCallingConfig(disable=True),
+            automatic_function_calling=types.AutomaticFunctionCallingConfig(
+                disable=not PROVIDER_CONFIG["automatic_function_calling"]
+            ),
             http_options=types.HttpOptions(timeout=max(1, int(remaining * 1000))),
         )
         return config, tags
@@ -309,7 +323,9 @@ class GeminiProvider:
                 remaining = deadline - monotonic()
                 if remaining <= 0 or (cancelled is not None and cancelled.is_set()):
                     raise TimeoutError("Execution deadline reached.")
-                config.http_options.timeout = max(1, int(min(20, remaining) * 1000))
+                config.http_options.timeout = max(
+                    1, int(min(PROVIDER_CONFIG["transport_timeout_seconds"], remaining) * 1000)
+                )
             return self.client.models.generate_content(
                 model=GENERATION_MODEL, contents=text, config=config
             )
@@ -384,7 +400,9 @@ class GeminiProvider:
                 remaining = deadline - monotonic()
                 if remaining <= 0 or (cancelled is not None and cancelled.is_set()):
                     raise TimeoutError("Execution deadline reached.")
-                config.http_options.timeout = max(1, int(min(20, remaining) * 1000))
+                config.http_options.timeout = max(
+                    1, int(min(PROVIDER_CONFIG["transport_timeout_seconds"], remaining) * 1000)
+                )
             return self.client.models.generate_content(
                 model=GENERATION_MODEL, contents=text, config=config
             )
@@ -446,7 +464,9 @@ class GeminiProvider:
             Takes no parameters: text, deadline and cancelled come from embed_text().
             The shared _call() wrapper invokes this after budget reservation.
             """
-            remaining = 20 if deadline is None else min(20, deadline - monotonic())
+            remaining = PROVIDER_CONFIG["transport_timeout_seconds"]
+            if deadline is not None:
+                remaining = min(remaining, deadline - monotonic())
             if remaining <= 0 or (cancelled is not None and cancelled.is_set()):
                 raise TimeoutError("Execution deadline reached.")
             return self.client.models.embed_content(

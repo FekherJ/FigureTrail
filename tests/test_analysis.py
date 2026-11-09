@@ -4,17 +4,21 @@ from contextlib import closing
 from copy import deepcopy
 from decimal import ROUND_DOWN, localcontext
 import json
+from hashlib import sha256
+import shutil
 from pathlib import Path
 import sqlite3
 import tempfile
 import unittest
 from unittest.mock import Mock, patch
 
+from app import embeddings, llm
 from app.calculator import EvidenceError, calculate
-from app.corpus import prepare_corpus
+from app.corpus import digest, prepare_corpus
 from app.llm import ProviderError
 from app.schemas import CellSelection
-from app.service import analyze, model_input
+from app.retrieval import RETRIEVAL_CONFIG, lexical_terms
+from app.service import CONFIGURATION, ROOT, analyze, model_input, read_analysis, save_analysis
 from test_corpus import fixture
 
 
@@ -208,6 +212,166 @@ class AnalysisTests(unittest.TestCase):
                 ).fetchone()[0]
             )
         self.assertEqual(saved, result)
+
+    def identity_root(self):
+        root = Path(self.folder.name) / "project"
+        names = [
+            *(path.relative_to(ROOT).as_posix() for path in (ROOT / "app").glob("*.py")),
+            "pyproject.toml",
+            "uv.lock",
+            ".python-version",
+            "prompts/analysis_selection.md",
+        ]
+        for name in names:
+            target = root / name
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(ROOT / name, target)
+        return root
+
+    def identity_run(self, root, *, method="semantic"):
+        provider = Mock()
+        provider.generate_json.return_value = (
+            plan(self.ids),
+            {
+                "call_id": "simulated-call",
+                "kind": "generation",
+                "status": "passed",
+                "requested_model": "simulated-model",
+                "allowance_eur": "0",
+                "usage": None,
+            },
+        )
+        retriever = self.retriever()
+        retriever.search.return_value["hits"] = [
+            {**hit, "rank": rank, "score": 1.0} for rank, hit in enumerate(self.chunks, 1)
+        ]
+        with patch("app.service.ROOT", root):
+            result = analyze(
+                self.question, retriever, provider, journal=self.journal, method=method
+            )
+        self.assertEqual(result["status"], "success")
+        return result, provider
+
+    def test_execution_identity_tracks_runtime_files_and_dependency_changes(self):
+        root = self.identity_root()
+        baseline, _ = self.identity_run(root)
+        repeated, _ = self.identity_run(root)
+        self.assertEqual(baseline["code_sha256"], repeated["code_sha256"])
+        self.assertEqual(baseline["configuration_sha256"], repeated["configuration_sha256"])
+        self.assertEqual(baseline["identity_version"], "fixed-execution-v1")
+        for name in (
+            "app/embeddings.py",
+            "app/storage.py",
+            "app/corpus.py",
+            "app/main.py",
+            "app/__init__.py",
+            "pyproject.toml",
+            "uv.lock",
+            ".python-version",
+        ):
+            with self.subTest(file=name):
+                path = root / name
+                original = path.read_bytes()
+                path.write_bytes(original + b"\n")
+                try:
+                    changed, _ = self.identity_run(root)
+                    self.assertNotEqual(baseline["code_sha256"], changed["code_sha256"])
+                    self.assertNotEqual(baseline["code_files"][name], changed["code_files"][name])
+                finally:
+                    path.write_bytes(original)
+        extra = root / "app/extra_runtime.py"
+        extra.write_text("VALUE = 1\n", encoding="utf-8")
+        changed, _ = self.identity_run(root)
+        self.assertIn("app/extra_runtime.py", changed["code_files"])
+        self.assertNotEqual(baseline["code_sha256"], changed["code_sha256"])
+        self.assertFalse(
+            any(name.startswith(("tests/", "evals/", "docs/")) for name in changed["code_files"])
+        )
+
+    def test_execution_identity_snapshots_effective_settings_without_secrets(self):
+        root = self.identity_root()
+        baseline, provider = self.identity_run(root)
+        configuration = baseline["configuration"]
+        self.assertEqual(configuration["retrieval"]["method"], "semantic")
+        self.assertEqual(configuration["embedding"], embeddings.EMBEDDING_CONFIG)
+        self.assertEqual(configuration["provider"]["generation_model"], llm.GENERATION_MODEL)
+        self.assertEqual(
+            provider.generate_json.call_args.kwargs["max_output_tokens"],
+            configuration["provider"]["max_output_tokens"],
+        )
+        original = deepcopy(configuration)
+        for settings, changes in (
+            (CONFIGURATION, {"k": 3}),
+            (RETRIEVAL_CONFIG, {"max_lexical_terms": 32}),
+            (embeddings.EMBEDDING_CONFIG, {"query_format": "query: {query}"}),
+            (llm.PROVIDER_CONFIG, {"max_output_tokens": 512}),
+            (llm.PROVIDER_CONFIG, {"transport_timeout_seconds": 10}),
+        ):
+            with self.subTest(settings=changes), patch.dict(settings, changes):
+                changed, provider = self.identity_run(root)
+                self.assertNotEqual(
+                    baseline["configuration_sha256"], changed["configuration_sha256"]
+                )
+                self.assertEqual(configuration, original)
+                if "max_output_tokens" in changes:
+                    self.assertEqual(
+                        provider.generate_json.call_args.kwargs["max_output_tokens"], 512
+                    )
+                if "max_lexical_terms" in changes:
+                    self.assertEqual(
+                        len(lexical_terms(" ".join(f"term{i}" for i in range(50)))), 32
+                    )
+        lexical, _ = self.identity_run(root, method="lexical")
+        self.assertNotEqual(baseline["configuration_sha256"], lexical["configuration_sha256"])
+        with patch("app.llm.GENERATION_MODEL", "simulated-model"):
+            changed, _ = self.identity_run(root)
+            self.assertEqual(
+                changed["configuration"]["provider"]["generation_model"], "simulated-model"
+            )
+            self.assertNotEqual(baseline["configuration_sha256"], changed["configuration_sha256"])
+        with patch("app.embeddings.PACING_RPM", 40):
+            changed, _ = self.identity_run(root)
+            self.assertEqual(changed["configuration"]["pacing"]["requests_per_minute"], 40)
+            self.assertNotEqual(baseline["configuration_sha256"], changed["configuration_sha256"])
+        with patch("app.service.platform.python_version", return_value="simulated-python"):
+            changed, _ = self.identity_run(root)
+            self.assertNotEqual(baseline["configuration_sha256"], changed["configuration_sha256"])
+        with patch.dict("os.environ", {"GEMINI_API_KEY": "PRIVATE-TEST-KEY"}):
+            no_secret, _ = self.identity_run(root)
+        self.assertNotIn("PRIVATE-TEST-KEY", json.dumps(no_secret))
+        self.assertEqual(baseline["configuration_sha256"], no_secret["configuration_sha256"])
+
+    def test_execution_identity_preserves_legacy_record_and_public_lookup(self):
+        from app.main import public_result
+
+        root = self.identity_root()
+        current, _ = self.identity_run(root)
+        legacy = deepcopy(current)
+        legacy.pop("identity_version", None)
+        legacy.pop("code_files", None)
+        legacy["configuration"] = dict(CONFIGURATION)
+        legacy["configuration_sha256"] = digest(CONFIGURATION)
+        legacy["code_sha256"] = sha256(b"legacy-five-module-fingerprint").hexdigest()
+        save_analysis(self.journal, legacy)
+        before = self.journal.read_bytes()
+        with patch(
+            "app.llm.create_client",
+            side_effect=AssertionError("Lookup must not create SDK clients"),
+        ):
+            loaded = read_analysis(self.journal, legacy["run_id"])
+            self.assertEqual(loaded, legacy)
+            self.assertEqual(public_result(loaded).code_sha256, legacy["code_sha256"])
+        self.assertEqual(self.journal.read_bytes(), before)
+
+    def test_missing_identity_input_stops_before_search_or_generation(self):
+        root = self.identity_root()
+        (root / "uv.lock").unlink()
+        retriever, provider = self.retriever(), Mock()
+        with patch("app.service.ROOT", root), self.assertRaises(OSError):
+            analyze(self.question, retriever, provider, journal=self.journal)
+        retriever.search.assert_not_called()
+        provider.generate_json.assert_not_called()
+        self.assertFalse(self.journal.exists())
 
     def test_explicit_outcomes_and_preserved_provider_failures(self):
         for state in ("insufficient_evidence", "unsupported_request"):

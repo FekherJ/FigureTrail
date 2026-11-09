@@ -1,6 +1,6 @@
 # FigureTrail architecture
 
-**Version 1.1 — target design dated 24 October 2026; implementation status updated 1 November 2026 — Fekher Jarrar.**
+**Version 1.1 — target design dated 24 October 2026; implementation status updated 9 November 2026 — Fekher Jarrar.**
 
 FigureTrail answers simple numerical questions about public reports. It finds evidence, calculates a result and shows a verifiable analysis: values, periods, units, sources and formula. Example: “What was the percentage change in this measure between these two years?”
 
@@ -260,6 +260,8 @@ The source-case pilot records three generation timings and dated conservative co
 ### Execution records
 
 Store in `runs.sqlite`: `run_id`, state, date, public question, scope, mode, code/prompt/corpus/index/configuration versions, requested and returned model IDs where available, retrieved sources/ranks, allowed tool arguments, result, errors, durations, tokens and estimated cost with dated prices.
+
+Implemented fixed-workflow identity, verified 9 November 2026: `execution_identity()` snapshots all top-level application Python files and the dependency specification/lock/Python pin as named SHA-256 entries. It stores `identity_version`, `code_files`, a deep-owned configuration including retrieval scope/method, provider/pacing/embedding settings and installed runtime versions, plus code/configuration hashes. Prompt/corpus/index hashes remain independent. Historical records keep their original fields; API contracts are unchanged. The source manifest covers disk bytes; restart after edits, and do not treat it as proof of loaded bytecode or reproducible hosted-model output. See [verification](../verification/B08_EXECUTION_IDENTITY.md).
 
 Each event includes `run_id`, type and duration. Record failures; leave unknown usage unknown. Retain diagnostic structured responses without requesting or storing private chain of thought. Keep SQLite transactions short and closed during network calls. A critical recording failure must stop further untracked paid calls.
 

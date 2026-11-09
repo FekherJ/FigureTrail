@@ -37,9 +37,11 @@ The first Ubuntu test run exposed a timing-sensitive assumption: a 150 ms test d
 
 ## GitHub-hosted acceptance
 
-**Pending publication and hosted runs.** Local Ubuntu validation is not a GitHub-hosted result. No GitHub run ID or URL has yet been recorded for this workflow.
+**Hosted success verified on 1 November 2026.** [CI run 41318662604](https://github.com/FekherJ/FigureTrail/actions/runs/41318662604), attempt 1, completed successfully for commit `d901156ba47e075c640b4d27231a376131a9109c` on `main`. The `checks` job used GitHub-hosted Ubuntu 24.04 and passed all 58 tests in 4.751 s; every job step succeeded, including fresh locked installation, data verification, lint, formatting and tracked-file checks. Logs show empty model-key variables. Job duration was 17 seconds; the workflow summary shows 20 seconds total. These are CI durations, not live-model latency measurements.
 
-After publication, verify a green run on a fresh GitHub runner. Then, on a temporary validation branch, add a deliberately failing unittest and confirm the `Run offline tests` step and job fail. Remove that test and confirm the branch is green again. Record the commits/run URLs before marking hosted acceptance complete. The deliberately failing test must not be merged into the default branch.
+**Hosted intentional failure verified on 1 November 2026.** [CI run 41332322419](https://github.com/FekherJ/FigureTrail/actions/runs/41332322419), commit `95b596f15799adc601ca57ee94a477c716ed2736` on `ci/verify-failure`, failed specifically at `Run offline tests`. Setup, pinned data, environment, lint and formatting passed. Logs show 59 tests in 4.658 s, one intentional assertion failure (`Intentional hosted CI verification failure`) and exit code 1. The subsequent reproducibility step was skipped because the test step failed; this is expected failure propagation. Model keys were empty.
+
+**Hosted restoration verified on 1 November 2026.** [CI run 41332673328](https://github.com/FekherJ/FigureTrail/actions/runs/41332673328), commit `16e7ae95f138b6d5efb29ac3794a9665c6ca784d` on `ci/verify-failure`, passed all 58 tests in 4.695 s after the user committed and pushed the probe removal. Every job step passed, including the tracked-file/whitespace check. The tracked validation-branch tree matches the original CI baseline. The main success, intentional test failure and restored success now complete hosted CI acceptance. Main contains no probe and no validation-branch merge is required. The existing local negative test remains separate evidence.
 
 Commits and pushes remain under the user's control unless separately authorized. B08 remains the next application implementation milestone.
 

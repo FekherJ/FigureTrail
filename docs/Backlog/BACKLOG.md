@@ -22,7 +22,7 @@ Record priority (`P0`/`P1`), milestone and estimated hours. Optional labels are 
 
 Close an issue only after verifying its criteria and saving or linking evidence. Distinguish simulated from live model calls. Documentation alone does not establish an implemented feature.
 
-**CI follow-up, 1 November 2026:** [one workflow](../../.github/workflows/ci.yml) now defines locked setup, pinned public data, lint, formatting and offline tests. Local Ubuntu validation passes all 58 tests and propagates an intentionally failing test as exit code 1. Hosted green/red runs remain pending publication; see [CI evidence](../verification/CI_WORKFLOW.md). No B08 acceptance criterion is marked complete by this infrastructure change.
+**CI follow-up, 1 November 2026:** [one workflow](../../.github/workflows/ci.yml) now defines locked setup, pinned public data, lint, formatting and offline tests. Local Ubuntu validation passes all 58 tests and propagates an intentionally failing test as exit code 1. The [hosted green run](https://github.com/FekherJ/FigureTrail/actions/runs/41318662604) is verified; the [hosted deliberate-failure run](https://github.com/FekherJ/FigureTrail/actions/runs/41332322419) failed as intended; the [restored-green run](https://github.com/FekherJ/FigureTrail/actions/runs/41332673328) passed all 58 tests, completing hosted CI acceptance; see [CI evidence](../verification/CI_WORKFLOW.md). No B08 acceptance criterion is marked complete by this infrastructure change.
 
 ## 2. Delivery plan and validation allowance
 
@@ -226,6 +226,8 @@ Objective: make the service usable and testable independently of the UI.
 
 Objective: measure strengths/failures and avoid a demonstration based only on selected successes.
 
+**Preparation completed, 9 November 2026:** audit F02 is resolved for the fixed workflow. New records identify all top-level application modules and dependency files, effective workflow/retrieval/embedding/provider/pacing settings and installed runtime versions. Four regression tests cover changes, owned snapshots, secret exclusion, legacy lookup and missing dependency input; all 62 offline tests pass. All 14 historical analyses remain readable and the journal is unchanged. See [verification](../verification/B08_EXECUTION_IDENTITY.md). B08's evaluation criteria below remain open; the wider event/export/UI observability work remains B12.
+
 - [ ] Build the evaluator around the API's shared service. Only the evaluator loads expected answers/evidence, separately from analysis.
 - [ ] If feasible, extend to 20 development cases and 10 reserved cases split by report group; report actual counts if preparation takes longer.
 - [ ] Define tolerances, percentage conventions, retrieval/accuracy/unit/abstention metrics, evidence review, latency/cost and error categories.
@@ -339,4 +341,4 @@ Objective: release a reproducible version with measured results and documented t
 
 Exclude arbitrary PDF/OCR ingestion, user-supplied URL downloads, slow local models, fine-tuning, multi-agent systems, multiple providers, SSO, distributed cloud deployment, full dashboards and systematic LLM judging from this cycle.
 
-Add an extension only to address an observed weakness, and replace another task within the available allowance. The next implementation item is **B08**: formalize end-to-end evaluations and measure an improvement. The credential-free CI workflow is implemented and validated in an isolated local Ubuntu checkout; GitHub-hosted acceptance remains pending publication.
+Add an extension only to address an observed weakness, and replace another task within the available allowance. The next implementation item is **B08**: formalize end-to-end evaluations and measure an improvement. The credential-free CI workflow is implemented and validated in an isolated local Ubuntu checkout; GitHub-hosted success, deliberate test-failure propagation and restored-green acceptance are all verified; see [CI verification](../verification/CI_WORKFLOW.md).

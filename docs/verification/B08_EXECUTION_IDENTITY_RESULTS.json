@@ -1,0 +1,40 @@
+{
+  "date": "2026-11-09",
+  "tests": 62,
+  "test_seconds": 13.001,
+  "checks": [
+    {
+      "check": "lint",
+      "exit_code": 0
+    },
+    {
+      "check": "format",
+      "exit_code": 0
+    },
+    {
+      "check": "offline-tests",
+      "exit_code": 0
+    },
+    {
+      "check": "environment",
+      "exit_code": 0
+    },
+    {
+      "check": "data",
+      "exit_code": 0
+    },
+    {
+      "check": "corpus",
+      "exit_code": 0
+    },
+    {
+      "check": "index",
+      "exit_code": 0
+    }
+  ],
+  "identity_version": "fixed-execution-v1",
+  "identity_file_count": 13,
+  "historical_analyses_read": 14,
+  "historical_journal_unchanged": true,
+  "live_model_calls": 0
+}

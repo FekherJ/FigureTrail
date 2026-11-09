@@ -3,15 +3,19 @@
 from contextlib import closing
 from datetime import datetime, timezone
 from hashlib import sha256
+from importlib.metadata import distributions
 import json
 from pathlib import Path
+import platform
 import sqlite3
 from time import monotonic, perf_counter
 from uuid import uuid4
 
+from app import embeddings, llm
 from app.calculator import EvidenceError, VERSION, calculate
 from app.corpus import digest
 from app.llm import JOURNAL, ProviderError
+from app.retrieval import RETRIEVAL_CONFIG
 from app.schemas import CellSelection
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -24,6 +28,58 @@ CONFIGURATION = {
     "deadline_seconds": 60,
     "calculator_version": VERSION,
 }
+
+
+def execution_identity(method, report_ids):
+    """Snapshot on-disk app/dependency files and non-secret effective settings.
+
+    Args:
+        method: Validated lexical or semantic retrieval mode.
+        report_ids: Validated report scope, or None for the entire corpus.
+
+    Returns:
+        Versioned file hashes, owned settings and their fingerprints. Missing inputs
+        raise before retrieval or generation. Restart after code/dependency edits;
+        file hashes identify disk contents, not already imported Python bytecode.
+    """
+    paths = [
+        *(ROOT / "app").glob("*.py"),
+        *(ROOT / name for name in ("pyproject.toml", "uv.lock", ".python-version")),
+    ]
+    code_files = {
+        path.relative_to(ROOT).as_posix(): sha256(path.read_bytes()).hexdigest()
+        for path in sorted(paths)
+    }
+    configuration = {
+        **CONFIGURATION,
+        "retrieval": {**RETRIEVAL_CONFIG, "method": method, "report_ids": report_ids},
+        "embedding": embeddings.EMBEDDING_CONFIG,
+        "pacing": {
+            "requests_per_minute": embeddings.PACING_RPM,
+            "input_allowance_per_minute": embeddings.PACING_INPUT_ALLOWANCE,
+        },
+        "provider": {
+            **llm.PROVIDER_CONFIG,
+            "generation_model": llm.GENERATION_MODEL,
+            "embedding_model": llm.EMBEDDING_MODEL,
+            "local_limit_eur": str(llm.LIMIT_EUR),
+        },
+        "runtime": {
+            "python": platform.python_version(),
+            "implementation": platform.python_implementation(),
+            "sqlite": sqlite3.sqlite_version,
+            "packages": {item.metadata["Name"]: item.version for item in distributions()},
+        },
+    }
+    # Own nested values so later configuration edits cannot change a saved snapshot.
+    configuration = json.loads(json.dumps(configuration))
+    return {
+        "identity_version": "fixed-execution-v1",
+        "code_files": code_files,
+        "code_sha256": digest(code_files),
+        "configuration": configuration,
+        "configuration_sha256": digest(configuration),
+    }
 
 
 def save_analysis(journal, record):
@@ -162,23 +218,9 @@ def analyze(
         "retrieval_method": method,
         "corpus_version": retriever.manifest["corpus_version"],
         "index_version": retriever.manifest["index_version"],
-        "configuration": CONFIGURATION,
-        "configuration_sha256": digest(CONFIGURATION),
+        **execution_identity(method, scope),
         "prompt_version": "analysis-selection-v1",
         "prompt_sha256": sha256(instruction.encode()).hexdigest(),
-        # Hash file bytes to identify the code used; even comment edits change this fingerprint.
-        "code_sha256": sha256(
-            b"".join(
-                (ROOT / name).read_bytes()
-                for name in (
-                    "app/service.py",
-                    "app/calculator.py",
-                    "app/retrieval.py",
-                    "app/schemas.py",
-                    "app/llm.py",
-                )
-            )
-        ).hexdigest(),
         "retrieval": None,
         "selection": None,
         "call": None,
@@ -215,6 +257,7 @@ def analyze(
             CellSelection,
             run_id=record["run_id"],
             instruction=instruction,
+            max_output_tokens=record["configuration"]["provider"]["max_output_tokens"],
             deadline=deadline,
             cancelled=cancelled,
             metadata={

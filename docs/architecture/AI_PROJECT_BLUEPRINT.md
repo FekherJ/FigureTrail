@@ -1,6 +1,6 @@
 # AI Project Blueprint — FigureTrail
 
-**Standards reviewed 24 October; implementation status updated 1 November 2026. Build incrementally.**
+**Standards reviewed 24 October; implementation status updated 9 November 2026. Build incrementally.**
 
 Purpose: answer numerical questions from public reports with traceable evidence. Scope: one local Python service, a bounded report corpus, deterministic calculations and measured retrieval/model variants. Data references, the HTTP health contract, provider access, a bounded native tool call and the SQLite/vector index bundle are verified. B05 retrieval and B06 fixed CLI analysis have initial development measurements; B07 exposes that shared service through typed HTTP contracts; wider reliability verification follows the roadmap.
 
@@ -40,7 +40,7 @@ figuretrail/
 │   ├── architecture/
 │   ├── Backlog/
 │   └── verification/            # curated reports and measured JSON
-├── .github/workflows/ci.yml     # credential-free checks; hosted proof pending
+├── .github/workflows/ci.yml     # credential-free checks; hosted acceptance verified
 ├── pyproject.toml               # dependencies and tool configuration
 ├── uv.lock                     # resolved dependencies
 ├── .python-version             # tested interpreter
@@ -101,8 +101,10 @@ Treat questions, retrieved text and tool outputs as untrusted. Enforce tool allo
 
 Bound every model/embedding call centrally: deadline, output tokens, retries, tool steps and conservative spending checks. Agent ceiling: four generation calls and six tool calls. Disable hidden SDK retries initially. Local cost estimates alone cannot guarantee a billing cap.
 
+Fixed-workflow execution identity is [verified](../verification/B08_EXECUTION_IDENTITY.md): named application/dependency hashes and an owned effective-settings/runtime snapshot, retaining historical records without migration. Restart after code/dependency edits; hashes cover on-disk files.
+
 Record `run_id`, versions, retrieved ranks, tool events, state/errors, durations, tokens and estimated cost in SQLite. Unknown usage stays unknown; redact secrets. OpenTelemetry is optional later.
 
-The [CI workflow](../../.github/workflows/ci.yml) defines credential-free formatting, tests and source/export checks with locked dependencies and hash-pinned public data. Isolated Ubuntu validation passes; GitHub-hosted run verification is pending publication. See [CI verification](../verification/CI_WORKFLOW.md). Run paid comparisons explicitly within budget; protect secrets from untrusted PRs. [GitHub Actions](https://docs.github.com/en/actions/reference/security/secure-use). `.gitignore` is not access control. [Git](https://git-scm.com/docs/gitignore)
+The [CI workflow](../../.github/workflows/ci.yml) defines credential-free formatting, tests and source/export checks with locked dependencies and hash-pinned public data. Isolated Ubuntu validation and the [GitHub-hosted run](https://github.com/FekherJ/FigureTrail/actions/runs/41318662604) pass; the [hosted deliberate-failure run](https://github.com/FekherJ/FigureTrail/actions/runs/41332322419) failed as intended; the [restored-green run](https://github.com/FekherJ/FigureTrail/actions/runs/41332673328) passed all 58 tests, completing hosted CI acceptance. See [CI verification](../verification/CI_WORKFLOW.md). Run paid comparisons explicitly within budget; protect secrets from untrusted PRs. [GitHub Actions](https://docs.github.com/en/actions/reference/security/secure-use). `.gitignore` is not access control. [Git](https://git-scm.com/docs/gitignore)
 
 Publish a reproducible demo, measured comparisons, representative failures and one trace explaining an answer. Add cloud deployment, orchestration frameworks or distributed databases only for a demonstrated requirement.

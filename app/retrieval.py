@@ -41,7 +41,9 @@ def query_input(question: str) -> str:
 def lexical_terms(question: str) -> list[str]:
     query_input(question)
     terms = dict.fromkeys(re.findall(r"[^\W_]+", question.casefold()))
-    return [term for term in terms if term not in STOP_WORDS][:64]
+    return [term for term in terms if term not in STOP_WORDS][
+        : RETRIEVAL_CONFIG["max_lexical_terms"]
+    ]
 
 
 class Retriever:

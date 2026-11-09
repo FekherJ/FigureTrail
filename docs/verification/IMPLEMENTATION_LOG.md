@@ -922,3 +922,48 @@ git diff --check
 ```
 
 The workflow's inline data preparation and full README formatting command were also executed. The deliberate failure and wrong-hash probes ran only in isolated task directories, not the project working tree.
+
+
+## 37. GitHub-hosted CI success verified — 1 November 2026
+
+After the user committed/pushed CI, verified run [41318662604](https://github.com/FekherJ/FigureTrail/actions/runs/41318662604) and job 124884022866 through GitHub read APIs/logs. Commit `d901156ba47e075c640b4d27231a376131a9109c`, push on main, attempt 1, conclusion success. Every job step succeeded. GitHub-hosted Ubuntu 24.04 installed Python 3.14.5/uv 0.11.14 and all 33 locked distributions, verified the pinned FinQA hash and ten cases, passed lint and 30-file formatting, and passed all 58 offline tests in 4.751 s. Tracked-file and whitespace checks passed. Logs confirm empty Gemini/Google API key variables, disabled uv caching and fresh environment/dependency setup. Job duration 17 s, workflow summary 20 s; these are not model-latency measurements. Existing TestClient/httpx warning remains visible.
+
+Updated the CI report/structured evidence and current README/blueprint/backlog/audit status. Retained local Ubuntu/Windows measurements and the separate local deliberate-failure evidence. Hosted negative acceptance remains pending: no remote failure-test branch/run was created because the user chose to handle commits/pushes. The earlier instruction/code changes and historical records remain intact. This verification used read-only GitHub operations; the connector's combined-status view was empty for the push run, so the GitHub CLI read located it and connected workflow APIs supplied jobs/logs.
+
+Documentation/evidence-only update: checked JSON, relative links and Git whitespace, with fingerprints preserving application/tests/workflow, dependency files, sources/indexes/caches/journals and private materials. No test rerun, live model request, staging, commit, push or issue update was needed or performed.
+
+
+## 38. Prepare isolated hosted failure acceptance check — 1 November 2026
+
+Rechecked hosted workflow history: only the successful main run 41318662604 exists; the hosted intentional-failure check is still outstanding. Created a separate local worktree and ci/verify-failure branch at the verified d901156 commit. Added one branch-only test which intentionally fails, with no application/data/model calls. Its lint and formatting checks pass; its focused unittest run exits 1 for the expected assertion. The main worktree/branch, its existing documentation edits, application/tests/workflow, private materials and data/journals remain intact. No staging, commit or push occurred; the user explicitly retains those steps.
+
+Added ignored private instructions with exact publication and cleanup commands. Clarified CI structured evidence: run_status describes the completed green run; the overall status remains green_verified_red_pending. Preparation is not recorded as a hosted failed run. Recorded the pending branch/probe without fabricating run URLs. Hosted red and restored-green verification require user publication before they can be completed.
+
+Verified worktree isolation, probe lint/format and expected exit code, JSON, main HEAD/branch, unchanged staging and preservation fingerprints; Git whitespace checks pass. This is the remaining CI acceptance step, not a new product feature or a B08 completion. No model request, dependency change or GitHub write operation was made.
+
+
+## 39. Hosted failure propagation verified — 1 November 2026
+
+The user published commit `95b596f15799adc601ca57ee94a477c716ed2736` on the isolated `ci/verify-failure` branch. Read-only GitHub run/job APIs and logs verify [run 41332322419](https://github.com/FekherJ/FigureTrail/actions/runs/41332322419), job 124924827061: setup, data, environment, lint and formatting passed; Run offline tests failed with 59 tests in 4.658 s, one deliberate assertion failure and exit code 1. The downstream reproducibility check was skipped. Model keys were empty. This establishes hosted failure propagation, not a product regression or model-quality measurement.
+
+Removed only the temporary test in the separate validation worktree. Git diff against the original d901156 baseline confirms its remaining tracked content matches the original CI commit. Updated current CI status/evidence and ignored private cleanup commands; preserved historical local/hosted-green measurements. The restored-green run remains pending user commit/push. No staging, commit, push, remote configuration, application/dependency change or live AI call was performed. Main branch/HEAD, staging and unrelated tracked-file fingerprints are preserved; JSON and Git whitespace checks pass. No extra local suite run was needed: cleanup restores the already verified baseline and hosted green verification is the remaining check.
+
+
+## 40. Hosted restoration and current project review — 1 November 2026
+
+Verified the user's probe-removal commit `16e7ae95f138b6d5efb29ac3794a9665c6ca784d`, [run 41332673328](https://github.com/FekherJ/FigureTrail/actions/runs/41332673328), job 124925874875 via read-only GitHub metadata and logs. All hosted steps pass, including 58 tests in 4.695 s and tracked-file checks. The validation branch's tracked tree matches d901156. Hosted green/red/restored-green acceptance is complete; no merge is needed. Preserved prior measurements and recorded restoration separately.
+
+Reviewed current backlog, architecture/blueprint, audit findings, README commands/status and the shared analysis/retrieval/provider/evaluation paths. Current runtime code, prompts, dependencies and tests match the audited main commit. Confirmed F02 is still open: analyze hashes only five modules and its configuration omits effective runtime settings. Updated README and current CI follow-ups, removed pending-restoration claims, and documented bounded F02 preparation under B08. Full B12 observability remains later; no runtime fix or new evaluation result is claimed.
+
+Actual checks used installed project executables, equivalent to the README Ruff lint/format commands and python -B -X utf8 with unittest discover, scripts/check_environment.py, scripts/inspect_finqa.py --case all --check, -m scripts.prepare_corpus --check and -m scripts.build_index --check. All pass: 58 offline tests in 10.131 s; 30 formatted files; ten reviewed cases; validated 20-source/186-chunk/243-cell corpus and aligned 186-by-768 index. Parsed 32 tracked Python files/all tracked JSON and checked local Markdown links/whitespace. The TestClient/httpx deprecation warning remains visible. Model keys were empty for child checks. Before/after fingerprints preserve application/tests/prompts/workflow/dependencies, raw/reference data, source/index/cache/journal bytes and private materials except the explicitly updated CI instructions. Staging is unchanged; no commit, push, GitHub write, dependency installation or live model call occurred.
+
+
+## 41. Fixed-workflow execution identity — 9 November 2026
+
+Closed audit F02 as bounded B08 preparation. Added execution_identity() inside existing app/service.py: named hashes of all ten top-level application modules plus pyproject.toml, uv.lock and .python-version; canonical aggregate hash and owned effective workflow/retrieval/scope/embedding/pacing/provider/runtime settings. Records label the new format fixed-execution-v1. Prompt/corpus/index identities remain separate. No database migration or API contract change; historical records keep their original fields/hashes. Disk fingerprints require restart after source/dependency edits; they do not attest already loaded bytecode or deterministic hosted output.
+
+Centralized existing SDK request settings in app/llm.py without changing defaults and explicitly pass the captured generation token ceiling. Lexical term truncation now reads its recorded configuration value instead of a repeated literal, retaining the existing 64-term default. Added four meaningful offline regression tests in tests/test_analysis.py. Corrected the initial legacy fixture to include public evidence rank/score and call summary fields; the corrected pre-fix run had two missing-identity/settings errors and one missing-lock rejection failure, while legacy lookup passed. All four pass after implementation, including code/dependency changes, settings reaching behavior, owned snapshots, secret exclusion, old reads and stop-before-search on missing uv.lock.
+
+Actual commands: the focused identity unittest discovery, README Ruff lint/format, full offline unittest discovery, environment, ten-case --check, prepared-corpus --check and index --check commands. All 62 tests pass in 13.001 s; lint and 30-file formatting pass. All 14 real historical analyses read and validate through public_result() with SQLite mode=ro; journal bytes are unchanged. Existing TestClient/httpx warning remains visible. Child checks have empty model-key variables; no live requests, dependency installations or corpus/index rebuilds occurred.
+
+Updated README, backlog readiness, architecture/blueprint, engineering instructions, audit current status and the ignored consolidated workflow guide. [Identity verification](B08_EXECUTION_IDENTITY.md) and [results](B08_EXECUTION_IDENTITY_RESULTS.json) distinguish this local 62-test result from prior hosted 58-test evidence. Broader B08 comparisons and all B12 event/export/UI work remain open. Before/after fingerprints preserve other code/tests, dependencies, raw/reference/source/index/cache/journal files, earlier measurement JSON/reports and private PDFs/assets; prior local edits and staging remain intact. Commits and pushes remain with the user.
