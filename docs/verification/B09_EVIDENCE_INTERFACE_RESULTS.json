@@ -1,0 +1,131 @@
+{
+  "date": "2026-11-10",
+  "baseline_commit": "92db8b0a23c92b99216a78c1c7fb2fe111eb2cff",
+  "offline_validation": {
+    "date": "2026-11-10",
+    "tests": 74,
+    "test_seconds": 13.026,
+    "formatted_files": 30,
+    "checks": [
+      {
+        "check": "lint",
+        "exit_code": 0
+      },
+      {
+        "check": "format",
+        "exit_code": 0
+      },
+      {
+        "check": "offline-tests",
+        "exit_code": 0
+      },
+      {
+        "check": "environment",
+        "exit_code": 0
+      },
+      {
+        "check": "data",
+        "exit_code": 0
+      },
+      {
+        "check": "corpus",
+        "exit_code": 0
+      },
+      {
+        "check": "index",
+        "exit_code": 0
+      }
+    ],
+    "live_model_calls": 0,
+    "all_existing_data_and_private_files_preserved": true
+  },
+  "browser_validation": {
+    "playwright": "1.65.0",
+    "browser": "Edge 157.0.4341.42",
+    "desktop_viewport": [
+      1440,
+      1080
+    ],
+    "mobile_viewport": [
+      390,
+      844
+    ],
+    "checks": [
+      "startup lists reports without analysis POST",
+      "real HTTP submission shows original values/formula/periods/units/evidence",
+      "source link opens excerpt; bookmark reload uses GET only",
+      "insufficient evidence clears prior numeric answer and keeps excerpts",
+      "simulated SDK 503 is rendered as a technical failure",
+      "hostile question/source/row labels remain literal text; no elements or probe request",
+      "unknown ID is clear; malformed ID is rejected before a request",
+      "504 envelope preserves ID; manual lookup shows unfinalized state without POST",
+      "waiting state disables controls, clears old answer and prevents duplicate submission",
+      "blank question makes no POST; form controls have native labels",
+      "390px mobile layout has no page overflow; source table scroll stays local",
+      "unavailable reports disable new analysis while saved lookup remains usable"
+    ],
+    "page_errors": [],
+    "csp_errors": [],
+    "model_responses": "simulated SDK; 504 and reports-unavailable envelopes intercepted in browser",
+    "live_model_calls": 0,
+    "project_journal_writes": 0,
+    "screenshots": [
+      "b09-home.png",
+      "b09-live-result.png",
+      "b09-mobile.png",
+      "b09-no-answer.png",
+      "b09-result.png"
+    ]
+  },
+  "real_corpus_read_only_preview": {
+    "playwright": "1.65.0",
+    "browser": "157.0.4341.42",
+    "run_id": "ed53161d-972f-4ef6-a55f-9ebf61e9eb56",
+    "source": "saved live B08 lexical C01 result",
+    "page_errors": [],
+    "http_methods": [
+      "GET"
+    ],
+    "analysis_post_requests": 0,
+    "live_model_calls": 0,
+    "journal_unchanged": true
+  },
+  "preceding_hosted_baseline": {
+    "run_id": 42689851809,
+    "run_url": "https://github.com/FekherJ/FigureTrail/actions/runs/42689851809",
+    "commit_sha": "92db8b0a23c92b99216a78c1c7fb2fe111eb2cff",
+    "job_id": 129406396890,
+    "job_url": "https://github.com/FekherJ/FigureTrail/actions/runs/42689851809/job/129406396890",
+    "tests": 72,
+    "test_seconds": 6.097,
+    "conclusion": "success"
+  },
+  "ui_files_sha256": {
+    "app/main.py": "4aee85a1198de6abaf98c78b57fd30c66836ba77a12d67d15f8355919e11eb97",
+    "app/static/index.html": "d5f8b79d7273fdd4ac04a5768f20c7512ea256935c63673f51db859837417c11",
+    "app/static/app.css": "e8b9a5bf249ee62579475c1572754af3e239f030fe0b9dfb966caa13f10b0c4f",
+    "app/static/app.js": "58424ead165ded45e680b314fc6f97b1f9b4a331970b2baf61dbe593214b2711",
+    "app/static/favicon.svg": "c36fd4daacc988eb7620615ae9b7d9cfb3ea726538a6939e050c86aa668d087e"
+  },
+  "published_screenshots": {
+    "b09-live-result.png": "437bdb51645b299dab24f3885ed044637351c1480490204bf9623f50dc5d9f98",
+    "b09-no-answer.png": "f3b44aba4074ae19268dd45f6e4e6974971d93f5d951e22bf2e7242f395bfec9",
+    "b09-mobile.png": "75212623f73bb11a6227d36f2f0e332f976018744837a8584524474a497dd897"
+  },
+  "additional_period_check": {
+    "recorded_year": 2008,
+    "context_date": "2007-12-31",
+    "displayed_period": "2008 \u00b7 estimate",
+    "stored_record_unchanged": true
+  },
+  "live_model_calls": 0,
+  "project_dependencies_changed": false,
+  "temporary_servers_stopped": true,
+  "limitations": [
+    "Browser verification used Edge desktop and an emulated 390px mobile viewport, not every browser/device or a full accessibility audit.",
+    "Browser automation is a task-local verification harness, not a GitHub Actions browser job; committed offline tests cover static serving and file boundaries.",
+    "The API's existing semantic fixed workflow, request limits and provider reliability limits remain unchanged.",
+    "A 75-second browser timeout cannot forcibly cancel a submitted model request; saved-result refresh is manual.",
+    "Original PDF viewing/ingestion, multiple-report subset selection in the UI, agent mode and public authentication are outside B09."
+  ]
+}

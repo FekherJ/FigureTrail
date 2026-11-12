@@ -13,7 +13,8 @@ from uuid import UUID, uuid4
 
 from fastapi import FastAPI, Response
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
 from starlette.exceptions import HTTPException
 
 from app.embeddings import EmbeddingCache, EmbeddingPacer
@@ -172,6 +173,20 @@ def create_app(root: Path = ROOT, *, provider_factory=None):
     @app.exception_handler(Exception)
     async def internal_error(request, error):
         return error_response("internal_error", "The request could not be completed.", 500)
+
+    # Static assets are packaged with the application, independently of the data root.
+    assets = Path(__file__).resolve().parent / "static"
+    app.mount("/static", StaticFiles(directory=assets), name="static")
+
+    @app.get("/", include_in_schema=False)
+    def workspace():
+        return FileResponse(
+            assets / "index.html",
+            headers={
+                "Content-Security-Policy": "default-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'",
+                "X-Content-Type-Options": "nosniff",
+            },
+        )
 
     errors = {code: {"model": APIError} for code in (400, 403, 413, 415, 422, 503)}
 

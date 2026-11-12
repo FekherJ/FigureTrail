@@ -239,7 +239,7 @@ Objective: measure strengths/failures and avoid a demonstration based only on se
 
 **Design note:** calculation, retrieval and end-to-end checks use distinct metrics.
 
-**Verified status, 9 November 2026:** initial B08 comparison is complete locally on ten development positives and two negatives per variant. [Evidence](../verification/B08_WORKFLOW_EVALUATION.md): paced lexical 8/10 correct, semantic 6/10, complete proof 9/10 versus 10/10, negative checks 2/2 versus 1/2. The initial failed semantic run is retained. Generation pacing and stop-on-quota are tested; no 429 occurs in the paced pair, while three semantic 503s remain. All 72 offline tests pass. Larger/held-out evaluation is not delivered; B13 requires report-disjoint reserved cases. B09 is next. GitHub issue/board state above remains the dated 28 October observation; this local completion has not changed external tracking.
+**Verified status, 9 November 2026:** initial B08 comparison is complete locally on ten development positives and two negatives per variant. [Evidence](../verification/B08_WORKFLOW_EVALUATION.md): paced lexical 8/10 correct, semantic 6/10, complete proof 9/10 versus 10/10, negative checks 2/2 versus 1/2. The initial failed semantic run is retained. Generation pacing and stop-on-quota are tested; no 429 occurs in the paced pair, while three semantic 503s remain. All 72 offline tests pass. Larger/held-out evaluation is not delivered; B13 requires report-disjoint reserved cases. B09 is also complete locally; B10 is next. GitHub issue/board state above remains the dated 28 October observation; this local completion has not changed external tracking.
 
 ### B09 — Build an interface that shows the evidence
 
@@ -247,16 +247,18 @@ Objective: measure strengths/failures and avoid a demonstration based only on se
 
 Objective: provide a quickly understandable analysis result.
 
-- [ ] Serve one page from FastAPI with question, scope, submit action, waiting state and result.
-- [ ] Show original values, units/periods, formula, result and readable evidence with table headers.
-- [ ] Clearly display unresolved cases and errors; support execution lookup and technical details.
-- [ ] Escape source content and check the browser flow, including text containing HTML tags.
+- [x] Serve one page from FastAPI with question, scope, submit action, waiting state and result.
+- [x] Show original values, units/periods, formula, result and readable evidence with table headers.
+- [x] Clearly display unresolved cases and errors; support execution lookup and technical details.
+- [x] Escape source content and check the browser flow, including text containing HTML tags.
 
 **Acceptance criteria:** a reader can understand the purpose and trace the calculation to sources. The browser calls the application API without a provider key. One page is sufficient; no conversation state or graphical redesign is required.
 
 **Evidence:** screenshots or a short sequence showing a sourced success and insufficient evidence.
 
 **Design note:** every result remains traceable to source values and formula.
+
+**Verified status, 10 November 2026:** B09 is complete locally. [Verification](../verification/B09_EVIDENCE_INTERFACE.md): one same-origin page, source operands/formula/excerpts, waiting/error states, read-only lookup/bookmarks and technical details. All 74 offline tests and twelve Edge interaction checks pass; a genuine saved 24.69% result is displayed with the correct 2008 estimate period using GET only. Hostile HTML remains literal text. No project data or model calls changed. B10 is next; GitHub issue/board state has not been changed by this local completion.
 
 ### B10 — Add a bounded agent with structured tool calls
 
@@ -343,4 +345,4 @@ Objective: release a reproducible version with measured results and documented t
 
 Exclude arbitrary PDF/OCR ingestion, user-supplied URL downloads, slow local models, fine-tuning, multi-agent systems, multiple providers, SSO, distributed cloud deployment, full dashboards and systematic LLM judging from this cycle.
 
-Add an extension only to address an observed weakness, and replace another task within the available allowance. The next implementation item is **B09**: build the evidence-focused interface over the existing API. B08's scoped development comparison is complete; wider/held-out evaluation remains required before release. The credential-free CI workflow is implemented and validated in an isolated local Ubuntu checkout; GitHub-hosted success, deliberate test-failure propagation and restored-green acceptance are all verified; see [CI verification](../verification/CI_WORKFLOW.md).
+Add an extension only to address an observed weakness, and replace another task within the available allowance. The next implementation item is **B10**: add a bounded agent over the existing tools and compare it with the fixed baseline. B09's evidence interface is complete locally. B08's scoped development comparison is complete; wider/held-out evaluation remains required before release. The credential-free CI workflow is implemented and validated in an isolated local Ubuntu checkout; GitHub-hosted success, deliberate test-failure propagation and restored-green acceptance are all verified; see [CI verification](../verification/CI_WORKFLOW.md).

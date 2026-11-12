@@ -106,6 +106,56 @@ class APITests(unittest.TestCase):
         self.factory.assert_not_called()
         self.assertFalse(self.journal.exists())
 
+    def test_interface_assets_are_key_free_and_cannot_expose_local_files(self):
+        with patch.dict("os.environ", {}, clear=True), self.client() as client:
+            page = client.get("/")
+            self.assertEqual(page.status_code, 200)
+            self.assertIn("text/html", page.headers["content-type"])
+            self.assertIn("default-src 'self'", page.headers["content-security-policy"])
+            self.assertIn("object-src 'none'", page.headers["content-security-policy"])
+            self.assertEqual(page.headers["x-content-type-options"], "nosniff")
+            for path, kind in (
+                ("app.js", "javascript"),
+                ("app.css", "text/css"),
+                ("favicon.svg", "image/svg+xml"),
+            ):
+                with self.subTest(asset=path):
+                    asset = client.get("/static/" + path)
+                    self.assertEqual(asset.status_code, 200)
+                    self.assertIn(kind, asset.headers["content-type"])
+            for path in (
+                "/static/",
+                "/static/.env",
+                "/static/%2e%2e/main.py",
+                "/static/%2e%2e/%2e%2e/data/local/runs.sqlite",
+            ):
+                with self.subTest(path=path):
+                    self.assertEqual(client.get(path).status_code, 404)
+            self.assertEqual(client.get("/", headers={"Host": "outside.example"}).status_code, 400)
+            self.assertEqual(
+                client.get(
+                    "/static/app.js", headers={"Origin": "https://outside.example"}
+                ).status_code,
+                403,
+            )
+        self.factory.assert_not_called()
+        self.assertFalse(self.journal.exists())
+
+    def test_interface_is_available_without_an_index_or_credentials(self):
+        root = self.root / "fresh-checkout"
+        with (
+            patch.dict("os.environ", {}, clear=True),
+            TestClient(
+                create_app(root, provider_factory=self.factory), base_url="http://127.0.0.1"
+            ) as client,
+        ):
+            self.assertEqual(client.get("/").status_code, 200)
+            self.assertEqual(client.get("/static/app.js").status_code, 200)
+            self.assertIsNone(client.get("/health").json()["corpus_version"])
+            self.assertEqual(client.get("/reports").status_code, 503)
+        self.factory.assert_not_called()
+        self.assertFalse(root.exists())
+
     def test_success_is_typed_saved_and_lookup_makes_no_calls(self):
         with self.client() as client:
             response = client.post("/analyses", json=BODY)

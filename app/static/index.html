@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Numerical answers with the calculation and report evidence behind them.">
+  <title>FigureTrail — Report analysis</title>
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/app.css">
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#question">Skip to question</a>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="FigureTrail home"><span class="brand-mark" aria-hidden="true">FT</span><span>FigureTrail</span></a>
+    <div class="topbar-right"><span class="workspace-label">REPORT WORKSPACE</span><a href="/docs" target="_blank" rel="noopener">API reference <span aria-hidden="true">↗</span></a></div>
+  </header>
+  <main class="workspace">
+    <section class="intro" aria-labelledby="page-title">
+      <div><p class="eyebrow">FROM QUESTION TO SOURCE</p><h1 id="page-title">Follow the numbers.</h1><p class="intro-copy">Ask a question about your reports. See the figures and calculation behind the answer.</p></div>
+      <span class="availability" id="availability" role="status">Checking reports…</span>
+    </section>
+    <div class="workbench">
+      <aside class="sidebar" aria-label="Analysis controls">
+        <section class="panel question-panel">
+          <div class="section-heading"><span class="step-number" aria-hidden="true">01</span><h2>Your question</h2></div>
+          <form id="analysis-form">
+            <label for="question">What would you like to calculate?</label>
+            <textarea id="question" name="question" rows="5" maxlength="2000" required disabled placeholder="For example, what percentage of total estimated production came from Canada in 2008?" aria-describedby="question-hint character-count"></textarea>
+            <div class="field-notes"><span id="question-hint">Include the measure and period.</span><span id="character-count">0 / 2,000</span></div>
+            <div class="examples"><span>Try an example</span><button type="button" class="example" data-example="production" disabled>Production share</button><button type="button" class="example" data-example="revenue" disabled>Revenue change</button></div>
+            <label for="report-scope" class="scope-label">Report scope</label>
+            <select id="report-scope" disabled><option value="">All available reports</option></select>
+            <p class="field-help">Search all reports, or choose one.</p>
+            <button class="button primary" id="analyze-button" type="submit" disabled><span id="analyze-label">Analyze question</span><span aria-hidden="true">→</span></button>
+            <p class="request-note">New analyses use the model API.</p>
+          </form>
+          <p id="request-status" class="request-status" role="status" aria-live="polite"></p>
+        </section>
+        <section class="panel lookup-panel">
+          <h2>Open a saved analysis</h2>
+          <p class="muted">Inspect a previous result without another model request.</p>
+          <form id="lookup-form">
+            <label for="run-id">Execution ID</label>
+            <input id="run-id" name="run-id" type="text" maxlength="36" autocomplete="off" spellcheck="false" required placeholder="Paste an execution ID">
+            <button class="button secondary" id="lookup-button" type="submit">Open analysis <span aria-hidden="true">↗</span></button>
+          </form>
+        </section>
+      </aside>
+      <section class="panel result-panel" id="result-panel" aria-label="Analysis result" aria-busy="false">
+        <div id="result-view">
+          <div class="empty-state">
+            <div class="document-mark" aria-hidden="true"><span></span><span></span><span></span><b>a <span>÷</span> b</b></div>
+            <p class="eyebrow">AN ANSWER WITH A PAPER TRAIL</p>
+            <h2>The result is only the beginning.</h2>
+            <p>Your analysis will show the original values, the calculation and the report excerpts used along the way.</p>
+            <div class="workflow-preview" aria-label="Workflow"><span>Find evidence</span><i aria-hidden="true">→</i><span>Select values</span><i aria-hidden="true">→</i><span>Calculate</span></div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <footer class="footer"><span>Built around report excerpts and traceable calculations.</span><span>Source IDs identify excerpts; original PDF viewing is not included.</span></footer>
+  </main>
+  <noscript><p class="noscript">Enable JavaScript to use the workspace. The <a href="/docs">API reference</a> is also available.</p></noscript>
+</body>
+</html>

@@ -1,6 +1,6 @@
 # AI Project Blueprint — FigureTrail
 
-**Standards reviewed 24 October; implementation status updated 9 November 2026. Build incrementally.**
+**Standards reviewed 24 October; implementation status updated 10 November 2026. Build incrementally.**
 
 Purpose: answer numerical questions from public reports with traceable evidence. Scope: one local Python service, a bounded report corpus, deterministic calculations and measured retrieval/model variants. Data references, the HTTP health contract, provider access, a bounded native tool call and the SQLite/vector index bundle are verified. B05 retrieval and B06 fixed CLI analysis have initial development measurements; B07 exposes that shared service through typed HTTP contracts; wider reliability verification follows the roadmap.
 
@@ -10,7 +10,7 @@ Purpose: answer numerical questions from public reports with traceable evidence.
 figuretrail/
 ├── app/                         # single Python application
 │   ├── __init__.py
-│   ├── main.py                  # implemented JSON routes; UI follows in B09
+│   ├── main.py                  # implemented JSON routes and B09 workspace/static serving
 │   ├── schemas.py               # request, plan, tool, result contracts
 │   ├── corpus.py                # implemented source preparation and artifact validation
 │   ├── service.py               # fixed workflow; shared validation/limits
@@ -20,7 +20,7 @@ figuretrail/
 │   ├── embeddings.py            # content-addressed vector cache and paced preparation
 │   ├── storage.py               # SQLite/vector publication and validated reads
 │   ├── agent.py                 # P1 bounded tool-selection loop
-│   └── static/                  # minimal HTML/CSS/JavaScript
+│   └── static/                  # implemented evidence workspace; no build step
 ├── prompts/                     # versioned task prompts
 ├── scripts/                     # preparation and B01 checks
 ├── tests/                       # deterministic and component tests
@@ -108,5 +108,7 @@ Fixed-workflow execution identity is [verified](../verification/B08_EXECUTION_ID
 Record `run_id`, versions, retrieved ranks, tool events, state/errors, durations, tokens and estimated cost in SQLite. Unknown usage stays unknown; redact secrets. OpenTelemetry is optional later.
 
 The [CI workflow](../../.github/workflows/ci.yml) defines credential-free formatting, tests and source/export checks with locked dependencies and hash-pinned public data. Isolated Ubuntu validation and the [GitHub-hosted run](https://github.com/FekherJ/FigureTrail/actions/runs/41318662604) pass; the [hosted deliberate-failure run](https://github.com/FekherJ/FigureTrail/actions/runs/41332322419) failed as intended; the [restored-green run](https://github.com/FekherJ/FigureTrail/actions/runs/41332673328) passed all 58 tests, completing hosted CI acceptance. See [CI verification](../verification/CI_WORKFLOW.md). Run paid comparisons explicitly within budget; protect secrets from untrusted PRs. [GitHub Actions](https://docs.github.com/en/actions/reference/security/secure-use). `.gitignore` is not access control. [Git](https://git-scm.com/docs/gitignore)
+
+The [B09 workspace](../verification/B09_EVIDENCE_INTERFACE.md) is implemented with native HTML/CSS/JavaScript, existing API routes, text-safe evidence, read-only saved lookup and explicit failure states. Seventy-four offline tests and separate browser checks are locally verified; hosted acceptance awaits publication.
 
 Publish a reproducible demo, measured comparisons, representative failures and one trace explaining an answer. Add cloud deployment, orchestration frameworks or distributed databases only for a demonstrated requirement.

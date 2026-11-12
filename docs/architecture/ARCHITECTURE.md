@@ -1,6 +1,6 @@
 # FigureTrail architecture
 
-**Version 1.1 — target design dated 24 October 2026; implementation status updated 9 November 2026 — Fekher Jarrar.**
+**Version 1.1 — target design dated 24 October 2026; implementation status updated 10 November 2026 — Fekher Jarrar.**
 
 FigureTrail answers simple numerical questions about public reports. It finds evidence, calculates a result and shows a verifiable analysis: values, periods, units, sources and formula. Example: “What was the percentage change in this measure between these two years?”
 
@@ -184,14 +184,15 @@ Current implementation: `app/service.py` runs one retrieval and at most one stru
 
 | Route | Responsibility |
 |---|---|
-| `GET /` | Planned B09 demonstration UI; not implemented. |
+| `GET /` | Implemented B09 evidence workspace; no provider call. |
+| `GET /static/*` | Packaged HTML/CSS/JavaScript/icon assets only; local file boundaries enforced. |
 | `GET /health` | Report process availability and loaded corpus version without provider calls. Implemented. |
 | `GET /reports` | Implemented: list report/source IDs and chunk counts without annotations. |
 | `POST /analyses` | Implemented: question, optional known `report_ids`, and `fixed` mode only. |
 | `GET /analyses/{run_id}` | Implemented: read a stored public result without journal writes or AI calls. |
 | `GET /docs` | Interactive API documentation generated from OpenAPI. Available for current routes. |
 
-B07 implements the four JSON routes and OpenAPI using `app/main.py` and typed contracts in `app/schemas.py`; the root UI route remains planned. Retrieval mode is versioned experiment configuration, not an unrestricted API option. Agent mode remains unavailable until implemented.
+B07 implements the four JSON routes and OpenAPI using `app/main.py` and typed contracts in `app/schemas.py`; B09 implements the root workspace and static assets while keeping the JSON/OpenAPI contracts unchanged. Retrieval mode is versioned experiment configuration, not an unrestricted API option. Agent mode remains unavailable until implemented.
 
 The result includes `run_id`, state, mode, scope, evidence, available operation/operands/result, versions and an optional error code. Execution details expose durations and usage. Unknown values remain absent or `null`, rather than becoming zero.
 
@@ -215,6 +216,10 @@ Startup loads/validates the current corpus/index once. A fresh checkout with nei
 POST is an explicit hosted inference operation and shares B06's service, cached semantic k=5 retrieval, calculator and budget journal. GET routes create no provider client. Question/mode/scope validation, a 32,768-byte JSON body cap and local Host/same-origin checks precede execution. Unknown usage remains null; Decimal values are strings. Responses project typed public fields and omit internal SDK metadata/raw errors.
 
 One worker admits one analysis; concurrent submissions return 409. A 60-second HTTP analysis deadline propagates to pacing and <=20-second SDK transport limits. After HTTP timeout, cooperative stage checks discard late numerical output and the active slot remains held until its worker exits. Lookup can temporarily show `started`; thread/remote execution cannot be forcibly killed. Storage failures preserve the assigned ID but cannot guarantee a durable result. Process-crash recovery is outside B07. Run one Uvicorn worker, bind 127.0.0.1 and disable reload. See [verified API contracts/errors](../verification/B07_API.md).
+
+### Implemented B09 interface
+
+One plain page in `app/static/` uses existing API routes. A question and optional single report are submitted explicitly; saved-result lookup and `?run=` bookmarks are read-only. Results preserve server-supplied strings/precision, show source values/units/periods/formula and link to escaped excerpts. An independent context date does not replace the calculation year when years differ. Technical details retain raw public context and unknown usage/charges. Busy controls prevent duplicate submissions; unfinalized/blocked/domain/provider outcomes are distinct. A 75-second browser wait cannot cancel remote work, so refresh is manual and never resubmits. No CDN/runtime provider key is needed for the workspace. The root document has a restrictive same-origin CSP; textContent is the primary source-rendering boundary. Static assets remain separate from inference ingestion and backend execution identity. [Verification](../verification/B09_EVIDENCE_INTERFACE.md) separates simulated browser checks from a real saved-result GET preview.
 
 ## 6. P1 bounded agent
 

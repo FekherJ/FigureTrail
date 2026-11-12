@@ -53,3 +53,8 @@ The setup follows [Astral's GitHub Actions integration](https://docs.astral.sh/u
 ## Published identity baseline, 9 November 2026
 
 [Run 42684643190](https://github.com/FekherJ/FigureTrail/actions/runs/42684643190) at commit `b9cd10942217418380c72ceb76de251f0d82f296` passes all 62 tests in 7.280 s and every job step. This is the latest published baseline; earlier 58-test green/red/restored-green evidence is preserved above. B08 evaluator changes have 72 locally passing tests and await user commit/push.
+
+
+## Published B08 baseline, verified 10 November 2026
+
+[Run 42689851809](https://github.com/FekherJ/FigureTrail/actions/runs/42689851809) at commit `92db8b0a23c92b99216a78c1c7fb2fe111eb2cff` passes all 72 tests in 6.097 s; every job step succeeds. Earlier 58/62-test measurements remain historical. B09 currently has 74 locally passing tests plus separate Edge checks and awaits user commit/push; no hosted 74-test result is claimed.
