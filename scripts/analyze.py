@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 import sqlite3
 
+from app.agent import run_agent
 from app.embeddings import EmbeddingCache, EmbeddingPacer
 from app.llm import GeminiProvider, JOURNAL, create_client
 from app.retrieval import load_current
@@ -16,13 +17,14 @@ ROOT = Path(__file__).resolve().parents[1]
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("question")
+    parser.add_argument("--mode", choices=("fixed", "agent"), default="fixed")
     parser.add_argument("--method", choices=("lexical", "semantic"), default="semantic")
     parser.add_argument("--report-id", action="append", dest="report_ids")
     parser.add_argument("--live", action="store_true")
     args = parser.parse_args()
     if not args.live:
         parser.error(
-            "Pass --live to permit at most one generation and any missing query embedding. No requests were sent."
+            "Pass --live to permit hosted generation and any missing query embeddings. No requests were sent."
         )
     try:
         retriever = load_current(ROOT)
@@ -32,7 +34,8 @@ def main():
             if args.method == "semantic":
                 retriever.query_cache = EmbeddingCache(ROOT / "data/local/query-embeddings.sqlite")
                 retriever.provider, retriever.pacer = provider, EmbeddingPacer(JOURNAL)
-            result = analyze(
+            workflow = run_agent if args.mode == "agent" else analyze
+            result = workflow(
                 args.question, retriever, provider, method=args.method, report_ids=args.report_ids
             )
         print(json.dumps(result, indent=2))

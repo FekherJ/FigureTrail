@@ -6,7 +6,7 @@ The design combines retrieval, structured LLM selection and deterministic calcul
 
 ## Project status
 
-**Active development — implementation and local checks reviewed on 10 November 2026.**
+**Active development — implementation and local checks reviewed on 23 November 2026.**
 
 | Component | Status |
 |---|---|
@@ -21,10 +21,10 @@ The design combines retrieval, structured LLM selection and deterministic calcul
 | Native tool check | One validated `read_evidence` request and local execution; model request took 1.302 s |
 | Retrieval | Lexical/semantic comparison measured on ten development questions; complete proof@5: 9/10 and 10/10 |
 | Numerical analysis | Fixed CLI workflow with source validation, Decimal calculation and initial evaluation; provider latency/timeouts remain limitations |
-| Tools and operations | Provider/analysis journals and local allowances implemented; bounded agent events and fuller observability planned |
-| Delivery tracking | [Repository issues](https://github.com/FekherJ/FigureTrail/issues): B01–B07 completed; B08 development comparison and B09 interface completed locally; B10 bounded agent is next |
+| Tools and operations | Provider/analysis journals, local allowances and bounded agent events implemented; fuller observability planned |
+| Delivery tracking | [Repository issues](https://github.com/FekherJ/FigureTrail/issues): B01–B09 closed/Done; B10 implemented with a one-case pilot, broader comparison in progress; B11–B13 pending |
 
-Existing checks validate reference data, the HTTP foundation, a controlled LLM source-selection pilot and retrieval evidence coverage. Initial fixed-workflow evaluation is documented below, including provider failures. All ten questions are curated development cases; reserved-case performance remains unmeasured. B08 evaluation is implemented and measured on these development cases: lexical 8/10 correct, semantic 6/10 in the matched paced pair. Semantic proof coverage is higher, while provider failures and unit-context limits remain. B09's evidence UI is implemented; the bounded agent remains B10.
+Existing checks validate reference data, the HTTP foundation, a controlled LLM source-selection pilot and retrieval evidence coverage. Initial fixed-workflow evaluation is documented below, including provider failures. All ten questions are curated development cases; reserved-case performance remains unmeasured. B08 evaluation is implemented and measured on these development cases: lexical 8/10 correct, semantic 6/10 in the matched paced pair. Semantic proof coverage is higher, while provider failures and unit-context limits remain. B09's evidence UI is implemented. B10 adds explicit agent mode and a one-question pilot; broader comparison remains pending.
 
 ## How the application fits together
 
@@ -32,7 +32,7 @@ The target workflow is **question → retrieve report evidence → LLM selects c
 
 The backend lives in `app/` and runs as one local Python service. FastAPI handlers receive HTTP requests; corpus/index storage and retrieval already have shared modules. The shared analysis service now connects them to generation, validation and calculation. The same backend serves a plain HTML/CSS/JavaScript workspace at `/`. Gemini runs remotely and is called by Python; its API key stays out of the browser.
 
-The backend exposes health, report listing, fixed analysis and saved-result lookup. HTTP, CLI and evaluation paths reuse the same analysis service. The browser calls these same endpoints; it does not calculate answers or hold a provider key. See the [architecture](docs/architecture/ARCHITECTURE.md) for the target design.
+The backend exposes health, report listing, fixed/agent analysis and saved-result lookup. HTTP, CLI and evaluation paths reuse the same analysis service. The browser calls these same endpoints; it does not calculate answers or hold a provider key. See the [architecture](docs/architecture/ARCHITECTURE.md) for the target design.
 
 ![Evidence workspace displaying a saved live result](docs/verification/assets/b09-live-result.png)
 
@@ -231,11 +231,24 @@ $analysis.calculation
 Invoke-RestMethod "http://127.0.0.1:8000/analyses/$($analysis.run_id)"
 ```
 
-Omit `report_ids`, or set it to `null`, to search the full corpus. Only fixed semantic k=5 mode is available. POST can make one missing query embedding and at most one generation through the shared provider journal. It is the explicit live operation; GET routes and startup make no AI calls. Stored-result lookup returns recorded evidence and versions without rerunning inference. `/docs` describes strict inputs, typed results and errors.
+Omit `report_ids`, or set it to `null`, to search the full corpus. Fixed semantic k=5 remains default. Explicit `mode: "agent"` selects the bounded loop. Fixed permits one missing query embedding and at most one generation; agent mode permits four generations and two searches, potentially creating query embeddings, through the shared journal. It is the explicit live operation; GET routes and startup make no AI calls. Stored-result lookup returns recorded evidence and versions without rerunning inference. `/docs` describes strict inputs, typed results and errors.
 
 Questions are limited to 2000 characters and JSON bodies to 32,768 bytes. Unknown scope/mode/fields return 422 before provider initialization. Completed non-answer states use HTTP 200; technical failures use 5xx, and concurrent/budget-blocked work uses 409. Browser Origin must match the local server origin. No public authentication or arbitrary ingestion is implemented.
 
 The API bounds its analysis wait to 60 seconds and passes remaining time to pacing and SDK calls. If a worker outlives that wait, the response carries its run ID and the only analysis slot remains occupied until it stops; lookup may briefly show `started`. Python cannot forcibly cancel an already submitted remote request. See [API contracts, verification and limits](docs/verification/B07_API.md).
+
+## Run the bounded agent
+
+Gemini selects one native action at a time: `search_evidence`, `read_evidence`, then validated `calculate` or structured abstention. Python enforces original scope, read-cell access and shared source validation. Ceilings: four generations, six tools and two searches.
+
+```powershell
+uv run --locked python -B -X utf8 -m scripts.analyze "In Devon's estimated 2008 production table, what percentage of total production in MMBoe comes from Canada?" --mode agent --live
+uv run --locked python -B -X utf8 -m evals.agent --case-id C01
+```
+
+The first command is live. The second only prints a worst-case paired plan; add `--live` only for an affordable declared campaign. Without case IDs it plans all ten development questions, currently above the allowance. API clients may set `mode: "agent"`; the browser form remains fixed, while saved agent runs can be opened through lookup.
+
+C01 retains an agent 504 and a successful separate follow-up. Fixed succeeds twice; the successful agent takes 17.88 s versus 3.19 s for fixed. This is one repeated question, not a broad quality comparison. Fixed remains default; broader B10 comparison is pending. See [implementation, trace and limits](docs/verification/B10_BOUNDED_AGENT.md).
 
 ## Run checks
 
@@ -243,20 +256,20 @@ After preparing the data:
 
 ```powershell
 uv run --locked ruff check .
-uv run --locked ruff format --check app scripts/check_environment.py scripts/check_provider.py scripts/run_source_case.py scripts/check_tool_call.py scripts/prepare_corpus.py scripts/build_index.py tests/test_provider_connection.py tests/test_source_case.py tests/test_tool_call.py tests/test_corpus.py tests/test_index.py scripts/search.py evals/retrieval.py tests/test_retrieval.py scripts/analyze.py evals/analysis.py tests/test_analysis.py tests/test_analysis_evaluation.py tests/test_api.py tests/test_cli_lifecycle.py
+uv run --locked ruff format --check app scripts/check_environment.py scripts/check_provider.py scripts/run_source_case.py scripts/check_tool_call.py scripts/prepare_corpus.py scripts/build_index.py tests/test_provider_connection.py tests/test_source_case.py tests/test_tool_call.py tests/test_corpus.py tests/test_index.py scripts/search.py evals/retrieval.py tests/test_retrieval.py scripts/analyze.py evals/analysis.py tests/test_analysis.py tests/test_analysis_evaluation.py tests/test_api.py tests/test_cli_lifecycle.py evals/agent.py tests/test_agent.py tests/test_agent_evaluation.py
 uv run --locked python -B -X utf8 scripts/inspect_finqa.py --case all --check
 uv run --locked python -B -X utf8 -m unittest discover -s tests -v
 ```
 
 Verified results: **10 valid cases and 3 passing negative tests**. The tests reject the wrong year, confusion between ratios and percentages, and answers leaked into source exports. The verifier rejects Python's `-O` mode because it disables assertions.
 
-All **74 offline tests** pass. Nineteen API tests cover typed results, read-only lookup, validation, local request restrictions, single-analysis concurrency, deadlines and simulated provider/storage failures. One starts a real local Uvicorn HTTP server with simulated SDK responses. Two UI-serving tests cover key-free assets, fresh-checkout behavior and file boundaries. Twelve separate Edge interaction checks cover rendering, saved lookup, failures, hostile HTML, waiting and mobile layout; see [UI verification](docs/verification/B09_EVIDENCE_INTERFACE.md). Fixed-analysis tests cover source arithmetic, units/periods/scales, accessible cells, outcomes, durable records and failure-aware scoring. Four execution-identity tests cover code/dependency changes, effective settings, secret exclusion, legacy lookup and missing-input rejection before model work. Evaluator tests also cover evidence/unit/year scoring, nonfinite values, matched reports, read-only plans, unknown costs, generation pacing and storage/quota stopping. Retrieval tests cover literal query handling, scope before top-k, cosine/cache behavior, invalid requests, evaluator separation and failure-aware metrics. A filesystem or SQLite storage error stops the retrieval campaign: the triggering entry is failed and every remaining query/method entry is blocked without another search. Blocked entries remain in metric denominators; `blocked` is reported separately as a subset of the existing non-passing `failures` count. Index checks cover cached rebuild/resume, file-lock recovery, pacing/restart history, cache corruption and mismatched SQLite/FTS/vector rows and configuration. Corpus checks cover source isolation, deduplication, original values/context, repeatable artifacts and rejection of inconsistent input/output. Native-tool tests also cover eleven response/execution cases and a simulated quota failure. The provider tests additionally simulate quota errors on both SDK endpoints and verify credential exclusion, retained unknown usage, source/plan boundaries, invented cells and a budget block before network access. CLI lifecycle tests verify SDK cleanup on success, provider/pacing setup failures, provider errors and storage failures, plus operation without a client for lexical/cached paths. Ruff checks lint across the codebase and formatting in the application, current preparation/provider/index/search/evaluation commands and their tests. FinQA verification also runs with the Python standard library alone. These checks are separate from live development retrieval/workflow evaluations and future reserved-case measurements.
+All **88 offline tests** pass. Twenty API tests cover typed results, read-only lookup, validation, local request restrictions, single-analysis concurrency, deadlines and simulated provider/storage failures. One starts a real local Uvicorn HTTP server with simulated SDK responses. Two UI-serving tests cover key-free assets, fresh-checkout behavior and file boundaries. Twelve separate Edge interaction checks cover rendering, saved lookup, failures, hostile HTML, waiting and mobile layout; see [UI verification](docs/verification/B09_EVIDENCE_INTERFACE.md). Fixed-analysis tests cover source arithmetic, units/periods/scales, accessible cells, outcomes, durable records and failure-aware scoring. Four execution-identity tests cover code/dependency changes, effective settings, secret exclusion, legacy lookup and missing-input rejection before model work. Evaluator tests also cover evidence/unit/year scoring, nonfinite values, matched reports, read-only plans, unknown costs, generation pacing and storage/quota stopping. Retrieval tests cover literal query handling, scope before top-k, cosine/cache behavior, invalid requests, evaluator separation and failure-aware metrics. A filesystem or SQLite storage error stops the retrieval campaign: the triggering entry is failed and every remaining query/method entry is blocked without another search. Blocked entries remain in metric denominators; `blocked` is reported separately as a subset of the existing non-passing `failures` count. Index checks cover cached rebuild/resume, file-lock recovery, pacing/restart history, cache corruption and mismatched SQLite/FTS/vector rows and configuration. Corpus checks cover source isolation, deduplication, original values/context, repeatable artifacts and rejection of inconsistent input/output. Native-tool tests also cover eleven response/execution cases and a simulated quota failure. The provider tests additionally simulate quota errors on both SDK endpoints and verify credential exclusion, retained unknown usage, source/plan boundaries, invented cells and a budget block before network access. CLI lifecycle tests verify SDK cleanup on success, provider/pacing setup failures, provider errors and storage failures, plus operation without a client for lexical/cached paths. Ruff checks lint across the codebase and formatting in the application, current preparation/provider/index/search/evaluation commands and their tests. FinQA verification also runs with the Python standard library alone. These checks are separate from live development retrieval/workflow evaluations and future reserved-case measurements.
 
 ## Continuous integration
 
 [CI](.github/workflows/ci.yml) defines one Ubuntu 24.04 job: pinned Python/uv, locked dependency installation, hash-verified FinQA setup, source-only exports, lint, formatting and offline tests. It uses no model credentials and makes no hosted inference calls. An isolated local Ubuntu run passed all 58 tests; an intentionally failing temporary test returned exit code 1. The [GitHub-hosted run](https://github.com/FekherJ/FigureTrail/actions/runs/41318662604) passed all 58 tests; the [hosted deliberate-failure run](https://github.com/FekherJ/FigureTrail/actions/runs/41332322419) failed as intended; the [restored-green run](https://github.com/FekherJ/FigureTrail/actions/runs/41332673328) passed all 58 tests, completing hosted CI acceptance; see [verification and acceptance steps](docs/verification/CI_WORKFLOW.md).
 
-The later [identity baseline run](https://github.com/FekherJ/FigureTrail/actions/runs/42684643190) passes all 62 tests. The [published B08 baseline](https://github.com/FekherJ/FigureTrail/actions/runs/42689851809) passes all 72 tests. Current B09 changes pass 74 tests locally and await publication.
+The later [identity baseline run](https://github.com/FekherJ/FigureTrail/actions/runs/42684643190) passes all 62 tests. The [published B08 baseline](https://github.com/FekherJ/FigureTrail/actions/runs/42689851809) passes all 72 tests. The [published B09 run](https://github.com/FekherJ/FigureTrail/actions/runs/43271600822) passes 74 tests. Current B10 changes pass 88 tests locally; hosted verification awaits publication.
 
 ## Repository layout
 
@@ -290,10 +303,11 @@ The B03 pilot uses Google's Gemini Developer API: `gemini-3.5-flash-lite` for ge
 
 ## Next milestone
 
-B01–B09 functionality is complete at the documented scope: B08 measures ten development positives/two negatives, and B09 exposes the fixed workflow through an evidence interface. Next is B10's bounded agent, compared against that baseline. Provider reliability, broader source coverage and report-disjoint reserved validation remain open before release. The [backlog](docs/Backlog/BACKLOG.md) contains the acceptance criteria and dependencies.
+B01–B09 functionality is complete at the documented scope: B08 measures ten development positives/two negatives, and B09 exposes the fixed workflow through an evidence interface. B10's agent loop is implemented with a one-question pilot; broader comparison remains in progress. Fixed stays default. Provider reliability, broader source coverage and report-disjoint reserved validation remain open before release. The [backlog](docs/Backlog/BACKLOG.md) contains the acceptance criteria and dependencies.
 
 ## Documentation
 
+- [Bounded agent and paired pilot](docs/verification/B10_BOUNDED_AGENT.md)
 - [Evidence interface and browser verification](docs/verification/B09_EVIDENCE_INTERFACE.md)
 - [End-to-end evaluation comparison](docs/verification/B08_WORKFLOW_EVALUATION.md)
 - [Fixed workflow, domain limits and live results](docs/verification/B06_FIXED_WORKFLOW.md)

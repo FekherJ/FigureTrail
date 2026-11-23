@@ -10,12 +10,14 @@ from decimal import Decimal
 from hashlib import sha256
 from importlib.metadata import version
 from pathlib import Path
-from time import monotonic, perf_counter
+from time import monotonic, perf_counter, sleep, time
 from uuid import uuid4
 
 from google import genai
 from google.genai import types
 from pydantic import BaseModel, ValidationError
+
+from app.schemas import CellSelection
 
 # Generation returns structured responses or tool calls; embeddings represent text as numbers.
 GENERATION_MODEL = "gemini-3.5-flash-lite"
@@ -419,6 +421,96 @@ class GeminiProvider:
             cancelled=cancelled,
         )
 
+    def agent_turn(
+        self, messages, tools, *, run_id, instruction, metadata=None, deadline=None, cancelled=None
+    ):
+        """Request one native action; preserve SDK content in memory, not the journal.
+
+        messages is a bounded SDK Content history. tools maps allowed names to
+        argument schemas/descriptions. Returns (action, model Content, call record).
+        The caller validates permissions and executes tools; automatic execution is off.
+        """
+        serialized = json.dumps(
+            [message.model_dump(mode="json", exclude_none=True) for message in messages],
+            ensure_ascii=False,
+        )
+        config, tags = self._generation_config(serialized, instruction, 1000, deadline)
+        declarations = [
+            types.FunctionDeclaration(
+                name=name,
+                description=description,
+                parameters_json_schema=schema.model_json_schema(),
+            )
+            for name, (schema, description) in tools.items()
+        ]
+        config.tools = [types.Tool(function_declarations=declarations)]
+        config.tool_config = types.ToolConfig(
+            function_calling_config=types.FunctionCallingConfig(mode="AUTO")
+        )
+        tags["tools_sha256"] = sha256(
+            json.dumps(
+                [tool.model_dump(mode="json", exclude_none=True) for tool in declarations],
+                sort_keys=True,
+            ).encode()
+        ).hexdigest()
+
+        def parse(response, record):
+            if len(response.candidates or []) != 1:
+                raise ValueError("Expected one model candidate.")
+            candidate = response.candidates[0]
+            if candidate.finish_reason != types.FinishReason.STOP or not candidate.content:
+                raise ValueError("Agent response is incomplete.")
+            calls = [
+                part.function_call
+                for part in candidate.content.parts or []
+                if part.function_call is not None
+            ]
+            if calls:
+                if len(calls) != 1:
+                    raise ValueError("Parallel tool calls are not supported.")
+                call = calls[0]
+                if not isinstance(call.name, str) or not isinstance(call.args, dict):
+                    raise ValueError("Malformed native tool call.")
+                action = {
+                    "type": "tool",
+                    "name": call.name,
+                    "arguments": call.args,
+                    "provider_call_id": call.id,
+                }
+            else:
+                text = "".join(
+                    part.text or "" for part in candidate.content.parts or [] if not part.thought
+                )
+                outcome = CellSelection.model_validate_json(text)
+                if outcome.status == "ready":
+                    raise ValueError("Only calculate can produce a numerical success.")
+                action = {"type": "abstention", "status": outcome.status}
+            record["validated_output"] = action
+            return action, candidate.content
+
+        def perform():
+            if deadline is not None:
+                remaining = deadline - monotonic()
+                if remaining <= 0 or (cancelled is not None and cancelled.is_set()):
+                    raise TimeoutError("Execution deadline reached.")
+                config.http_options.timeout = max(
+                    1, int(min(PROVIDER_CONFIG["transport_timeout_seconds"], remaining) * 1000)
+                )
+            return self.client.models.generate_content(
+                model=GENERATION_MODEL, contents=messages, config=config
+            )
+
+        (action, content), record = self._call(
+            "generation",
+            run_id,
+            perform,
+            parse,
+            {**(metadata or {}), **tags},
+            deadline=deadline,
+            cancelled=cancelled,
+        )
+        return action, content, record
+
     def embed_text(
         self, text: str, *, run_id: str, metadata: dict | None = None, deadline=None, cancelled=None
     ):
@@ -494,3 +586,41 @@ class GeminiProvider:
             deadline=deadline,
             cancelled=cancelled,
         )
+
+
+GENERATION_RPM = 12
+
+
+def wait_for_generation_slot(journal, *, clock=time, pause=sleep, deadline=None, cancelled=None):
+    """Pace one sequential campaign using recent shared-journal generation history.
+
+    Failed/blocked call records count conservatively. The caller owns campaign
+    serialization; this is not a cross-process reservation or provider quota guarantee.
+    """
+    waited = 0.0
+    while journal.exists():
+        if (deadline is not None and monotonic() >= deadline) or (
+            cancelled is not None and cancelled.is_set()
+        ):
+            raise TimeoutError("Generation pacing deadline reached.")
+        now = clock()
+        with closing(
+            sqlite3.connect(journal.resolve().as_uri() + "?mode=ro", uri=True)
+        ) as database:
+            calls = [
+                json.loads(row[0]) for row in database.execute("SELECT record_json FROM calls")
+            ]
+        recent = sorted(
+            datetime.fromisoformat(call["created_at_utc"]).timestamp()
+            for call in calls
+            if call["kind"] == "generation"
+            and now - datetime.fromisoformat(call["created_at_utc"]).timestamp() < 60
+        )
+        if len(recent) < GENERATION_RPM:
+            break
+        delay = min(1.0, max(0.01, recent[-GENERATION_RPM] + 60.1 - now))
+        if deadline is not None:
+            delay = min(delay, max(0, deadline - monotonic()))
+        pause(delay)
+        waited += delay
+    return waited

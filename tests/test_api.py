@@ -177,6 +177,29 @@ class APITests(unittest.TestCase):
             self.assertTrue(0 < call.kwargs["config"].http_options.timeout <= 20_000)
         self.assertNotIn("ANNOTATION-SECRET", self.generate.call_args.kwargs["contents"])
 
+    def test_agent_mode_is_explicit_and_saved_lookup_preserves_tool_events(self):
+        from test_agent import native
+        from unittest.mock import patch
+
+        chunks = ["DVN/2007/page_58.pdf#table-row[1]", "DVN/2007/page_58.pdf#table-row[3]"]
+        self.generate.side_effect = [
+            native("search_evidence", {"query": QUESTION}),
+            native("read_evidence", {"chunk_ids": chunks}),
+            native("calculate", {"operation": "ratio_percent", "cell_ids": IDS}),
+        ]
+        with self.client() as client, patch("app.agent.wait_for_generation_slot", return_value=0):
+            response = client.post("/analyses", json={**BODY, "mode": "agent"})
+            self.assertEqual(response.status_code, 200, response.text)
+            value = response.json()
+            self.assertEqual(value["mode"], "agent")
+            self.assertEqual(value["calculation"]["display"], "24.69 %")
+            self.assertEqual(len(value["tool_events"]), 3)
+            self.assertEqual(len(value["calls"]), 4)
+            self.assertEqual(client.get(f"/analyses/{value['run_id']}").json(), value)
+            self.assertEqual(self.generate.call_count, 3)
+            schema = client.get("/openapi.json").json()["components"]["schemas"]
+            self.assertEqual(schema["AnalysisRequest"]["properties"]["mode"]["default"], "fixed")
+
     def test_invalid_input_never_initializes_provider_or_journal(self):
         with self.client() as client:
             for body in (
@@ -184,7 +207,7 @@ class APITests(unittest.TestCase):
                 {**BODY, "question": " "},
                 {**BODY, "question": "x" * 2001},
                 {**BODY, "question": 123},
-                {**BODY, "mode": "agent"},
+                {**BODY, "mode": "unknown"},
                 {**BODY, "report_ids": []},
                 {**BODY, "report_ids": ["unknown"]},
                 {**BODY, "report_ids": [True]},

@@ -1,6 +1,6 @@
 # AI Project Blueprint — FigureTrail
 
-**Standards reviewed 24 October; implementation status updated 10 November 2026. Build incrementally.**
+**Standards reviewed 24 October; implementation status updated 23 November 2026. Build incrementally.**
 
 Purpose: answer numerical questions from public reports with traceable evidence. Scope: one local Python service, a bounded report corpus, deterministic calculations and measured retrieval/model variants. Data references, the HTTP health contract, provider access, a bounded native tool call and the SQLite/vector index bundle are verified. B05 retrieval and B06 fixed CLI analysis have initial development measurements; B07 exposes that shared service through typed HTTP contracts; wider reliability verification follows the roadmap.
 
@@ -61,7 +61,7 @@ Use FastAPI/Pydantic, SQLite FTS5/BM25, then compare hosted embeddings with loca
 
 The LLM selects an allowed operation and cell IDs. Code resolves source values, checks scope/units/periods and positive denominators, then calculates. Schema conformity does not establish factual correctness. [Structured outputs](https://developers.openai.com/api/docs/guides/structured-outputs)
 
-The API and evaluator share the analysis service; the planned UI will call that API. Expose `/health`, `/reports`, `POST /analyses`, and execution lookup. Return explicit `success`, `insufficient_evidence`, `unsupported_request`, `blocked` or `failed` states.
+The API and evaluator share the analysis service; the evidence UI calls that API. Expose `/health`, `/reports`, `POST /analyses`, and execution lookup. Return explicit `success`, `insufficient_evidence`, `unsupported_request`, `blocked` or `failed` states.
 
 B07 verification covers strict JSON/known-scope input, typed results, read-only lookup, local Host/origin checks, one active worker and a bounded HTTP wait. Keep the slot while a timed-out worker exits; do not equate an HTTP deadline with forced remote cancellation. See [API evidence](../verification/B07_API.md).
 
@@ -112,3 +112,6 @@ The [CI workflow](../../.github/workflows/ci.yml) defines credential-free format
 The [B09 workspace](../verification/B09_EVIDENCE_INTERFACE.md) is implemented with native HTML/CSS/JavaScript, existing API routes, text-safe evidence, read-only saved lookup and explicit failure states. Seventy-four offline tests and separate browser checks are locally verified; hosted acceptance awaits publication.
 
 Publish a reproducible demo, measured comparisons, representative failures and one trace explaining an answer. Add cloud deployment, orchestration frameworks or distributed databases only for a demonstrated requirement.
+
+
+**B10 follow-up, 23 November:** explicit API/CLI agent mode uses three controlled tools and shared calculator/provider limits. [Evidence](../verification/B10_BOUNDED_AGENT.md) retains failed/successful C01 attempts. Wider comparison is pending; fixed stays default. No framework or new dependency.

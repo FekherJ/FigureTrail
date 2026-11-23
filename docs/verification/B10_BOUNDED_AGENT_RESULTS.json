@@ -1,0 +1,713 @@
+{
+  "date": "2026-11-23",
+  "status": "implementation_and_one_case_pilot_verified; broader_comparison_pending",
+  "offline_validation": {
+    "date": "2026-11-23",
+    "status": "passed",
+    "offline_tests": 88,
+    "test_seconds": 23.665,
+    "formatted_files": 34,
+    "lint": "passed",
+    "format": "passed",
+    "environment": "passed",
+    "ten_source_cases": "passed",
+    "prepared_corpus": "passed",
+    "current_index": "passed",
+    "local_link_targets_checked": 256,
+    "python_files_parsed": 36,
+    "json_files_parsed": 28,
+    "legacy_analysis_rows_preserved": 67,
+    "legacy_call_rows_preserved": 272,
+    "saved_results_readable": 71,
+    "protected_local_files_preserved_except_intended": true,
+    "intentional_local_changes": [
+      "data/local/query-embeddings.sqlite",
+      "data/local/runs.sqlite",
+      "private/FIGURETRAIL_WORKFLOW_GUIDE.md"
+    ],
+    "staging_unchanged": true,
+    "further_live_calls": 0
+  },
+  "independent_development_questions": 1,
+  "paired_attempts": 2,
+  "reserved_cases": 0,
+  "campaigns": [
+    {
+      "run_id": "71869bee-f944-47cb-b755-c8aa58e33f92",
+      "local_report_sha256": "39daccfe016b924ffe0d31a1ead690d8c361c640c9cc3c32c4577782ba39fbbc",
+      "plan": {
+        "method": "semantic",
+        "planned_cases": 1,
+        "maximum_generation_requests": 5,
+        "maximum_embedding_requests": 2,
+        "additional_allowance_reservation_eur": "5.02",
+        "current_allowance_eur": "16.6120700",
+        "local_limit_eur": "25",
+        "fits_local_allowance": true,
+        "actual_charge_eur": null
+      },
+      "case_id": "C01",
+      "question": "In Devon's estimated 2008 production table, what percentage of total production in MMBoe comes from Canada?",
+      "metrics": {
+        "fixed": {
+          "development_cases": 1,
+          "correct_answers": 1,
+          "answer_accuracy": 1.0,
+          "answer_successes": 1,
+          "answer_abstentions": 0,
+          "blocked": 0,
+          "technical_failures": 0,
+          "complete_proofs_at_k": 1,
+          "mean_cell_recall_at_k": 1.0,
+          "correct_cell_selections": 1,
+          "unit_scored_cases": 1,
+          "correct_unit_contexts": 1,
+          "year_scored_cases": 1,
+          "correct_period_years": 1,
+          "latency_attempted_cases": 1,
+          "median_development_seconds": 1.352216,
+          "p95_development_seconds": 1.352216,
+          "negative_cases": 0,
+          "correct_negative_outcomes": 0,
+          "error_categories": {
+            "correct": 1
+          },
+          "provider": {
+            "call_records": 1,
+            "generation_records": 1,
+            "embedding_records": 0,
+            "reported_tokens": {
+              "input_tokens": 2205,
+              "output_tokens": 80,
+              "thought_tokens": null,
+              "total_tokens": 2285
+            },
+            "calls_with_unknown_usage": 0,
+            "known_estimated_paid_cost_usd": "0.0057125",
+            "calls_with_unknown_cost": 0,
+            "estimated_paid_cost_usd": "0.0057125",
+            "actual_charge_eur": null
+          }
+        },
+        "agent": {
+          "development_cases": 1,
+          "correct_answers": 0,
+          "answer_accuracy": 0.0,
+          "answer_successes": 0,
+          "answer_abstentions": 0,
+          "blocked": 0,
+          "technical_failures": 1,
+          "complete_proofs_at_k": 1,
+          "mean_cell_recall_at_k": 1.0,
+          "correct_cell_selections": 0,
+          "unit_scored_cases": 1,
+          "correct_unit_contexts": 0,
+          "year_scored_cases": 1,
+          "correct_period_years": 0,
+          "latency_attempted_cases": 1,
+          "median_development_seconds": 24.973209,
+          "p95_development_seconds": 24.973209,
+          "negative_cases": 0,
+          "correct_negative_outcomes": 0,
+          "error_categories": {
+            "provider_http_504": 1
+          },
+          "provider": {
+            "call_records": 4,
+            "generation_records": 3,
+            "embedding_records": 1,
+            "reported_tokens": {
+              "input_tokens": null,
+              "output_tokens": null,
+              "thought_tokens": null,
+              "total_tokens": null
+            },
+            "calls_with_unknown_usage": 2,
+            "known_estimated_paid_cost_usd": "0.0061600",
+            "calls_with_unknown_cost": 2,
+            "estimated_paid_cost_usd": null,
+            "actual_charge_eur": null
+          }
+        }
+      },
+      "modes": {
+        "fixed": {
+          "run_id": "b6c7903b-23f4-45c7-925e-82b93c128abd",
+          "status": "success",
+          "error_code": null,
+          "duration_seconds": 1.352216,
+          "code_sha256": "441c4a0e006b0bac69fcac3278c50016a7b5dc2b8ddc2bb53c187f98513a9901",
+          "configuration_sha256": "11e8f0d16c1293bf5c333c9eafa40ef62c3c83a3c882bdef26a904cb588bbca2",
+          "prompt_sha256": "623b355ad6248d626c5c13847ea4848c19c6f593d4d458a5ad01d643b30fe5b9",
+          "calculation": {
+            "operation": "ratio_percent",
+            "formula": "100 * 60 / 243",
+            "value": "24.69135802469135802469135802",
+            "display": "24.69 %",
+            "unit": "%",
+            "operands": [
+              {
+                "cell_id": "DVN/2007/page_58.pdf#table[3][4]",
+                "column": 4,
+                "column_header": "Total   (MMBoe)",
+                "decimal_value": "60",
+                "row": 3,
+                "row_label": "Canada",
+                "source_id": "DVN/2007/page_58.pdf",
+                "source_value": "60",
+                "value": "60",
+                "context": {
+                  "unit": "MMBoe",
+                  "scale": 1000000,
+                  "year": 2008,
+                  "date": "2007-12-31",
+                  "nature": "estimate",
+                  "period_basis": "before table:\noil , gas and ngl production set forth below are our estimates of oil , gas and ngl production for 2008 .\nwe estimate that our combined 2008 oil , gas and ngl production will total approximately 240 to 247 mmboe .\nof this total , approximately 92% ( 92 % ) is estimated to be produced from reserves classified as 201cproved 201d at december 31 , 2007 .\nthe following estimates for oil , gas and ngl production are calculated at the midpoint of the estimated range for total production .\noil gas ngls total ( mmbbls ) ( bcf ) ( mmbbls ) ( mmboe ) .\n",
+                  "unit_basis": " | oil   (mmbbls) | gas   (bcf) | ngls   (mmbbls) | total   (mmboe)\noil gas ngls total ( mmbbls ) ( bcf ) ( mmbbls ) ( mmboe ) ."
+                }
+              },
+              {
+                "cell_id": "DVN/2007/page_58.pdf#table[5][4]",
+                "column": 4,
+                "column_header": "Total   (MMBoe)",
+                "decimal_value": "243",
+                "row": 5,
+                "row_label": "Total",
+                "source_id": "DVN/2007/page_58.pdf",
+                "source_value": "243",
+                "value": "243",
+                "context": {
+                  "unit": "MMBoe",
+                  "scale": 1000000,
+                  "year": 2008,
+                  "date": "2007-12-31",
+                  "nature": "estimate",
+                  "period_basis": "before table:\noil , gas and ngl production set forth below are our estimates of oil , gas and ngl production for 2008 .\nwe estimate that our combined 2008 oil , gas and ngl production will total approximately 240 to 247 mmboe .\nof this total , approximately 92% ( 92 % ) is estimated to be produced from reserves classified as 201cproved 201d at december 31 , 2007 .\nthe following estimates for oil , gas and ngl production are calculated at the midpoint of the estimated range for total production .\noil gas ngls total ( mmbbls ) ( bcf ) ( mmbbls ) ( mmboe ) .\n",
+                  "unit_basis": " | oil   (mmbbls) | gas   (bcf) | ngls   (mmbbls) | total   (mmboe)\noil gas ngls total ( mmbbls ) ( bcf ) ( mmbbls ) ( mmboe ) ."
+                }
+              }
+            ],
+            "calculator_version": "table-calculation-v2",
+            "decimal_precision": 28,
+            "display_rounding": "ROUND_HALF_UP"
+          },
+          "tool_events": [],
+          "calls": [
+            {
+              "call_id": "c6bdc65a-886e-4c53-939f-e970209862e4",
+              "kind": "generation",
+              "status": "passed",
+              "requested_model": "gemini-3.5-flash-lite",
+              "returned_model": "gemini-3.5-flash-lite",
+              "usage": {
+                "input_tokens": 2205,
+                "output_tokens": 80,
+                "thought_tokens": null,
+                "total_tokens": 2285
+              },
+              "duration_seconds": 1.282,
+              "allowance_eur": "0.0114250",
+              "actual_charge_eur": null,
+              "error_code": null
+            }
+          ]
+        },
+        "agent": {
+          "run_id": "ee79a787-12d2-4ca6-bcfa-1aab33145989",
+          "status": "failed",
+          "error_code": "provider_http_504",
+          "duration_seconds": 24.973209,
+          "code_sha256": "441c4a0e006b0bac69fcac3278c50016a7b5dc2b8ddc2bb53c187f98513a9901",
+          "configuration_sha256": "12748761c98be9d60b62f25b0de8df3f00d1ab2bc34edc188eb9c42107562c3d",
+          "prompt_sha256": "b21d52569c2a0b4ee3d8f4691ebf83b7ddf39447eed0309d449dfd5290d9ec19",
+          "calculation": null,
+          "tool_events": [
+            {
+              "step": 1,
+              "name": "search_evidence",
+              "arguments": {
+                "query": "Devon 2008 production Canada MMBoe estimated"
+              },
+              "status": "executed",
+              "error_code": null,
+              "duration_seconds": 0.38322
+            },
+            {
+              "step": 2,
+              "name": "read_evidence",
+              "arguments": {
+                "chunk_ids": [
+                  "DVN/2007/page_58.pdf#table-row[1]",
+                  "DVN/2007/page_58.pdf#table-row[2]",
+                  "DVN/2007/page_58.pdf#table-row[3]",
+                  "DVN/2007/page_58.pdf#table-row[5]"
+                ]
+              },
+              "status": "executed",
+              "error_code": null,
+              "duration_seconds": 0.0002
+            }
+          ],
+          "calls": [
+            {
+              "call_id": "65c99476-1c30-4bee-bb35-a664a98457ef",
+              "kind": "generation",
+              "status": "passed",
+              "requested_model": "gemini-3.5-flash-lite",
+              "returned_model": "gemini-3.5-flash-lite",
+              "usage": {
+                "input_tokens": 787,
+                "output_tokens": 28,
+                "thought_tokens": null,
+                "total_tokens": 815
+              },
+              "duration_seconds": 0.708,
+              "allowance_eur": "0.0040750",
+              "actual_charge_eur": null,
+              "error_code": null
+            },
+            {
+              "call_id": "664167f6-9510-4d0a-b641-f924b5e842d4",
+              "kind": "embedding",
+              "status": "passed",
+              "requested_model": "gemini-embedding-2",
+              "returned_model": null,
+              "usage": null,
+              "duration_seconds": 0.363,
+              "allowance_eur": "0.01",
+              "actual_charge_eur": null,
+              "error_code": null
+            },
+            {
+              "call_id": "af1bca96-3118-49a5-81b0-4b2bcffdbef3",
+              "kind": "generation",
+              "status": "passed",
+              "requested_model": "gemini-3.5-flash-lite",
+              "returned_model": "gemini-3.5-flash-lite",
+              "usage": {
+                "input_tokens": 1539,
+                "output_tokens": 110,
+                "thought_tokens": null,
+                "total_tokens": 1649
+              },
+              "duration_seconds": 4.488,
+              "allowance_eur": "0.0082450",
+              "actual_charge_eur": null,
+              "error_code": null
+            },
+            {
+              "call_id": "0fd1d79b-a0bf-4375-b8a1-5b45aa23316e",
+              "kind": "generation",
+              "status": "failed",
+              "requested_model": "gemini-3.5-flash-lite",
+              "returned_model": null,
+              "usage": null,
+              "duration_seconds": 19.204,
+              "allowance_eur": "1",
+              "actual_charge_eur": null,
+              "error_code": "provider_http_504"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "run_id": "75edec30-c85a-40f0-9e34-97953476de1e",
+      "local_report_sha256": "7998b7449864d7d3e4acf2617ca3a676aa52667562c1293c4d2905f46008eea4",
+      "plan": {
+        "method": "semantic",
+        "planned_cases": 1,
+        "maximum_generation_requests": 5,
+        "maximum_embedding_requests": 2,
+        "additional_allowance_reservation_eur": "5.02",
+        "current_allowance_eur": "17.6458150",
+        "local_limit_eur": "25",
+        "fits_local_allowance": true,
+        "actual_charge_eur": null
+      },
+      "case_id": "C01",
+      "question": "In Devon's estimated 2008 production table, what percentage of total production in MMBoe comes from Canada?",
+      "metrics": {
+        "fixed": {
+          "development_cases": 1,
+          "correct_answers": 1,
+          "answer_accuracy": 1.0,
+          "answer_successes": 1,
+          "answer_abstentions": 0,
+          "blocked": 0,
+          "technical_failures": 0,
+          "complete_proofs_at_k": 1,
+          "mean_cell_recall_at_k": 1.0,
+          "correct_cell_selections": 1,
+          "unit_scored_cases": 1,
+          "correct_unit_contexts": 1,
+          "year_scored_cases": 1,
+          "correct_period_years": 1,
+          "latency_attempted_cases": 1,
+          "median_development_seconds": 3.185002,
+          "p95_development_seconds": 3.185002,
+          "negative_cases": 0,
+          "correct_negative_outcomes": 0,
+          "error_categories": {
+            "correct": 1
+          },
+          "provider": {
+            "call_records": 1,
+            "generation_records": 1,
+            "embedding_records": 0,
+            "reported_tokens": {
+              "input_tokens": 2205,
+              "output_tokens": 80,
+              "thought_tokens": null,
+              "total_tokens": 2285
+            },
+            "calls_with_unknown_usage": 0,
+            "known_estimated_paid_cost_usd": "0.0057125",
+            "calls_with_unknown_cost": 0,
+            "estimated_paid_cost_usd": "0.0057125",
+            "actual_charge_eur": null
+          }
+        },
+        "agent": {
+          "development_cases": 1,
+          "correct_answers": 1,
+          "answer_accuracy": 1.0,
+          "answer_successes": 1,
+          "answer_abstentions": 0,
+          "blocked": 0,
+          "technical_failures": 0,
+          "complete_proofs_at_k": 1,
+          "mean_cell_recall_at_k": 1.0,
+          "correct_cell_selections": 1,
+          "unit_scored_cases": 1,
+          "correct_unit_contexts": 1,
+          "year_scored_cases": 1,
+          "correct_period_years": 1,
+          "latency_attempted_cases": 1,
+          "median_development_seconds": 17.88266,
+          "p95_development_seconds": 17.88266,
+          "negative_cases": 0,
+          "correct_negative_outcomes": 0,
+          "error_categories": {
+            "correct": 1
+          },
+          "provider": {
+            "call_records": 6,
+            "generation_records": 4,
+            "embedding_records": 2,
+            "reported_tokens": {
+              "input_tokens": null,
+              "output_tokens": null,
+              "thought_tokens": null,
+              "total_tokens": null
+            },
+            "calls_with_unknown_usage": 2,
+            "known_estimated_paid_cost_usd": "0.0221900",
+            "calls_with_unknown_cost": 2,
+            "estimated_paid_cost_usd": null,
+            "actual_charge_eur": null
+          }
+        }
+      },
+      "modes": {
+        "fixed": {
+          "run_id": "77cfa7c7-2cae-49e6-9423-db83ef7623d0",
+          "status": "success",
+          "error_code": null,
+          "duration_seconds": 3.185002,
+          "code_sha256": "441c4a0e006b0bac69fcac3278c50016a7b5dc2b8ddc2bb53c187f98513a9901",
+          "configuration_sha256": "11e8f0d16c1293bf5c333c9eafa40ef62c3c83a3c882bdef26a904cb588bbca2",
+          "prompt_sha256": "623b355ad6248d626c5c13847ea4848c19c6f593d4d458a5ad01d643b30fe5b9",
+          "calculation": {
+            "operation": "ratio_percent",
+            "formula": "100 * 60 / 243",
+            "value": "24.69135802469135802469135802",
+            "display": "24.69 %",
+            "unit": "%",
+            "operands": [
+              {
+                "cell_id": "DVN/2007/page_58.pdf#table[3][4]",
+                "column": 4,
+                "column_header": "Total   (MMBoe)",
+                "decimal_value": "60",
+                "row": 3,
+                "row_label": "Canada",
+                "source_id": "DVN/2007/page_58.pdf",
+                "source_value": "60",
+                "value": "60",
+                "context": {
+                  "unit": "MMBoe",
+                  "scale": 1000000,
+                  "year": 2008,
+                  "date": "2007-12-31",
+                  "nature": "estimate",
+                  "period_basis": "before table:\noil , gas and ngl production set forth below are our estimates of oil , gas and ngl production for 2008 .\nwe estimate that our combined 2008 oil , gas and ngl production will total approximately 240 to 247 mmboe .\nof this total , approximately 92% ( 92 % ) is estimated to be produced from reserves classified as 201cproved 201d at december 31 , 2007 .\nthe following estimates for oil , gas and ngl production are calculated at the midpoint of the estimated range for total production .\noil gas ngls total ( mmbbls ) ( bcf ) ( mmbbls ) ( mmboe ) .\n",
+                  "unit_basis": " | oil   (mmbbls) | gas   (bcf) | ngls   (mmbbls) | total   (mmboe)\noil gas ngls total ( mmbbls ) ( bcf ) ( mmbbls ) ( mmboe ) ."
+                }
+              },
+              {
+                "cell_id": "DVN/2007/page_58.pdf#table[5][4]",
+                "column": 4,
+                "column_header": "Total   (MMBoe)",
+                "decimal_value": "243",
+                "row": 5,
+                "row_label": "Total",
+                "source_id": "DVN/2007/page_58.pdf",
+                "source_value": "243",
+                "value": "243",
+                "context": {
+                  "unit": "MMBoe",
+                  "scale": 1000000,
+                  "year": 2008,
+                  "date": "2007-12-31",
+                  "nature": "estimate",
+                  "period_basis": "before table:\noil , gas and ngl production set forth below are our estimates of oil , gas and ngl production for 2008 .\nwe estimate that our combined 2008 oil , gas and ngl production will total approximately 240 to 247 mmboe .\nof this total , approximately 92% ( 92 % ) is estimated to be produced from reserves classified as 201cproved 201d at december 31 , 2007 .\nthe following estimates for oil , gas and ngl production are calculated at the midpoint of the estimated range for total production .\noil gas ngls total ( mmbbls ) ( bcf ) ( mmbbls ) ( mmboe ) .\n",
+                  "unit_basis": " | oil   (mmbbls) | gas   (bcf) | ngls   (mmbbls) | total   (mmboe)\noil gas ngls total ( mmbbls ) ( bcf ) ( mmbbls ) ( mmboe ) ."
+                }
+              }
+            ],
+            "calculator_version": "table-calculation-v2",
+            "decimal_precision": 28,
+            "display_rounding": "ROUND_HALF_UP"
+          },
+          "tool_events": [],
+          "calls": [
+            {
+              "call_id": "bad8e2c4-2828-4e12-9f01-180cb99b9507",
+              "kind": "generation",
+              "status": "passed",
+              "requested_model": "gemini-3.5-flash-lite",
+              "returned_model": "gemini-3.5-flash-lite",
+              "usage": {
+                "input_tokens": 2205,
+                "output_tokens": 80,
+                "thought_tokens": null,
+                "total_tokens": 2285
+              },
+              "duration_seconds": 3.09,
+              "allowance_eur": "0.0114250",
+              "actual_charge_eur": null,
+              "error_code": null
+            }
+          ]
+        },
+        "agent": {
+          "run_id": "5fcdb9df-d81f-4ca8-b44a-bbe3a4abb3e8",
+          "status": "success",
+          "error_code": null,
+          "duration_seconds": 17.88266,
+          "code_sha256": "441c4a0e006b0bac69fcac3278c50016a7b5dc2b8ddc2bb53c187f98513a9901",
+          "configuration_sha256": "12748761c98be9d60b62f25b0de8df3f00d1ab2bc34edc188eb9c42107562c3d",
+          "prompt_sha256": "b21d52569c2a0b4ee3d8f4691ebf83b7ddf39447eed0309d449dfd5290d9ec19",
+          "calculation": {
+            "operation": "ratio_percent",
+            "formula": "100 * 60 / 243",
+            "value": "24.69135802469135802469135802",
+            "display": "24.69 %",
+            "unit": "%",
+            "operands": [
+              {
+                "cell_id": "DVN/2007/page_58.pdf#table[3][4]",
+                "column": 4,
+                "column_header": "Total   (MMBoe)",
+                "decimal_value": "60",
+                "row": 3,
+                "row_label": "Canada",
+                "source_id": "DVN/2007/page_58.pdf",
+                "source_value": "60",
+                "value": "60",
+                "context": {
+                  "unit": "MMBoe",
+                  "scale": 1000000,
+                  "year": 2008,
+                  "date": "2007-12-31",
+                  "nature": "estimate",
+                  "period_basis": "before table:\noil , gas and ngl production set forth below are our estimates of oil , gas and ngl production for 2008 .\nwe estimate that our combined 2008 oil , gas and ngl production will total approximately 240 to 247 mmboe .\nof this total , approximately 92% ( 92 % ) is estimated to be produced from reserves classified as 201cproved 201d at december 31 , 2007 .\nthe following estimates for oil , gas and ngl production are calculated at the midpoint of the estimated range for total production .\noil gas ngls total ( mmbbls ) ( bcf ) ( mmbbls ) ( mmboe ) .\n",
+                  "unit_basis": " | oil   (mmbbls) | gas   (bcf) | ngls   (mmbbls) | total   (mmboe)\noil gas ngls total ( mmbbls ) ( bcf ) ( mmbbls ) ( mmboe ) ."
+                }
+              },
+              {
+                "cell_id": "DVN/2007/page_58.pdf#table[5][4]",
+                "column": 4,
+                "column_header": "Total   (MMBoe)",
+                "decimal_value": "243",
+                "row": 5,
+                "row_label": "Total",
+                "source_id": "DVN/2007/page_58.pdf",
+                "source_value": "243",
+                "value": "243",
+                "context": {
+                  "unit": "MMBoe",
+                  "scale": 1000000,
+                  "year": 2008,
+                  "date": "2007-12-31",
+                  "nature": "estimate",
+                  "period_basis": "before table:\noil , gas and ngl production set forth below are our estimates of oil , gas and ngl production for 2008 .\nwe estimate that our combined 2008 oil , gas and ngl production will total approximately 240 to 247 mmboe .\nof this total , approximately 92% ( 92 % ) is estimated to be produced from reserves classified as 201cproved 201d at december 31 , 2007 .\nthe following estimates for oil , gas and ngl production are calculated at the midpoint of the estimated range for total production .\noil gas ngls total ( mmbbls ) ( bcf ) ( mmbbls ) ( mmboe ) .\n",
+                  "unit_basis": " | oil   (mmbbls) | gas   (bcf) | ngls   (mmbbls) | total   (mmboe)\noil gas ngls total ( mmbbls ) ( bcf ) ( mmbbls ) ( mmboe ) ."
+                }
+              }
+            ],
+            "calculator_version": "table-calculation-v2",
+            "decimal_precision": 28,
+            "display_rounding": "ROUND_HALF_UP"
+          },
+          "tool_events": [
+            {
+              "step": 1,
+              "name": "search_evidence",
+              "arguments": {
+                "query": "Devon 2008 estimated production Canada MMBoe percentage total production"
+              },
+              "status": "executed",
+              "error_code": null,
+              "duration_seconds": 0.403061
+            },
+            {
+              "step": 2,
+              "name": "search_evidence",
+              "arguments": {
+                "query": "Canada MMBoe 2008 estimated production Devon"
+              },
+              "status": "executed",
+              "error_code": null,
+              "duration_seconds": 4.289264
+            },
+            {
+              "step": 3,
+              "name": "read_evidence",
+              "arguments": {
+                "chunk_ids": [
+                  "DVN/2007/page_58.pdf#table-row[1]",
+                  "DVN/2007/page_58.pdf#table-row[2]",
+                  "DVN/2007/page_58.pdf#table-row[3]",
+                  "DVN/2007/page_58.pdf#table-row[5]"
+                ]
+              },
+              "status": "executed",
+              "error_code": null,
+              "duration_seconds": 0.000236
+            },
+            {
+              "step": 4,
+              "name": "calculate",
+              "arguments": {
+                "cell_ids": [
+                  "DVN/2007/page_58.pdf#table[3][4]",
+                  "DVN/2007/page_58.pdf#table[5][4]"
+                ],
+                "operation": "ratio_percent"
+              },
+              "status": "executed",
+              "error_code": null,
+              "duration_seconds": 0.000773
+            }
+          ],
+          "calls": [
+            {
+              "call_id": "e8d9bf85-1325-4ea6-9bbd-e28bdec07c6d",
+              "kind": "generation",
+              "status": "passed",
+              "requested_model": "gemini-3.5-flash-lite",
+              "returned_model": "gemini-3.5-flash-lite",
+              "usage": {
+                "input_tokens": 787,
+                "output_tokens": 32,
+                "thought_tokens": null,
+                "total_tokens": 819
+              },
+              "duration_seconds": 9.877,
+              "allowance_eur": "0.0040950",
+              "actual_charge_eur": null,
+              "error_code": null
+            },
+            {
+              "call_id": "eefe78fd-49f6-45fc-9982-fb4f204f9802",
+              "kind": "embedding",
+              "status": "passed",
+              "requested_model": "gemini-embedding-2",
+              "returned_model": null,
+              "usage": null,
+              "duration_seconds": 0.374,
+              "allowance_eur": "0.01",
+              "actual_charge_eur": null,
+              "error_code": null
+            },
+            {
+              "call_id": "9c7dead9-c735-4fe0-a5f8-7cd770caa600",
+              "kind": "generation",
+              "status": "passed",
+              "requested_model": "gemini-3.5-flash-lite",
+              "returned_model": "gemini-3.5-flash-lite",
+              "usage": {
+                "input_tokens": 1540,
+                "output_tokens": 27,
+                "thought_tokens": null,
+                "total_tokens": 1567
+              },
+              "duration_seconds": 0.618,
+              "allowance_eur": "0.0078350",
+              "actual_charge_eur": null,
+              "error_code": null
+            },
+            {
+              "call_id": "df6fecd0-c1a4-4b87-b5af-ced3e0dd8362",
+              "kind": "embedding",
+              "status": "passed",
+              "requested_model": "gemini-embedding-2",
+              "returned_model": null,
+              "usage": null,
+              "duration_seconds": 4.263,
+              "allowance_eur": "0.01",
+              "actual_charge_eur": null,
+              "error_code": null
+            },
+            {
+              "call_id": "1452ee18-83e2-4b72-8cdd-adb991ff903d",
+              "kind": "generation",
+              "status": "passed",
+              "requested_model": "gemini-3.5-flash-lite",
+              "returned_model": "gemini-3.5-flash-lite",
+              "usage": {
+                "input_tokens": 2290,
+                "output_tokens": 111,
+                "thought_tokens": null,
+                "total_tokens": 2401
+              },
+              "duration_seconds": 1.609,
+              "allowance_eur": "0.0120050",
+              "actual_charge_eur": null,
+              "error_code": null
+            },
+            {
+              "call_id": "6a5db451-9a0a-4a83-ae56-e4ef2157c416",
+              "kind": "generation",
+              "status": "passed",
+              "requested_model": "gemini-3.5-flash-lite",
+              "returned_model": "gemini-3.5-flash-lite",
+              "usage": {
+                "input_tokens": 4021,
+                "output_tokens": 68,
+                "thought_tokens": null,
+                "total_tokens": 4089
+              },
+              "duration_seconds": 0.888,
+              "allowance_eur": "0.0204450",
+              "actual_charge_eur": null,
+              "error_code": null
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "local_allowance_before_eur": "16.6120700",
+  "local_allowance_after_eur": "17.7216200",
+  "actual_charge_eur": null,
+  "additional_live_generation_requests": 9,
+  "additional_live_embedding_requests": 3,
+  "measured_scorer_sha256": "d4566b9aa69108bcadc550262fcc51b84ce11abb61536a92289bbd44cce4e689",
+  "default_mode": "fixed",
+  "broader_comparison_completed": false,
+  "current_application_code_sha256": "441c4a0e006b0bac69fcac3278c50016a7b5dc2b8ddc2bb53c187f98513a9901",
+  "current_scorer_sha256": "ed1fed101a5d7422d24261e755a13ec83a27ff19cf00fb3fba2e05fbb354da46"
+}

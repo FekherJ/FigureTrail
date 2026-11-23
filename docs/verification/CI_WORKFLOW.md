@@ -58,3 +58,9 @@ The setup follows [Astral's GitHub Actions integration](https://docs.astral.sh/u
 ## Published B08 baseline, verified 10 November 2026
 
 [Run 42689851809](https://github.com/FekherJ/FigureTrail/actions/runs/42689851809) at commit `92db8b0a23c92b99216a78c1c7fb2fe111eb2cff` passes all 72 tests in 6.097 s; every job step succeeds. Earlier 58/62-test measurements remain historical. B09 currently has 74 locally passing tests plus separate Edge checks and awaits user commit/push; no hosted 74-test result is claimed.
+
+## Published B09 baseline and local B10 follow-up - 23 November 2026
+
+Published commit 3df555442b7dd40940bcee4b5649d6d093ca68a1 passed [CI run 43271600822](https://github.com/FekherJ/FigureTrail/actions/runs/43271600822), job 131369285450: all steps successful, 74 offline tests in 6.373 s. This is distinct from Dependabot run 43274318491.
+
+Local B10 passes 88 tests and 34-file formatting; README/workflow scopes include the agent module, evaluator and tests. No hosted B10 run is claimed before the user's commit/push. Live pilot measurements remain separate from credential-free CI.

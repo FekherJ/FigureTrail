@@ -188,11 +188,11 @@ Current implementation: `app/service.py` runs one retrieval and at most one stru
 | `GET /static/*` | Packaged HTML/CSS/JavaScript/icon assets only; local file boundaries enforced. |
 | `GET /health` | Report process availability and loaded corpus version without provider calls. Implemented. |
 | `GET /reports` | Implemented: list report/source IDs and chunk counts without annotations. |
-| `POST /analyses` | Implemented: question, optional known `report_ids`, and `fixed` mode only. |
+| `POST /analyses` | Implemented: question, optional known `report_ids`, and `fixed` mode by default, or explicit bounded `agent` mode. |
 | `GET /analyses/{run_id}` | Implemented: read a stored public result without journal writes or AI calls. |
 | `GET /docs` | Interactive API documentation generated from OpenAPI. Available for current routes. |
 
-B07 implements the four JSON routes and OpenAPI using `app/main.py` and typed contracts in `app/schemas.py`; B09 implements the root workspace and static assets while keeping the JSON/OpenAPI contracts unchanged. Retrieval mode is versioned experiment configuration, not an unrestricted API option. Agent mode remains unavailable until implemented.
+B07 implements the four JSON routes and OpenAPI using `app/main.py` and typed contracts in `app/schemas.py`; B09 implements the root workspace and static assets while keeping the JSON/OpenAPI contracts unchanged. Retrieval mode is versioned experiment configuration, not an unrestricted API option. Explicit agent mode is implemented; fixed stays default. See B10 below.
 
 The result includes `run_id`, state, mode, scope, evidence, available operation/operands/result, versions and an optional error code. Execution details expose durations and usage. Unknown values remain absent or `null`, rather than becoming zero.
 
@@ -223,12 +223,14 @@ One plain page in `app/static/` uses existing API routes. A question and optiona
 
 ## 6. P1 bounded agent
 
+**Implemented 23 November:** `app/agent.py` uses shared native tool calling with explicit API/CLI opt-in. Reads accept retrieved chunk IDs (narrower than arbitrary source IDs); only those reads permit calculation. Original question/scope stay authoritative. SDK Content/signatures stay in memory; sanitized events are saved before further generation. C01 retains a 504 and successful follow-up; broader comparison is pending and fixed stays default. The browser form remains fixed; saved agent lookup reuses rendering. See [verification](../verification/B10_BOUNDED_AGENT.md).
+
 The agent reuses retrieval, cells, calculations, validation and result contracts. The model chooses the next action; the program enforces permissions.
 
 | Tool | Allowed input | Code-enforced boundary |
 |---|---|---|
 | `search_evidence` | Text query | Immutable execution scope; bounded query and results. |
-| `read_evidence` | Previously retrieved source IDs | Associated context and cells only; no arbitrary file paths or URLs. |
+| `read_evidence` | Previously retrieved chunk IDs | Associated context and cells only; no arbitrary file paths or URLs. |
 | `calculate` | Allowed operation and cell IDs | Cells from evidence read during this execution; shared unit checks and deterministic formulas. |
 
 Start with the question and tool definitions. The model can search, read, revise a query, calculate or abstain. Stop after a valid calculation and build the final result in code; do not ask the model to recalculate it.

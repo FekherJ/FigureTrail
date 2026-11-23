@@ -1,22 +1,24 @@
 # FigureTrail backlog
 
-**Version 1.1 — implementation roadmap dated 24 October 2026; implementation status updated 1 November 2026 — Fekher Jarrar.**
+**Version 1.1 — implementation roadmap dated 24 October 2026; implementation status reviewed 23 November 2026 — Fekher Jarrar.**
 
 This backlog implements the [architecture](../architecture/ARCHITECTURE.md). B01–B13 are stable work-item IDs. They are now linked to [repository issues](https://github.com/FekherJ/FigureTrail/issues) and [Project 2](https://github.com/users/FekherJ/projects/2), verified on 25 October 2026. Their current GitHub issue numbers are 1–13; the Bxx IDs remain the roadmap identifiers.
 
 The target is a local application that retrieves cells from public reports, calculates a percentage change or ratio, and shows the result, formula and evidence. A hosted LLM, measured RAG and an API form the core. A bounded agent, guardrails and execution records extend the fixed workflow.
 
+**Current local status:** B01–B09 are complete within their documented scope; B10 is in progress: implementation and one-case paired pilot verified; broader comparison pending. B09 verification recorded 74 passing offline tests and twelve browser checks on 10 November. B08 covers ten development positives and two negatives per variant; reserved-case evaluation remains required before release. B01–B09 tracking was verified on 12 November; B10 progress was synchronized on 23 November. Future Markdown edits do not automatically synchronize GitHub.
+
 ## 1. GitHub tracking
 
-Track work in the existing board and keep one issue in progress. Each Bxx section defines an issue; retain its checklist and dependencies in the issue body. The following issue/board states were read back and verified on 28 October 2026:
+Track work in the existing board and keep one issue in progress. Each Bxx section defines an issue; retain its checklist and dependencies in the issue body. B01–B09 were verified Done on 12 November; B10 moved to In progress on 23 November. The tracking snapshot is:
 
 | Work items | Issue state | Board status |
 |---|---|---|
-| B01–B07 | Closed | Done |
-| B08 | Open | Ready |
-| B09–B13 | Open | Backlog |
+| B01–B09 | Closed | Done |
+| B10 | Open | In progress |
+| B11–B13 | Open | Backlog |
 
-B03's seven checklist items are verified, including the account-limit observation and one native tool call with validated arguments and original source values. B01–B07 functionality is complete; B04's source, SQLite/FTS5, embedding and alignment checks are verified. The B03 issue body and Done status are aligned with this completion review. B04 has four completed tasks and its issue/card are closed/Done. B05 retrieval is complete with measured comparison and difficult-case evidence; its issue/card are closed/Done. B06 functionality is complete with initial workflow evidence and explicit latency/domain limits; its issue/card are closed/Done. B07 API functionality is complete with 51 passing offline tests and documented worker/deadline limits; its issue/card are closed/Done. B08 is next and its existing card is Ready. All thirteen issues and board-item identities were preserved. This was a one-time alignment; pushing Markdown does not automatically synchronize issue bodies or board fields.
+B08 and B09 issue checklists and evidence links were aligned with the verified implementation, both issues were closed as completed, and their cards were moved to Done on 12 November. B10 is now In progress; B11–B13 remain in Backlog. All thirteen issue/card identities were preserved. This was a one-time alignment; pushing Markdown does not automatically synchronize issue bodies or board fields.
 
 Record priority (`P0`/`P1`), milestone and estimated hours. Optional labels are `data`, `llm`, `rag`, `api`, `evals`, `agents`, `security`, `observability` and `docs`. These values are currently documented in issue descriptions; importing them did not create labels or GitHub milestones.
 
@@ -239,7 +241,7 @@ Objective: measure strengths/failures and avoid a demonstration based only on se
 
 **Design note:** calculation, retrieval and end-to-end checks use distinct metrics.
 
-**Verified status, 9 November 2026:** initial B08 comparison is complete locally on ten development positives and two negatives per variant. [Evidence](../verification/B08_WORKFLOW_EVALUATION.md): paced lexical 8/10 correct, semantic 6/10, complete proof 9/10 versus 10/10, negative checks 2/2 versus 1/2. The initial failed semantic run is retained. Generation pacing and stop-on-quota are tested; no 429 occurs in the paced pair, while three semantic 503s remain. All 72 offline tests pass. Larger/held-out evaluation is not delivered; B13 requires report-disjoint reserved cases. B09 is also complete locally; B10 is next. GitHub issue/board state above remains the dated 28 October observation; this local completion has not changed external tracking.
+**Verified status, 9 November 2026:** initial B08 comparison is complete locally on ten development positives and two negatives per variant. [Evidence](../verification/B08_WORKFLOW_EVALUATION.md): paced lexical 8/10 correct, semantic 6/10, complete proof 9/10 versus 10/10, negative checks 2/2 versus 1/2. The initial failed semantic run is retained. Generation pacing and stop-on-quota are tested; no 429 occurs in the paced pair, while three semantic 503s remain. All 72 offline tests pass. Larger/held-out evaluation is not delivered; B13 requires report-disjoint reserved cases. B09 is also complete locally; B10 is next. GitHub issue #8 is closed and its board card is Done, verified on 12 November 2026.
 
 ### B09 — Build an interface that shows the evidence
 
@@ -258,7 +260,7 @@ Objective: provide a quickly understandable analysis result.
 
 **Design note:** every result remains traceable to source values and formula.
 
-**Verified status, 10 November 2026:** B09 is complete locally. [Verification](../verification/B09_EVIDENCE_INTERFACE.md): one same-origin page, source operands/formula/excerpts, waiting/error states, read-only lookup/bookmarks and technical details. All 74 offline tests and twelve Edge interaction checks pass; a genuine saved 24.69% result is displayed with the correct 2008 estimate period using GET only. Hostile HTML remains literal text. No project data or model calls changed. B10 is next; GitHub issue/board state has not been changed by this local completion.
+**Verified status, 10 November 2026:** B09 is complete locally. [Verification](../verification/B09_EVIDENCE_INTERFACE.md): one same-origin page, source operands/formula/excerpts, waiting/error states, read-only lookup/bookmarks and technical details. All 74 offline tests and twelve Edge interaction checks pass; a genuine saved 24.69% result is displayed with the correct 2008 estimate period using GET only. Hostile HTML remains literal text. No project data or model calls changed. B10 is next. GitHub issue #9 is closed and its board card is Done, verified on 12 November 2026.
 
 ### B10 — Add a bounded agent with structured tool calls
 
@@ -266,9 +268,9 @@ Objective: provide a quickly understandable analysis result.
 
 Objective: implement bounded model-selected tools and measure their contribution against the fixed workflow.
 
-- [ ] Define `search_evidence`, `read_evidence` and `calculate` with structured parameters backed by existing functions.
-- [ ] Let the model choose tools/next actions; enforce immutable scope, four generation calls and six tool calls, including at most two searches.
-- [ ] Stop after valid calculation, abstention or a limit. Reject unknown tools, inaccessible cells and numerical final text without a validated calculation.
+- [x] Define `search_evidence`, `read_evidence` and `calculate` with structured parameters backed by existing functions.
+- [x] Let the model choose tools/next actions; enforce immutable scope, four generation calls and six tool calls, including at most two searches.
+- [x] Stop after valid calculation, abstention or a limit. Reject unknown tools, inaccessible cells and numerical final text without a validated calculation.
 - [ ] Compare quality, errors, tools, latency and cost using the same development cases and retriever as the fixed workflow.
 
 **Acceptance criteria:** at least one real trace contains multiple model-selected tool decisions. Share validations with the fixed workflow. Test enforced limits, including simulated model attempts to exceed them. No agent framework or multi-agent system is required.
@@ -276,6 +278,8 @@ Objective: implement bounded model-selected tools and measure their contribution
 **Evidence:** sanitized trace, comparison table and justified default mode. Report actual findings; retain fixed mode if it performs better for the requirements.
 
 **Design note:** the agent selects actions; code enforces permissions and ceilings.
+
+**Progress, 23 November 2026:** native loop, immutable scope, limits, shared validation, sanitized events, explicit API/CLI mode and 88 offline tests verified. [Evidence](../verification/B10_BOUNDED_AGENT.md) retains both C01 pairs: agent 504 then successful explicit follow-up; fixed succeeds twice. Fixed stays default. The final checklist item remains open: broader distinct-case comparison is incomplete and the full worst-case campaign exceeds the allowance. No reserved accuracy is reported. Changes await user commit/push; issue #10 stays open/In progress.
 
 ### B11 — Test injections, permissions and impossible requests
 
@@ -345,4 +349,4 @@ Objective: release a reproducible version with measured results and documented t
 
 Exclude arbitrary PDF/OCR ingestion, user-supplied URL downloads, slow local models, fine-tuning, multi-agent systems, multiple providers, SSO, distributed cloud deployment, full dashboards and systematic LLM judging from this cycle.
 
-Add an extension only to address an observed weakness, and replace another task within the available allowance. The next implementation item is **B10**: add a bounded agent over the existing tools and compare it with the fixed baseline. B09's evidence interface is complete locally. B08's scoped development comparison is complete; wider/held-out evaluation remains required before release. The credential-free CI workflow is implemented and validated in an isolated local Ubuntu checkout; GitHub-hosted success, deliberate test-failure propagation and restored-green acceptance are all verified; see [CI verification](../verification/CI_WORKFLOW.md).
+Add an extension only to address an observed weakness, and replace another task within the available allowance. The active item is **B10**: agent implementation is verified; broader development comparison remains pending. B09's evidence interface is complete locally. B08's scoped development comparison is complete; wider/held-out evaluation remains required before release. The credential-free CI workflow is implemented and validated in an isolated local Ubuntu checkout; GitHub-hosted success, deliberate test-failure propagation and restored-green acceptance are all verified; see [CI verification](../verification/CI_WORKFLOW.md).

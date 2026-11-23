@@ -113,3 +113,7 @@ git diff --check
 ```
 
 The source/export/corpus/index checks require the existing local prepared artifacts; see README for fresh-checkout setup. Machine-readable evidence accompanies this report in [KARPATHY_GUIDELINES_REVIEW_RESULTS.json](KARPATHY_GUIDELINES_REVIEW_RESULTS.json).
+
+## B10 follow-up - 23 November 2026
+
+The bounded agent now reuses the existing retrieval/calculator/provider with no framework or new dependency. Native calls, scope and ceilings are tested; 88 offline tests pass. [B10 evidence](B10_BOUNDED_AGENT.md) retains an initial provider 504 and successful explicit C01 follow-up. This is one repeated question, not broader accuracy or security certification. B10 stays in progress for wider comparison; historical audit findings and reports remain unchanged.

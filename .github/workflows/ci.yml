@@ -79,7 +79,7 @@ jobs:
           tests/test_tool_call.py tests/test_corpus.py tests/test_index.py
           scripts/search.py evals/retrieval.py tests/test_retrieval.py
           scripts/analyze.py evals/analysis.py tests/test_analysis.py
-          tests/test_analysis_evaluation.py tests/test_api.py tests/test_cli_lifecycle.py
+          tests/test_analysis_evaluation.py tests/test_api.py tests/test_cli_lifecycle.py evals/agent.py tests/test_agent.py tests/test_agent_evaluation.py
 
       - name: Run offline tests
         run: uv run --locked python -B -X utf8 -m unittest discover -s tests -v

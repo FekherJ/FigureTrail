@@ -17,6 +17,7 @@ from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from starlette.exceptions import HTTPException
 
+from app.agent import run_agent
 from app.embeddings import EmbeddingCache, EmbeddingPacer
 from app.llm import GeminiProvider, create_client
 from app.retrieval import load_current
@@ -113,7 +114,9 @@ def public_result(record):
     """
     retrieval = record.get("retrieval") or {}
     embedding = retrieval.get("query_embedding") or {}
-    calls = [call for call in (embedding.get("call"), record.get("call")) if call]
+    calls = record.get("calls") or [
+        call for call in (embedding.get("call"), record.get("call")) if call
+    ]
     # Project explicit public fields; internal SDK metadata and journal payloads stay local.
     return AnalysisResponse.model_validate(
         {**record, "evidence": retrieval.get("hits", []), "calls": calls}
@@ -247,7 +250,8 @@ def create_app(root: Path = ROOT, *, provider_factory=None):
             retriever.provider = provider
             retriever.query_cache = EmbeddingCache(root / "data/local/query-embeddings.sqlite")
             retriever.pacer = EmbeddingPacer(journal)
-            return analyze(
+            workflow = run_agent if body.mode == "agent" else analyze
+            return workflow(
                 body.question,
                 retriever,
                 provider,

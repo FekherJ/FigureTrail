@@ -115,7 +115,7 @@ class AnalysisRequest(BaseModel):
     model_config = ConfigDict(extra="forbid", strict=True)
     question: str = Field(min_length=1, max_length=2000)
     report_ids: list[str] | None = Field(default=None, min_length=1, max_length=40)
-    mode: Literal["fixed"] = "fixed"
+    mode: Literal["fixed", "agent"] = "fixed"
 
     @model_validator(mode="after")
     def check_question(self):
@@ -206,12 +206,22 @@ class CallSummary(BaseModel):
     actual_charge_eur: str | None = None
 
 
+class AgentToolEvent(BaseModel):
+    step: int
+    name: str
+    arguments: dict
+    status: Literal["started", "executed", "rejected", "failed"]
+    error_code: str | None = None
+    result: dict | None = None
+    duration_seconds: float | None = None
+
+
 class AnalysisResponse(BaseModel):
     run_id: str
     status: Literal[
         "started", "success", "insufficient_evidence", "unsupported_request", "blocked", "failed"
     ]
-    mode: Literal["fixed"]
+    mode: Literal["fixed", "agent"]
     question: str
     report_ids: list[str] | None
     retrieval_method: Literal["lexical", "semantic"]
@@ -229,3 +239,31 @@ class AnalysisResponse(BaseModel):
     calculation: Calculation | None
     calls: list[CallSummary]
     error_code: str | None
+    tool_events: list[AgentToolEvent] = Field(default_factory=list)
+
+
+class AgentSearch(BaseModel):
+    model_config = ConfigDict(extra="forbid", strict=True)
+    query: str = Field(min_length=1, max_length=2000)
+
+    @model_validator(mode="after")
+    def check_query(self):
+        if not self.query.strip():
+            raise ValueError("Search query must contain non-whitespace text.")
+        return self
+
+
+class AgentRead(BaseModel):
+    model_config = ConfigDict(extra="forbid", strict=True)
+    chunk_ids: list[str] = Field(min_length=1, max_length=5)
+
+    @model_validator(mode="after")
+    def check_distinct(self):
+        if len(set(self.chunk_ids)) != len(self.chunk_ids):
+            raise ValueError("Read chunk IDs must be distinct.")
+        return self
+
+
+class AgentCalculation(EvidenceRead):
+    operation: Literal["ratio_percent", "percent_change"]
+    cell_ids: list[str] = Field(min_length=2, max_length=2)

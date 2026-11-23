@@ -273,13 +273,13 @@
   },
   "local_markdown_links_checked": 97,
   "latest_published_baseline": {
-    "run_id": 42689851809,
-    "run_url": "https://github.com/FekherJ/FigureTrail/actions/runs/42689851809",
-    "commit_sha": "92db8b0a23c92b99216a78c1c7fb2fe111eb2cff",
-    "job_id": 129406396890,
-    "job_url": "https://github.com/FekherJ/FigureTrail/actions/runs/42689851809/job/129406396890",
-    "tests": 72,
-    "test_seconds": 6.097,
+    "observed_date": "2026-11-23",
+    "commit": "3df555442b7dd40940bcee4b5649d6d093ca68a1",
+    "run_id": 43271600822,
+    "job_id": 131369285450,
+    "url": "https://github.com/FekherJ/FigureTrail/actions/runs/43271600822",
+    "tests": 74,
+    "seconds": 6.373,
     "conclusion": "success"
   },
   "published_identity_baseline": {
@@ -345,5 +345,22 @@
         "conclusion": "success"
       }
     ]
+  },
+  "published_b08_baseline": {
+    "run_id": 42689851809,
+    "run_url": "https://github.com/FekherJ/FigureTrail/actions/runs/42689851809",
+    "commit_sha": "92db8b0a23c92b99216a78c1c7fb2fe111eb2cff",
+    "job_id": 129406396890,
+    "job_url": "https://github.com/FekherJ/FigureTrail/actions/runs/42689851809/job/129406396890",
+    "tests": 72,
+    "test_seconds": 6.097,
+    "conclusion": "success"
+  },
+  "b10_local_validation": {
+    "date": "2026-11-23",
+    "tests": 88,
+    "seconds": 23.665,
+    "formatted_files": 34,
+    "hosted_result": null
   }
 }

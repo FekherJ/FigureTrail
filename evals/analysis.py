@@ -5,7 +5,6 @@ from collections import Counter
 from contextlib import closing
 from copy import deepcopy
 from decimal import Decimal, InvalidOperation
-from datetime import datetime
 from hashlib import sha256
 import json
 from math import ceil
@@ -13,7 +12,7 @@ from pathlib import Path
 import re
 import sqlite3
 from statistics import median
-from time import perf_counter, sleep, time
+from time import perf_counter
 from uuid import uuid4
 
 from app.corpus import digest, write_atomic
@@ -25,6 +24,8 @@ from app.llm import (
     JOURNAL,
     LIMIT_EUR,
     create_client,
+    wait_for_generation_slot,
+    GENERATION_RPM,
 )
 from app.retrieval import load_current, query_input
 from app.service import CONFIGURATION, analyze, execution_identity
@@ -40,8 +41,6 @@ SCORING_POLICY = {
     "latency": "analysis attempts exclude campaign pacing, include failures; nearest-rank p95",
     "case_order": "positive fixture order, then negative fixture order",
 }
-# Keep headroom below the observed 15 RPM free-tier generation quota.
-GENERATION_RPM = 12
 NEGATIVE_CASES = [
     {
         "id": "N01",
@@ -71,7 +70,7 @@ def provider_metrics(results):
     calls = {}
     for item in results:
         embedding = ((item.get("retrieval") or {}).get("query_embedding") or {}).get("call")
-        for call in (item.get("call"), embedding):
+        for call in (*item.get("calls", []), item.get("call"), embedding):
             if call and call.get("call_id"):
                 calls[call["call_id"]] = call
     calls = list(calls.values())
@@ -103,22 +102,34 @@ def provider_metrics(results):
     }
 
 
-def score(results, references):
+def score(
+    results,
+    references,
+    *,
+    positive_ids=None,
+    negative_cases=NEGATIVE_CASES,
+    evidence_limit="configured",
+):
     """Score only after execution; references never become analysis inputs."""
+    if evidence_limit == "configured":
+        evidence_limit = CONFIGURATION["k"]
+    if positive_ids is None:
+        positive_ids = [f"C{i:02d}" for i in range(1, len(references["cases"]) + 1)]
+    if len(positive_ids) != len(references["cases"]) or len(set(positive_ids)) != len(positive_ids):
+        raise ValueError("Positive reference IDs must align exactly once.")
     positive = [item for item in results if item["case_id"].startswith("C")]
     negatives = [item for item in results if item["case_id"].startswith("N")]
     if (
         not positive
         or len(positive) != len(references["cases"])
-        or len(negatives) != len(NEGATIVE_CASES)
+        or len(negatives) != len(negative_cases)
         or len(results) != len(positive) + len(negatives)
     ):
         raise ValueError("Evaluation/reference case counts differ.")
-    for index, (item, reference) in enumerate(zip(positive, references["cases"], strict=True), 1):
-        if (
-            item["case_id"] != f"C{index:02d}"
-            or item["question"] != reference["application_question"]
-        ):
+    for expected_id, item, reference in zip(
+        positive_ids, positive, references["cases"], strict=True
+    ):
+        if item["case_id"] != expected_id or item["question"] != reference["application_question"]:
             raise ValueError("Evaluation/reference questions or case IDs differ.")
         match = re.fullmatch(r"(.+\.pdf)-\d+", reference["case_id"])
         if not match:
@@ -128,7 +139,7 @@ def score(results, references):
             for cell in reference["operands"]
         ]
         selection, calculation = item.get("selection") or {}, item.get("calculation") or {}
-        hits = (item.get("retrieval") or {}).get("hits", [])[: CONFIGURATION["k"]]
+        hits = (item.get("retrieval") or {}).get("hits", [])[:evidence_limit]
         found = {cell_id for hit in hits for cell_id in hit["cell_ids"]}
         expected = finite_number(reference["expected_percent"])
         tolerance = finite_number(reference["exe_ans_tolerance"])
@@ -212,7 +223,7 @@ def score(results, references):
             )
         evaluation["error_category"] = category
         item["evaluation"] = evaluation
-    for item, case in zip(negatives, NEGATIVE_CASES, strict=True):
+    for item, case in zip(negatives, negative_cases, strict=True):
         if item["case_id"] != case["id"] or item["question"] != case["question"]:
             raise ValueError("Negative case identity differs.")
         item["evaluation"] = {
@@ -310,35 +321,6 @@ def plan_campaign(root, cases, method, journal):
         "fits_local_allowance": allowance + reservation <= LIMIT_EUR,
         "actual_charge_eur": None,
     }
-
-
-def wait_for_generation_slot(journal, *, clock=time, pause=sleep):
-    """Pace one sequential campaign using recent shared-journal generation history.
-
-    Failed/blocked call records count conservatively. The caller owns campaign
-    serialization; this is not a cross-process reservation or provider quota guarantee.
-    """
-    waited = 0.0
-    while journal.exists():
-        now = clock()
-        with closing(
-            sqlite3.connect(journal.resolve().as_uri() + "?mode=ro", uri=True)
-        ) as database:
-            calls = [
-                json.loads(row[0]) for row in database.execute("SELECT record_json FROM calls")
-            ]
-        recent = sorted(
-            datetime.fromisoformat(call["created_at_utc"]).timestamp()
-            for call in calls
-            if call["kind"] == "generation"
-            and now - datetime.fromisoformat(call["created_at_utc"]).timestamp() < 60
-        )
-        if len(recent) < GENERATION_RPM:
-            break
-        delay = min(1.0, max(0.01, recent[-GENERATION_RPM] + 60.1 - now))
-        pause(delay)
-        waited += delay
-    return waited
 
 
 def run_cases(cases, method, retriever, provider, *, journal, save, wait=None):
