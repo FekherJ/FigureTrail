@@ -17,7 +17,7 @@ from app.schemas import AgentCalculation, AgentRead, AgentSearch, CellSelection
 from app.service import CONFIGURATION, ROOT, execution_identity, model_input, save_analysis
 
 AGENT_CONFIG = {
-    "version": "bounded-agent-v1",
+    "version": "bounded-agent-v2",
     "max_generation_calls": 4,
     "max_tool_calls": 6,
     "max_searches": 2,
@@ -217,7 +217,20 @@ def run_agent(
                                 key: hit[key]
                                 for key in ("chunk_id", "source_id", "report_id", "rank", "score")
                             }
-                            | {"preview": hit["text"][:200]}
+                            | {
+                                "kind": hit["kind"],
+                                # Table rows share parent text; expose the header/row, not
+                                # another copy of that introduction. Reads still grant access.
+                                "preview": (
+                                    "\n".join(
+                                        line
+                                        for line in hit["text"].splitlines()
+                                        if line.startswith(("Columns: ", "Row "))
+                                    )[:400]
+                                    if hit["kind"] == "table_row"
+                                    else hit["text"][:200]
+                                ),
+                            }
                             for hit in result["hits"]
                         ]
                     }

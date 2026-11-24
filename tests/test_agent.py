@@ -119,6 +119,33 @@ class AgentTests(unittest.TestCase):
         self.assertNotIn("opaque-signature", json.dumps(result))
         self.assertEqual(result["configuration"]["agent"], AGENT_CONFIG)
 
+    def test_search_previews_identify_rows_without_granting_cell_access(self):
+        for hit in self.hits:
+            hit["text"] = "Shared introductory paragraph. " * 40 + "\n" + hit["text"]
+        result = self.execute(
+            [
+                native("search_evidence", {"query": QUESTION}),
+                native("calculate", {"operation": "ratio_percent", "cell_ids": self.ids}),
+                text_response(
+                    json.dumps(
+                        {"status": "insufficient_evidence", "operation": None, "cell_ids": []}
+                    )
+                ),
+            ]
+        )
+        previews = result["tool_events"][0]["result"]["hits"]
+        canada = next(hit for hit in previews if hit["chunk_id"] == self.chunks[0])
+        self.assertIn("Canada", canada["preview"])
+        self.assertIn("Columns:", canada["preview"])
+        self.assertIn("MMBoe", canada["preview"])
+        self.assertNotIn("Shared introductory", canada["preview"])
+        self.assertEqual(canada["kind"], "table_row")
+        self.assertLessEqual(len(canada["preview"]), 400)
+        self.assertEqual(result["retrieval"]["hits"], self.hits)
+        self.assertEqual(result["tool_events"][1]["status"], "rejected")
+        self.assertEqual(result["tool_events"][1]["error_code"], "invalid_cell_reference")
+        self.assertIsNone(result["calculation"])
+
     def test_native_http_round_trip_preserves_ids_without_recording_thoughts(self):
         import base64
         import httpx

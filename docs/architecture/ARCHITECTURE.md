@@ -365,3 +365,8 @@ Release gates:
 4. **Release ready:** documented setup, real results, failures, trade-offs and a short demonstration.
 
 The initial ten-case data gate, provider connection and one-case source-selection latency gate are verified. Account quotas are recorded from the [AI Studio observation](../verification/B03_ACCOUNT_LIMITS.md). One bounded native call is verified; the indexed corpus is now verified in B04. Retrieval coverage is measured in B05 and an initial fixed-workflow campaign is recorded in B06, including four 504 failures. Reserved-case accuracy, multi-step agent behavior, consistent low latency and broader task-performance thresholds remain unverified. Reliability depends on implementation and these checks, rather than the diagram alone. Add cloud deployment, agent frameworks or remote vector storage only for demonstrated requirements.
+
+
+### B10 preview follow-up - 24 November 2026
+
+`bounded-agent-v2` changes the brief search result: include kind and original Columns/Row lines for table chunks, capped at 400 characters; text keeps its first 200. This makes row candidates distinguishable without changing ranking or granting read/calculate access. The [C02 comparison](../verification/B10_COMPARISON.md) retains a v1 provider 504; v2 is verified offline only. Both versions retain original evidence and scope.

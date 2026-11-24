@@ -1,12 +1,12 @@
 # FigureTrail backlog
 
-**Version 1.1 — implementation roadmap dated 24 October 2026; implementation status reviewed 23 November 2026 — Fekher Jarrar.**
+**Version 1.1 — implementation roadmap dated 24 October 2026; implementation status reviewed 24 November 2026 — Fekher Jarrar.**
 
 This backlog implements the [architecture](../architecture/ARCHITECTURE.md). B01–B13 are stable work-item IDs. They are now linked to [repository issues](https://github.com/FekherJ/FigureTrail/issues) and [Project 2](https://github.com/users/FekherJ/projects/2), verified on 25 October 2026. Their current GitHub issue numbers are 1–13; the Bxx IDs remain the roadmap identifiers.
 
 The target is a local application that retrieves cells from public reports, calculates a percentage change or ratio, and shows the result, formula and evidence. A hosted LLM, measured RAG and an API form the core. A bounded agent, guardrails and execution records extend the fixed workflow.
 
-**Current local status:** B01–B09 are complete within their documented scope; B10 is in progress: implementation and one-case paired pilot verified; broader comparison pending. B09 verification recorded 74 passing offline tests and twelve browser checks on 10 November. B08 covers ten development positives and two negatives per variant; reserved-case evaluation remains required before release. B01–B09 tracking was verified on 12 November; B10 progress was synchronized on 23 November. Future Markdown edits do not automatically synchronize GitHub.
+**Current local status:** B01–B09 are complete within their documented scope; B10 is in progress: implementation and limited C01/C02 evidence verified; broader comparison pending. B09 verification recorded 74 passing offline tests and twelve browser checks on 10 November. B08 covers ten development positives and two negatives per variant; reserved-case evaluation remains required before release. B01–B09 tracking was verified on 12 November; B10 progress was synchronized on 23 November. Future Markdown edits do not automatically synchronize GitHub.
 
 ## 1. GitHub tracking
 
@@ -280,6 +280,8 @@ Objective: implement bounded model-selected tools and measure their contribution
 **Design note:** the agent selects actions; code enforces permissions and ceilings.
 
 **Progress, 23 November 2026:** native loop, immutable scope, limits, shared validation, sanitized events, explicit API/CLI mode and 88 offline tests verified. [Evidence](../verification/B10_BOUNDED_AGENT.md) retains both C01 pairs: agent 504 then successful explicit follow-up; fixed succeeds twice. Fixed stays default. The final checklist item remains open: broader distinct-case comparison is incomplete and the full worst-case campaign exceeds the allowance. No reserved accuracy is reported. Changes await user commit/push; issue #10 stays open/In progress.
+
+**Follow-up, 24 November 2026:** published commit d1434b1 passes hosted CI (88 tests). The declared C02/C07/C10 pilots stopped after C02: fixed correct 2.89%, agent HTTP 504; C07/C10 were not attempted. [New evidence](../verification/B10_COMPARISON.md) retains the failure. Agent v2 previews original table headers/rows; the read boundary is unchanged and all 89 offline tests pass. V2 live impact and broader comparison remain unmeasured; the final B10 checklist item stays open. Local preview changes await the next user commit/push.
 
 ### B11 — Test injections, permissions and impossible requests
 

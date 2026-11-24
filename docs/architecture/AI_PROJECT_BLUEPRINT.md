@@ -115,3 +115,6 @@ Publish a reproducible demo, measured comparisons, representative failures and o
 
 
 **B10 follow-up, 23 November:** explicit API/CLI agent mode uses three controlled tools and shared calculator/provider limits. [Evidence](../verification/B10_BOUNDED_AGENT.md) retains failed/successful C01 attempts. Wider comparison is pending; fixed stays default. No framework or new dependency.
+
+
+**24 November follow-up:** [C02 evidence and preview correction](../verification/B10_COMPARISON.md) add a retained agent 504 and an offline-verified table-preview fix. Fixed remains default; broader comparison and v2 live behavior remain unmeasured.

@@ -1,0 +1,46 @@
+{
+  "date": "2026-11-23",
+  "baseline_commit": "d1434b1db9609998529617acd4c8490ac9af7f03",
+  "published_ci": {
+    "run_id": 45240820878,
+    "job_id": 137924659753,
+    "tests": 88,
+    "seconds": 7.087,
+    "conclusion": "success"
+  },
+  "status": "declared_before_new_live_calls",
+  "method": "semantic",
+  "scope": "question fixture report_ids; no gold filters",
+  "planned_candidate_order": [
+    "C02",
+    "C07",
+    "C10"
+  ],
+  "selection_reason": {
+    "C02": "monetary percentage growth",
+    "C07": "known conservative ambiguous-unit case",
+    "C10": "signed percentage decline"
+  },
+  "execution": "separate one-case pilot campaigns; each requires a fresh existing worst-case preflight; later stages conditional on actual remaining allowance, not guaranteed",
+  "maximum_per_pair": {
+    "generation": 5,
+    "additional_query_embeddings": 2,
+    "reserved_eur": "5.02"
+  },
+  "initial_allowance_eur": "17.7216200",
+  "local_limit_eur": "25",
+  "minimum_remaining_after_worst_case_pair_eur": "2.25",
+  "stop_rules": [
+    "fresh plan does not fit",
+    "remaining worst-case headroom would fall below EUR 2.25",
+    "either mode failed or blocked",
+    "storage/report fault"
+  ],
+  "retries": 0,
+  "repeat_failed_pairs": false,
+  "change_prompts_or_code": false,
+  "scoring": "existing positive subset scorer; keep all failures; references only after execution",
+  "negative_and_reserved_cases": 0,
+  "comparison_scope": "selected development sample, including difficult case; not a representative or held-out benchmark",
+  "campaigns": []
+}

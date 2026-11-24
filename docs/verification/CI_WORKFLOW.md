@@ -64,3 +64,8 @@ The setup follows [Astral's GitHub Actions integration](https://docs.astral.sh/u
 Published commit 3df555442b7dd40940bcee4b5649d6d093ca68a1 passed [CI run 43271600822](https://github.com/FekherJ/FigureTrail/actions/runs/43271600822), job 131369285450: all steps successful, 74 offline tests in 6.373 s. This is distinct from Dependabot run 43274318491.
 
 Local B10 passes 88 tests and 34-file formatting; README/workflow scopes include the agent module, evaluator and tests. No hosted B10 run is claimed before the user's commit/push. Live pilot measurements remain separate from credential-free CI.
+
+
+## Published B10 and local preview follow-up - 24 November 2026
+
+Commit d1434b1db9609998529617acd4c8490ac9af7f03 passed [CI run 45240820878](https://github.com/FekherJ/FigureTrail/actions/runs/45240820878), job 137924659753: 88 tests in 7.087 seconds; all steps successful. The subsequent preview correction has 89 passing offline tests and 34-file formatting; a hosted result for that change awaits user publication. Live C02 measurement is separate from credential-free CI.

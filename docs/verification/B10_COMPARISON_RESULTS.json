@@ -1,0 +1,428 @@
+{
+  "review_date": "2026-11-24",
+  "live_date": "2026-11-23",
+  "baseline_commit": "d1434b1db9609998529617acd4c8490ac9af7f03",
+  "published_ci": {
+    "run_id": 45240820878,
+    "job_id": 137924659753,
+    "tests": 88,
+    "seconds": 7.087,
+    "conclusion": "success"
+  },
+  "protocol_sha256": "c08bd57c2e979cc9e7b56326f3f57a2172d224961e7ce2212f5c506c51a80224",
+  "campaign_id": "87ecf882-bb54-4c46-bb38-690b7c94c142",
+  "raw_report_sha256": "f10f109bdae2077a349a2815f3b8431f7ee7e74917639449ea0c1badd90ec61f",
+  "case_id": "C02",
+  "question": "For FBHS, what was the percentage growth in annual Cabinets segment net sales from 2016 to 2017?",
+  "method": "semantic",
+  "plan": {
+    "method": "semantic",
+    "planned_cases": 1,
+    "maximum_generation_requests": 5,
+    "maximum_embedding_requests": 2,
+    "additional_allowance_reservation_eur": "5.02",
+    "current_allowance_eur": "17.7216200",
+    "local_limit_eur": "25",
+    "fits_local_allowance": true,
+    "actual_charge_eur": null
+  },
+  "attempted_distinct_cases": 1,
+  "conditional_cases_not_attempted": [
+    "C07",
+    "C10"
+  ],
+  "stop_reason": "provider_http_504",
+  "automatic_retries": 0,
+  "reserved_cases": 0,
+  "negative_cases": 0,
+  "modes": {
+    "fixed": {
+      "run_id": "e17f653c-91f3-494d-bc18-e5e6fe1d373b",
+      "created_at_utc": "2026-11-23T18:42:15.165399+00:00",
+      "status": "success",
+      "error_code": null,
+      "duration_seconds": 1.623226,
+      "code_sha256": "441c4a0e006b0bac69fcac3278c50016a7b5dc2b8ddc2bb53c187f98513a9901",
+      "configuration_sha256": "11e8f0d16c1293bf5c333c9eafa40ef62c3c83a3c882bdef26a904cb588bbca2",
+      "prompt_sha256": "623b355ad6248d626c5c13847ea4848c19c6f593d4d458a5ad01d643b30fe5b9",
+      "selection": {
+        "status": "ready",
+        "operation": "percent_change",
+        "cell_ids": [
+          "FBHS/2017/page_23.pdf#table[1][1]",
+          "FBHS/2017/page_23.pdf#table[1][2]"
+        ]
+      },
+      "calculation": {
+        "operation": "percent_change",
+        "formula": "100 * (2467.1 - 2397.8) / 2397.8",
+        "value": "2.890149303528234214696805405",
+        "display": "2.89 %",
+        "unit": "%",
+        "operands": [
+          {
+            "cell_id": "FBHS/2017/page_23.pdf#table[1][1]",
+            "column": 1,
+            "column_header": "<i>2017</i>",
+            "decimal_value": "2467.1",
+            "row": 1,
+            "row_label": "Cabinets",
+            "source_id": "FBHS/2017/page_23.pdf",
+            "source_value": "$2,467.1",
+            "value": "2467.1",
+            "context": {
+              "unit": "$",
+              "scale": 1000000,
+              "year": 2017,
+              "date": null,
+              "nature": "reported",
+              "period_basis": "<i>2017</i>",
+              "unit_basis": "(in millions) | 2017 | 2016 | 2015\nannual net sales for each of the last three fiscal years for each of our business segments were as follows : ( in millions ) 2017 2016 2015 ."
+            }
+          },
+          {
+            "cell_id": "FBHS/2017/page_23.pdf#table[1][2]",
+            "column": 2,
+            "column_header": "<i>2016</i>",
+            "decimal_value": "2397.8",
+            "row": 1,
+            "row_label": "Cabinets",
+            "source_id": "FBHS/2017/page_23.pdf",
+            "source_value": "$2,397.8",
+            "value": "2397.8",
+            "context": {
+              "unit": "$",
+              "scale": 1000000,
+              "year": 2016,
+              "date": null,
+              "nature": "reported",
+              "period_basis": "<i>2016</i>",
+              "unit_basis": "(in millions) | 2017 | 2016 | 2015\nannual net sales for each of the last three fiscal years for each of our business segments were as follows : ( in millions ) 2017 2016 2015 ."
+            }
+          }
+        ],
+        "calculator_version": "table-calculation-v2",
+        "decimal_precision": 28,
+        "display_rounding": "ROUND_HALF_UP"
+      },
+      "evaluation": {
+        "expected_cell_ids": [
+          "FBHS/2017/page_23.pdf#table[1][1]",
+          "FBHS/2017/page_23.pdf#table[1][2]"
+        ],
+        "expected_operation": "percent_change",
+        "expected_percent": "2.890149303528234214696805405",
+        "tolerance": "0.000005",
+        "cell_recall_at_k": 1.0,
+        "complete_proof_at_k": true,
+        "ordered_cells_correct": true,
+        "operation_correct": true,
+        "numeric_within_tolerance": true,
+        "unit_context_correct": true,
+        "period_years_correct": true,
+        "correct_answer": true,
+        "error_category": "correct"
+      },
+      "tool_events": [],
+      "calls": [
+        {
+          "call_id": "600da20f-2407-4c18-a973-a5c8d28d1b78",
+          "kind": "generation",
+          "status": "passed",
+          "error_code": null,
+          "requested_model": "gemini-3.5-flash-lite",
+          "returned_model": "gemini-3.5-flash-lite",
+          "usage": {
+            "input_tokens": 1919,
+            "output_tokens": 80,
+            "thought_tokens": null,
+            "total_tokens": 1999
+          },
+          "duration_seconds": 1.461,
+          "allowance_eur": "0.0099950",
+          "actual_charge_eur": null
+        }
+      ]
+    },
+    "agent": {
+      "run_id": "397f7ea6-fed2-4f18-be88-1ae5e4386caa",
+      "created_at_utc": "2026-11-23T18:42:16.854250+00:00",
+      "status": "failed",
+      "error_code": "provider_http_504",
+      "duration_seconds": 23.36242,
+      "code_sha256": "441c4a0e006b0bac69fcac3278c50016a7b5dc2b8ddc2bb53c187f98513a9901",
+      "configuration_sha256": "12748761c98be9d60b62f25b0de8df3f00d1ab2bc34edc188eb9c42107562c3d",
+      "prompt_sha256": "b21d52569c2a0b4ee3d8f4691ebf83b7ddf39447eed0309d449dfd5290d9ec19",
+      "selection": null,
+      "calculation": null,
+      "evaluation": {
+        "expected_cell_ids": [
+          "FBHS/2017/page_23.pdf#table[1][1]",
+          "FBHS/2017/page_23.pdf#table[1][2]"
+        ],
+        "expected_operation": "percent_change",
+        "expected_percent": "2.890149303528234214696805405",
+        "tolerance": "0.000005",
+        "cell_recall_at_k": 1.0,
+        "complete_proof_at_k": true,
+        "ordered_cells_correct": false,
+        "operation_correct": false,
+        "numeric_within_tolerance": false,
+        "unit_context_correct": false,
+        "period_years_correct": false,
+        "correct_answer": false,
+        "error_category": "provider_http_504"
+      },
+      "tool_events": [
+        {
+          "step": 1,
+          "name": "search_evidence",
+          "arguments": {
+            "query": "FBHS Cabinets segment net sales 2017 2016 percentage growth annual"
+          },
+          "status": "executed",
+          "error_code": null,
+          "duration_seconds": 0.503734
+        },
+        {
+          "step": 2,
+          "name": "search_evidence",
+          "arguments": {
+            "query": "Cabinets net sales 2017 2016 Fortune Brands Home & Security"
+          },
+          "status": "executed",
+          "error_code": null,
+          "duration_seconds": 0.429327
+        }
+      ],
+      "calls": [
+        {
+          "call_id": "0378f55a-1baa-4132-a1a3-f85978b5db6a",
+          "kind": "generation",
+          "status": "passed",
+          "error_code": null,
+          "requested_model": "gemini-3.5-flash-lite",
+          "returned_model": "gemini-3.5-flash-lite",
+          "usage": {
+            "input_tokens": 790,
+            "output_tokens": 35,
+            "thought_tokens": null,
+            "total_tokens": 825
+          },
+          "duration_seconds": 1.157,
+          "allowance_eur": "0.0041250",
+          "actual_charge_eur": null
+        },
+        {
+          "call_id": "fd9ad515-ec1b-48ce-8531-ba09de91b268",
+          "kind": "embedding",
+          "status": "passed",
+          "error_code": null,
+          "requested_model": "gemini-embedding-2",
+          "returned_model": null,
+          "usage": null,
+          "duration_seconds": 0.449,
+          "allowance_eur": "0.01",
+          "actual_charge_eur": null
+        },
+        {
+          "call_id": "c0b753f8-636d-4cd9-bf77-afd3fc559e89",
+          "kind": "generation",
+          "status": "passed",
+          "error_code": null,
+          "requested_model": "gemini-3.5-flash-lite",
+          "returned_model": "gemini-3.5-flash-lite",
+          "usage": {
+            "input_tokens": 1488,
+            "output_tokens": 34,
+            "thought_tokens": null,
+            "total_tokens": 1522
+          },
+          "duration_seconds": 1.459,
+          "allowance_eur": "0.007610",
+          "actual_charge_eur": null
+        },
+        {
+          "call_id": "656bc680-1b6b-4dde-a357-d772ca454f1c",
+          "kind": "embedding",
+          "status": "passed",
+          "error_code": null,
+          "requested_model": "gemini-embedding-2",
+          "returned_model": null,
+          "usage": null,
+          "duration_seconds": 0.373,
+          "allowance_eur": "0.01",
+          "actual_charge_eur": null
+        },
+        {
+          "call_id": "83964402-f00d-40ca-a505-ee6e45951a2a",
+          "kind": "generation",
+          "status": "failed",
+          "error_code": "provider_http_504",
+          "requested_model": "gemini-3.5-flash-lite",
+          "returned_model": null,
+          "usage": null,
+          "duration_seconds": 19.585,
+          "allowance_eur": "1",
+          "actual_charge_eur": null
+        }
+      ]
+    }
+  },
+  "metrics": {
+    "fixed": {
+      "development_cases": 1,
+      "correct_answers": 1,
+      "answer_accuracy": 1.0,
+      "answer_successes": 1,
+      "answer_abstentions": 0,
+      "blocked": 0,
+      "technical_failures": 0,
+      "complete_proofs_at_k": 1,
+      "mean_cell_recall_at_k": 1.0,
+      "correct_cell_selections": 1,
+      "unit_scored_cases": 1,
+      "correct_unit_contexts": 1,
+      "year_scored_cases": 1,
+      "correct_period_years": 1,
+      "latency_attempted_cases": 1,
+      "median_development_seconds": 1.623226,
+      "p95_development_seconds": 1.623226,
+      "negative_cases": 0,
+      "correct_negative_outcomes": 0,
+      "error_categories": {
+        "correct": 1
+      },
+      "provider": {
+        "call_records": 1,
+        "generation_records": 1,
+        "embedding_records": 0,
+        "reported_tokens": {
+          "input_tokens": 1919,
+          "output_tokens": 80,
+          "thought_tokens": null,
+          "total_tokens": 1999
+        },
+        "calls_with_unknown_usage": 0,
+        "known_estimated_paid_cost_usd": "0.0049975",
+        "calls_with_unknown_cost": 0,
+        "estimated_paid_cost_usd": "0.0049975",
+        "actual_charge_eur": null
+      }
+    },
+    "agent": {
+      "development_cases": 1,
+      "correct_answers": 0,
+      "answer_accuracy": 0.0,
+      "answer_successes": 0,
+      "answer_abstentions": 0,
+      "blocked": 0,
+      "technical_failures": 1,
+      "complete_proofs_at_k": 1,
+      "mean_cell_recall_at_k": 1.0,
+      "correct_cell_selections": 0,
+      "unit_scored_cases": 1,
+      "correct_unit_contexts": 0,
+      "year_scored_cases": 1,
+      "correct_period_years": 0,
+      "latency_attempted_cases": 1,
+      "median_development_seconds": 23.36242,
+      "p95_development_seconds": 23.36242,
+      "negative_cases": 0,
+      "correct_negative_outcomes": 0,
+      "error_categories": {
+        "provider_http_504": 1
+      },
+      "provider": {
+        "call_records": 5,
+        "generation_records": 3,
+        "embedding_records": 2,
+        "reported_tokens": {
+          "input_tokens": null,
+          "output_tokens": null,
+          "thought_tokens": null,
+          "total_tokens": null
+        },
+        "calls_with_unknown_usage": 3,
+        "known_estimated_paid_cost_usd": "0.0058675",
+        "calls_with_unknown_cost": 3,
+        "estimated_paid_cost_usd": null,
+        "actual_charge_eur": null
+      }
+    }
+  },
+  "preview_example": {
+    "chunk_id": "FBHS/2017/page_23.pdf#table-row[1]",
+    "before": "Before table:\nin addition , the segment sells lock systems and fire resistant safes to locksmiths , industrial and institutional users , and original equipment manufacturers .\nin aggregate , sales to ",
+    "after_source_lines": "Columns: <i>(In millions)</i> | <i>2017</i> | <i>2016</i> | 2015\nRow 1: Cabinets | $2,467.1 | $2,397.8 | $2,173.4",
+    "after_is_offline_example_not_new_live_output": true
+  },
+  "post_measurement_change": {
+    "file": "app/agent.py",
+    "agent_version": "bounded-agent-v2",
+    "table_preview": "kind plus original Columns/Row lines, at most 400 characters",
+    "text_preview": "first 200 characters, unchanged",
+    "retrieval_rankings_changed": false,
+    "read_permissions_changed": false,
+    "prompt_changed": false,
+    "live_verified": false
+  },
+  "additional_generation_requests": 4,
+  "additional_embedding_requests": 2,
+  "allowance_before_eur": "17.7216200",
+  "allowance_after_eur": "18.7633500",
+  "actual_charge_eur": null,
+  "current_tests": {
+    "count": 89,
+    "seconds": 30.231,
+    "formatted_files": 34,
+    "lint": "passed",
+    "format": "passed",
+    "full_suite_run_date": "2026-11-23"
+  },
+  "default_mode": "fixed",
+  "broader_comparison_completed": false,
+  "preservation": {
+    "review_date": "2026-11-24",
+    "status": "passed",
+    "tests": 89,
+    "test_seconds": 30.231,
+    "test_log_sha256": "122f004fc8b23a155691dd0c7a89aceaf42dd6cf743cea9c790596b7b67eb31b",
+    "lint": "passed",
+    "format": "passed",
+    "formatted_files": 34,
+    "python": 36,
+    "json": 30,
+    "local_markdown_links": 265,
+    "previous_call_rows_preserved": 284,
+    "previous_analysis_rows_preserved": 71,
+    "saved_results_readable": 73,
+    "new_calls": 6,
+    "new_analyses": 2,
+    "local_allowance_eur": "18.7633500",
+    "actual_charge_eur": null,
+    "protected_local_files_preserved_except_intended": true,
+    "intentional_local_changes": [
+      "data/local/query-embeddings.sqlite",
+      "data/local/runs.sqlite",
+      "private/FIGURETRAIL_WORKFLOW_GUIDE.md"
+    ],
+    "modified_tracked_files": [
+      "AGENTS.md",
+      "README.md",
+      "app/agent.py",
+      "docs/Backlog/BACKLOG.md",
+      "docs/architecture/AI_PROJECT_BLUEPRINT.md",
+      "docs/architecture/ARCHITECTURE.md",
+      "docs/verification/CI_WORKFLOW.md",
+      "docs/verification/CI_WORKFLOW_RESULTS.json",
+      "docs/verification/IMPLEMENTATION_LOG.md",
+      "tests/test_agent.py"
+    ],
+    "staging_unchanged": true,
+    "further_live_calls": 0
+  },
+  "current_application_code_sha256": "1b2b78b1bd18a52cc36d166bcc01ed1a118ae84b07ca8730256f939eba62a9fd",
+  "current_agent_py_sha256": "85fb4c6f3559b307bfeb465c85ed4363bd93792b9098f435e37c35e49060ee6f",
+  "current_test_agent_py_sha256": "27c6b504cbfe305f50a55dad1e670342ed4a070b8e11e4c8327b8070df85c3a5"
+}
